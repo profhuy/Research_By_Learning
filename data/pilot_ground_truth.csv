@@ -1,4 +1,4 @@
-﻿"repo","issue_id","issue_url","annotator_1_ob","annotator_1_eb","annotator_1_s2r","annotator_2_ob","annotator_2_eb","annotator_2_s2r","double_labeled","consensus_ob","consensus_eb","consensus_s2r","consensus_notes"
+"repo","issue_id","issue_url","annotator_1_ob","annotator_1_eb","annotator_1_s2r","annotator_2_ob","annotator_2_eb","annotator_2_s2r","double_labeled","consensus_ob","consensus_eb","consensus_s2r","consensus_notes"
 "pandas","62990","https://github.com/pandas-dev/pandas/issues/62990","Sufficient","Sufficient","Sufficient","Sufficient","Sufficient","Sufficient","TRUE","Sufficient","Sufficient","Sufficient",""
 "pandas","63071","https://github.com/pandas-dev/pandas/issues/63071","Sufficient","Sufficient","Missing","Sufficient","Sufficient","Missing","TRUE","Sufficient","Sufficient","Missing",""
 "pandas","63518","https://github.com/pandas-dev/pandas/issues/63518","Sufficient","Sufficient","Missing","Sufficient","Sufficient","Missing","TRUE","Sufficient","Sufficient","Missing",""
