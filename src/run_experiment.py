@@ -197,7 +197,7 @@ def main():
     clean_template_output(output_path)
     clean_template_log(log_path)
 
-    with open(input_path, newline="", encoding="utf-8") as f:
+    with open(input_path, newline="", encoding="utf-8-sig") as f: 
         all_rows = list(csv.DictReader(f))
     rows = select_rows(all_rows)
 
