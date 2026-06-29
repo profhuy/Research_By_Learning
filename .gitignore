@@ -1,0 +1,14 @@
+# Secrets - NEVER commit this
+.env
+
+# Mock test outputs - never commit (keep repo results/ clean)
+results/_mock/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store

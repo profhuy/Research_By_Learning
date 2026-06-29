@@ -1,0 +1,13 @@
+repo,issue_id,issue_url,title,body,created_at,state,labels,selected_for_pilot,notes
+pandas,99001,https://github.com/pandas-dev/pandas/issues/99001,groupby().sum() raises KeyError on an existing column,"When I run df.groupby('region').sum() on the attached dataframe it raises KeyError: 'sales', even though the 'sales' column clearly exists.
+
+Expected: it should return the grouped totals without raising.
+
+Steps to reproduce:
+1. Load the CSV with pd.read_csv('data.csv')
+2. Run df.groupby('region').sum()
+3. Observe the KeyError.",2026-05-10,open,bug,yes,clear report
+scikit-learn,99002,https://github.com/scikit-learn/scikit-learn/issues/99002,fit() is slow and the results look wrong,The model does not work well and the results are wrong somehow. Something seems broken but I am not sure what.,2026-05-11,open,needs-triage,yes,vague report
+VSCode,99003,https://github.com/microsoft/vscode/issues/99003,Please help,Something is broken. Thanks.,2026-05-12,open,,yes,near-empty report
+pandas,99004,https://github.com/pandas-dev/pandas/issues/99004,TEST FIXTURE - bad json path,SIMULATE_BADJSON  (this row is only to test the parse_error/INVALID path in mock mode),2026-05-13,open,,yes,TEST FIXTURE - remove for real runs
+scikit-learn,99005,https://github.com/scikit-learn/scikit-learn/issues/99005,TEST FIXTURE - empty response path,SIMULATE_EMPTY  (this row is only to test the empty_response/INVALID path in mock mode),2026-05-14,open,,yes,TEST FIXTURE - remove for real runs
