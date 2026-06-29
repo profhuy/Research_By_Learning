@@ -1,0 +1,31 @@
+# Pilot Analysis Plan
+
+MS should compute the following on the pilot:
+
+## 1. Human-Human agreement
+
+- Cohen's Kappa for `OB`
+- Cohen's Kappa for `EB`
+- Cohen's Kappa for `S2R`
+- Raw agreement percentage
+
+## 2. LLM-vs-Developer agreement
+
+- Overall Kappa for combined `OB + EB + S2R`
+- Kappa for `OB`
+- Kappa for `EB`
+- Kappa for `S2R`
+
+## 3. Distribution checks
+
+- Label counts for developer consensus
+- Label counts for LLM output
+- Histogram or bar chart for label distribution
+
+## 4. Decision rules after pilot
+
+- If pipeline runs and output format is correct: continue to full experiment
+- If small script/output bug exists: fix in the same day
+- If metric cannot be computed: report immediately and prepare amendment note
+- If empty output rate is above 20%: investigate before scaling
+- If data distribution is unexpectedly skewed: document in `notes.md`

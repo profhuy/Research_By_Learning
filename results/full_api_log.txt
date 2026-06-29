@@ -1,0 +1,12 @@
+Full experiment API log placeholder.
+
+Suggested fields per call:
+- timestamp
+- repo
+- issue_id
+- response_model
+- success_or_fail
+- parse_status
+- token_usage_if_available
+- cost_if_available
+- error_message_if_any
