@@ -17,6 +17,7 @@ where:
 
 import json
 import time
+import os
 
 from prompt_config import MODEL_API_ID, TEMPERATURE
 
@@ -95,7 +96,10 @@ def call_llm_real(system_prompt, user_prompt, max_retries=5):
     from openai import (RateLimitError, APIError,
                         APITimeoutError, APIConnectionError)
 
-    client = OpenAI()  # reads OPENAI_API_KEY from the environment
+    #client = OpenAI()  # reads OPENAI_API_KEY from the environment
+    # base_url đọc từ .env (OPENAI_BASE_URL). Nếu không có -> mặc định OpenAI chính chủ.
+    # Cho phép trỏ sang API tương thích OpenAI của bên thứ ba khi nhóm đã đồng ý.
+    client = OpenAI(base_url=os.getenv("OPENAI_BASE_URL") or None)
 
     last_error = None
     for attempt in range(max_retries):
