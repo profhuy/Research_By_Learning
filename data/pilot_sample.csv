@@ -1,4 +1,2572 @@
-repo,issue_id,issue_url,title,body,created_at,state,labels,selected_for_pilot,notes
-pandas,,,,,,,,,
-scikit-learn,,,,,,,,,
-VSCode,,,,,,,,,
+"repo","issue_id","issue_url","title","body","created_at","state","labels","selected_for_pilot"
+"pandas","62990","https://github.com/pandas-dev/pandas/issues/62990","BUG: Series.loc slicing raises KeyError unexpectedly","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [ ] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+
+print(pd.Series([3, 6, 7, 6], index=[3, 6, 7, 9]).loc[5:], ""\n"")  # works
+print(pd.Series([3, 6, 7, 6], index=[3, 6, 7, 6]).loc[5:], ""\n"")  # raises error
+```
+
+### Issue Description
+
+When an index value is repeated, loc slicing raises a `KeyError`. 
+The [documentation](https://pandas.pydata.org/docs/reference/api/pandas.Series.loc.html#pandas.Series.loc) does not mention this as a condition for raising a `KeyError`.
+
+
+
+### Expected Behavior
+
+I think this should return `d.Series([6, 7, 6], index=[6, 7, 6])` and not raise an error.
+
+### Installed Versions
+
+<details>
+
+```
+INSTALLED VERSIONS
+------------------
+commit                : 9c8bc3e55188c8aff37207a74f1dd144980b8874
+python                : 3.10.11
+python-bits           : 64
+OS                    : Windows
+OS-release            : 10
+Version               : 10.0.26100
+machine               : AMD64
+processor             : Intel64 Family 6 Model 186 Stepping 3, GenuineIntel
+byteorder             : little
+LC_ALL                : None
+LANG                  : en_US.UTF-8
+LOCALE                : English_New Zealand.1252
+
+pandas                : 2.3.3
+numpy                 : 2.2.6
+pytz                  : 2025.2
+dateutil              : 2.9.0.post0
+pip                   : 23.0.1
+Cython                : None
+sphinx                : None
+IPython               : None
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : None
+blosc                 : None
+bottleneck            : None
+dataframe-api-compat  : None
+fastparquet           : None
+fsspec                : None
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : None
+lxml.etree            : None
+matplotlib            : None
+numba                 : None
+numexpr               : None
+odfpy                 : None
+openpyxl              : None
+pandas_gbq            : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : None
+pyreadstat            : None
+pytest                : None
+python-calamine       : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : None
+sqlalchemy            : None
+tables                : None
+tabulate              : None
+xarray                : None
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+tzdata                : 2025.2
+qtpy                  : None
+pyqt5                 : None
+None
+```
+
+</details>
+","2025-11-05T01:29:43Z","closed","Bug,Indexing,Error Reporting","TRUE"
+"pandas","63071","https://github.com/pandas-dev/pandas/issues/63071","BUG: DataFrame.loc[] returns object type instead of float","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+from pandas import DataFrame
+
+
+df_e = DataFrame([[""x"", 10.0, 20.0], [""y"", 30.0, 40.0]])
+print(df_e.loc[0, slice(1, 3)])
+```
+
+### Issue Description
+
+When selecting columns using slices from a DataFrame that contains mixed data types, the resulting columns always have the dtype object, even when all the selected elements share the same data type (for example, float64). This issue was previously reported and fixed for array-based column selection in Issue #60600, but it still occurs when selecting columns with slices.
+
+
+### Expected Behavior
+
+```
+# Current Output: 
+1    10.0
+2    20.0
+Name: 0, dtype: object
+
+
+# Expected Output: 
+1    10.0
+2    20.0
+Name: 0, dtype: float64
+```
+
+### Installed Versions
+
+<details>
+commit                : 9c8bc3e55188c8aff37207a74f1dd144980b8874
+python                : 3.13.9
+python-bits           : 64
+OS                    : Darwin
+OS-release            : 24.6.0
+Version               : Darwin Kernel Version 24.6.0: Mon Jul 14 11:30:29 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T6000
+machine               : arm64
+processor             : arm
+byteorder             : little
+LC_ALL                : None
+LANG                  : en_US.UTF-8
+LOCALE                : en_US.UTF-8
+
+pandas                : 2.3.3
+numpy                 : 2.3.4
+pytz                  : 2025.2
+dateutil              : 2.9.0.post0
+pip                   : 25.2
+Cython                : None
+sphinx                : None
+IPython               : None
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : None
+blosc                 : None
+bottleneck            : None
+dataframe-api-compat  : None
+fastparquet           : None
+fsspec                : None
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : None
+lxml.etree            : None
+matplotlib            : None
+numba                 : None
+numexpr               : None
+odfpy                 : None
+openpyxl              : None
+pandas_gbq            : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : 22.0.0
+pyreadstat            : None
+pytest                : None
+python-calamine       : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : N/A
+sqlalchemy            : None
+tables                : None
+tabulate              : None
+xarray                : None
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+tzdata                : 2025.2
+qtpy                  : None
+pyqt5                 : None
+None
+
+</details>
+","2025-11-11T04:15:34Z","closed","Bug,Indexing,Dtype Conversions","TRUE"
+"pandas","63518","https://github.com/pandas-dev/pandas/issues/63518","BUG: pd.Grouper converts PyArrow timestamp to numpy datetime64","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+import io
+
+data = '''agency_cd,site_no,datetime,tz_cd,144166_00060,144166_00060_cd,144167_00065,144167_00065_cd
+USGS,9333500,2001-05-07 01:00:00,MDT,71.0,A:[91],,
+USGS,9333500,2001-05-07 01:15:00,MDT,71.0,A:[91],,
+USGS,9333500,2001-05-07 01:30:00,MDT,71.0,A:[91],,
+USGS,9333500,2001-05-07 01:45:00,MDT,70.0,A:[91],,
+USGS,9333500,2001-05-07 02:00:00,MDT,70.0,A:[91],,
+USGS,9333500,2001-05-08 02:15:00,MDT,69.0,A:[91],,
+USGS,9333500,2001-05-08 02:30:00,MDT,70.0,A:[91],,
+USGS,9333500,2001-05-08 02:45:00,MDT,70.0,A:[91],,
+USGS,9333500,2001-05-08 03:00:00,MDT,70.0,A:[91],,'''
+
+df = pd.read_csv(io.StringIO(data), dtype_backend='pyarrow', engine='pyarrow')
+
+def to_denver_time(df_, time_col, tz_col):
+    return (df_
+     .assign(**{tz_col: df_[tz_col].replace('MDT', 'MST7MDT')})
+     .groupby(tz_col)
+     [time_col]
+     .transform(lambda s: pd.to_datetime(s)
+         .dt.tz_localize(s.name, ambiguous=True)
+         .dt.tz_convert('America/Denver'))
+     .astype('timestamp[ns, America/Denver][pyarrow]')
+    )
+
+def tweak_river(df_):
+    return (df_
+     .assign(datetime=to_denver_time(df_, 'datetime', 'tz_cd'))
+     .rename(columns={'144166_00060': 'cfs'})
+     .loc[:, ['datetime', 'cfs']]
+     .set_index('datetime')
+    )
+
+dd = tweak_river(df)
+
+# Check the dtype before grouping
+print(""Before pd.Grouper:"")
+print(f""Index dtype: {dd.index.dtype}"")
+
+# Use pd.Grouper to group by day
+result = dd.groupby(pd.Grouper(freq='D')).median(numeric_only=True)
+
+# Check the dtype after grouping
+print(""\nAfter pd.Grouper:"")
+print(f""Index dtype: {result.index.dtype}"")
+```
+
+### Issue Description
+
+When using `pd.Grouper` with a PyArrow-backed timestamp column, the resulting index is automatically converted from the PyArrow dtype (`timestamp[ns, America/Denver][pyarrow]`) to the numpy-backed dtype (`datetime64[ns, America/Denver]`). This conversion happens silently and is inconsistent with the goal of maintaining PyArrow types throughout the analysis pipeline.
+
+This affects users working with PyArrow backend who want to maintain PyArrow types for performance and consistency reasons.
+
+### Expected Behavior
+
+The resulting index after using `pd.Grouper` should maintain the original PyArrow dtype (`timestamp[ns, America/Denver][pyarrow]`) instead of converting to numpy's `datetime64[ns, America/Denver]`.
+
+### Installed Versions
+
+<details>
+
+INSTALLED VERSIONS
+------------------
+commit                : 72427599b673c58e91c4e96a610fe753e3edc550
+python                : 3.11.13
+python-bits           : 64
+OS                    : Darwin
+OS-release            : 24.6.0
+Version               : Darwin Kernel Version 24.6.0: Mon Jul 14 11:30:40 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T6041
+machine               : arm64
+processor             : arm
+byteorder             : little
+LC_ALL                : None
+LANG                  : None
+LOCALE                : en_US.UTF-8
+
+pandas                : 3.0.0rc1
+numpy                 : 2.4.0
+dateutil              : 2.9.0.post0
+pip                   : 25.3
+Cython                : 3.2.2
+sphinx                : None
+IPython               : 9.8.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.14.3
+bottleneck            : None
+fastparquet           : None
+fsspec                : None
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : 3.1.6
+lxml.etree            : 6.0.2
+matplotlib            : 3.10.7
+numba                 : None
+numexpr               : None
+odfpy                 : None
+openpyxl              : 3.1.5
+psycopg2              : None
+pymysql               : None
+pyarrow               : 22.0.0
+pyiceberg             : None
+pyreadstat            : None
+pytest                : 9.0.2
+python-calamine       : None
+pytz                  : 2025.2
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.16.3
+sqlalchemy            : None
+tables                : None
+tabulate              : None
+xarray                : None
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+qtpy                  : None
+pyqt5                 : None
+</details>
+","2025-12-31T02:09:34Z","closed","Bug,Groupby,pyarrow dtype retention","TRUE"
+"pandas","64825","https://github.com/pandas-dev/pandas/issues/64825","BUG: concatenating Series with overlapping Interval names fails","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+
+value_index = pd.IntervalIndex.from_tuples([(0.0, 1.0), (1.0, 2.0)], name=""foo"")
+level_index = pd.IntervalIndex.from_tuples([(0.0, 10.0), (0.0, 20.0)], name=""bar"")
+
+values = [
+    pd.Series([1.0, 3.0], name=pd.Interval(0.0, 10.0), index=value_index),
+    pd.Series([5.0, 7.0], name=pd.Interval(0.0, 20.0), index=value_index),
+]
+
+result = pd.concat(values, keys=level_index, levels=[level_index], names=[""bar""])
+
+expected = pd.Series(
+    [1.0, 3.0, 5.0, 7.0], index=pd.MultiIndex.from_product([level_index, value_index])
+)
+
+pd.testing.assert_series_equal(result, expected)
+```
+
+### Issue Description
+
+The test script above fails with
+
+```
+Traceback (most recent call last):
+  File ""/tmp/./concat_interval_index_test.py"", line 12, in <module>
+    result = pd.concat(values, keys=level_index, levels=[level_index], names=[""bar""])
+  File ""/home/jmu3si/.cache/uv/archive-v0/MEDiUHAFCzJ_8CAY6bk42/lib/python3.14/site-packages/pandas/core/reshape/concat.py"", line 466, in concat
+    result = _get_result(
+        objs,
+    ...<9 lines>...
+        axis,
+    )
+  File ""/home/jmu3si/.cache/uv/archive-v0/MEDiUHAFCzJ_8CAY6bk42/lib/python3.14/site-packages/pandas/core/reshape/concat.py"", line 585, in _get_result
+    new_index = _get_concat_axis_series(
+        objs,
+    ...<5 lines>...
+        names,
+    )
+  File ""/home/jmu3si/.cache/uv/archive-v0/MEDiUHAFCzJ_8CAY6bk42/lib/python3.14/site-packages/pandas/core/reshape/concat.py"", line 720, in _get_concat_axis_series
+    concat_axis = _make_concat_multiindex(indexes, keys, levels, names)
+  File ""/home/jmu3si/.cache/uv/archive-v0/MEDiUHAFCzJ_8CAY6bk42/lib/python3.14/site-packages/pandas/core/reshape/concat.py"", line 975, in _make_concat_multiindex
+    mapped = level.get_indexer(hlevel_index)
+  File ""/home/jmu3si/.cache/uv/archive-v0/MEDiUHAFCzJ_8CAY6bk42/lib/python3.14/site-packages/pandas/core/indexes/base.py"", line 3728, in get_indexer
+    raise InvalidIndexError(self._requires_unique_msg)
+pandas.errors.InvalidIndexError: cannot handle overlapping indices; use IntervalIndex.get_indexer_non_unique
+```
+
+### Expected Behavior
+
+The test script should go through successfully with no error message.
+
+I have a fix for this locally. PR is underway.
+
+### Installed Versions
+
+<details>
+
+INSTALLED VERSIONS
+------------------
+commit                : e04b26f375035e5106cb913e47b6db612f4ebb11
+python                : 3.14.3
+python-bits           : 64
+OS                    : Linux
+OS-release            : 6.8.0-106-generic
+Version               : #106-Ubuntu SMP PREEMPT_DYNAMIC Fri Mar  6 07:58:08 UTC 2026
+machine               : x86_64
+processor             : x86_64
+byteorder             : little
+LC_ALL                : None
+LANG                  : de_DE.UTF-8
+LOCALE                : de_DE.UTF-8
+
+pandas                : 3.0.1
+numpy                 : 2.4.3
+dateutil              : 2.9.0.post0
+pip                   : 26.0.1
+Cython                : None
+sphinx                : None
+IPython               : None
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : None
+bottleneck            : None
+fastparquet           : None
+fsspec                : None
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : None
+lxml.etree            : None
+matplotlib            : None
+numba                 : None
+numexpr               : None
+odfpy                 : None
+openpyxl              : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : None
+pyiceberg             : None
+pyreadstat            : None
+pytest                : None
+python-calamine       : None
+pytz                  : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : None
+sqlalchemy            : None
+tables                : None
+tabulate              : None
+xarray                : None
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+qtpy                  : None
+pyqt5                 : None
+
+
+</details>
+","2026-03-24T13:12:06Z","closed","Bug,Reshaping,Interval","TRUE"
+"pandas","65710","https://github.com/pandas-dev/pandas/issues/65710","BUG: `DataFrame.any`/`all(skipna=False)` raises ValueError instead of returning NA","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+
+s = pd.Series([False, None], dtype=""boolean"")
+df = s.to_frame(""a"")
+
+s.any(skipna=False)
+df.any(skipna=False)
+```
+
+### Issue Description
+
+`DataFrame.any(skipna=False)` and `DataFrame.all(skipna=False)` raise `ValueError: cannot convert float NaN to bool` on numpy-nullable columns (`boolean`, `Int*`, `UInt*`, `Float*`) whenever the reduction would propagate `pd.NA`.
+
+The corresponding `Series.any/all(skipna=False)` reductions on the same data correctly return `pd.NA`.
+
+### Expected Behavior
+
+`DataFrame.any(skipna=False)` and `DataFrame.all(skipna=False)` should return a `Series` with nullable boolean dtype (`boolean`) containing `pd.NA` when the corresponding `Series.any/all(skipna=False)` reduction on the same column returns `pd.NA`.
+
+### Installed Versions
+
+<details>
+
+
+INSTALLED VERSIONS
+------------------
+commit                : 2a7587fed01e1b7d523d59281b92e1a32a20fd9e
+python                : 3.12.12
+python-bits           : 64
+OS                    : Windows
+OS-release            : 11
+Version               : 10.0.26200
+machine               : AMD64
+processor             : Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
+byteorder             : little
+LC_ALL                : None
+LANG                  : None
+LOCALE                : English_United States.1252
+
+pandas                : 3.1.0.dev0+526.g2a7587fed0.dirty
+numpy                 : 2.4.2
+dateutil              : 2.9.0.post0
+pip                   : 26.0.1
+Cython                : 3.2.4
+sphinx                : None
+IPython               : 9.10.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : None
+bottleneck            : 1.6.0
+fastparquet           : None
+fsspec                : None
+html5lib              : None
+hypothesis            : 6.151.6
+gcsfs                 : None
+jinja2                : None
+lxml.etree            : None
+matplotlib            : 3.10.8
+numba                 : None
+numexpr               : 2.14.1
+odfpy                 : None
+openpyxl              : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : None
+pyiceberg             : None
+pyreadstat            : None
+pytest                : 9.0.2
+python-calamine       : None
+pytz                  : 2025.2
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.17.0
+sqlalchemy            : 2.0.46
+tables                : None
+tabulate              : 0.9.0
+xarray                : None
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+qtpy                  : None
+pyqt5                 : None
+
+</details>
+","2026-05-22T14:26:32Z","closed","Bug,Missing-data,NA - MaskedArrays,Reduction Operations","TRUE"
+"scikit-learn","28977","https://github.com/scikit-learn/scikit-learn/issues/28977","Consider bumping C standard in meson.build from C99 to C17","### Describe the bug
+
+Currently, trying to build scikit-learn with the python 3.13 free-threaded build leads to a compilation error related to usage of `static_assert` in CPython internals. This leaks into public code via cython's adding `#include ""internal/pycore_frame.h""` to module init code.
+
+See https://github.com/scipy/scipy/pull/20515 where scipy made a similar change for similar reasons.
+
+C17 is well-supported by downstream compilers, including MSVC. CPython itself is built with C11, which is a superset of C17.
+
+Opening this as an issue instead of just making a pull request to see if there are good reasons besides inertia why `meson.build` specifies C99.
+
+### Steps/Code to Reproduce
+
+```bash
+python -m pip install -v . --no-build-isolation
+```
+
+### Expected Results
+
+successful build
+
+### Actual Results
+
+```
+  FAILED: sklearn/_loss/_loss.cpython-313t-darwin.so.p/meson-generated_sklearn__loss__loss.pyx.c.o
+  ccache cc -Isklearn/_loss/_loss.cpython-313t-darwin.so.p -Isklearn/_loss -I../sklearn/_loss -I/Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t -fvisibility=hidden -fdiagnostics-color=always -Wall -Winvalid-pch -std=c99 -O0 -g -Wno-unused-but-set-variable -Wno-unused-function -Wno-conversion -Wno-misleading-indentation -MD -MQ sklearn/_loss/_loss.cpython-313t-darwin.so.p/meson-generated_sklearn__loss__loss.pyx.c.o -MF sklearn/_loss/_loss.cpython-313t-darwin.so.p/meson-generated_sklearn__loss__loss.pyx.c.o.d -o sklearn/_loss/_loss.cpython-313t-darwin.so.p/meson-generated_sklearn__loss__loss.pyx.c.o -c sklearn/_loss/_loss.cpython-313t-darwin.so.p/sklearn/_loss/_loss.pyx.c
+  In file included from sklearn/_loss/_loss.cpython-313t-darwin.so.p/sklearn/_loss/_loss.pyx.c:174712:
+  In file included from /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_frame.h:13:
+  /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_code.h:493:15: error: expected parameter declarator
+  static_assert(COLD_EXIT_INITIAL_VALUE > ADAPTIVE_COOLDOWN_VALUE,
+                ^
+  /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_backoff.h:113:33: note: expanded from macro 'COLD_EXIT_INITIAL_VALUE'
+  #define COLD_EXIT_INITIAL_VALUE 64
+                                  ^
+  In file included from sklearn/_loss/_loss.cpython-313t-darwin.so.p/sklearn/_loss/_loss.pyx.c:174712:
+  In file included from /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_frame.h:13:
+  /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_code.h:493:15: error: expected ')'
+  /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_backoff.h:113:33: note: expanded from macro 'COLD_EXIT_INITIAL_VALUE'
+  #define COLD_EXIT_INITIAL_VALUE 64
+                                  ^
+  /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_code.h:493:14: note: to match this '('
+  static_assert(COLD_EXIT_INITIAL_VALUE > ADAPTIVE_COOLDOWN_VALUE,
+               ^
+  /Users/goldbaum/.pyenv/versions/3.13-dev-nogil/include/python3.13t/internal/pycore_code.h:493:1: warning: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+  static_assert(COLD_EXIT_INITIAL_VALUE > ADAPTIVE_COOLDOWN_VALUE,
+  ^
+  int
+```
+
+### Versions
+
+```shell
+Current `main` branch.
+```
+","2024-05-08T16:08:32Z","closed","Bug,free-threading","TRUE"
+"scikit-learn","29157","https://github.com/scikit-learn/scikit-learn/issues/29157","TypeError when fitting GridSearchCV or RandomizedSearchCV with OrdinalEncoder and OneHotEncoder in parameters grid","### Describe the bug
+
+Having both `OrdinalEncoder` and `OneHotEncoder` inside the parameters grid to be used by the `GridSearchCV` or `RandomizedSearchCV` results in the following error: `TypeError: float() argument must be a string or a real number, not 'OneHotEncoder'`.
+
+### Steps/Code to Reproduce
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn import set_config
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
+
+set_config(transform_output=""pandas"")
+
+# Setting seed for reproducibility
+np.random.seed(42)
+
+# Create a DataFrame with 1000 rows and 5 columns
+num_rows = 1000
+data = {
+    ""numeric_1"": np.random.randn(num_rows),  # Normally distributed random numbers
+    ""numeric_3"": np.random.randint(
+        1, 100, size=num_rows
+    ),  # Random integers between 1 and 100
+    ""object_1"": np.random.choice(
+        [""A"", ""B"", ""C"", ""D""], size=num_rows
+    ),  # Random choice among 'A', 'B', 'C', 'D'
+    ""object_2"": np.random.choice(
+        [""X"", ""Y"", ""Z""], size=num_rows
+    ),  # Random choice among 'X', 'Y', 'Z'
+    ""target"": np.random.rand(num_rows)
+    * 100,  # Uniformly distributed random numbers [0, 100)
+}
+
+df = pd.DataFrame(data)
+
+X = df.drop(""target"", axis=1)
+y = df[""target""]
+
+enc = ColumnTransformer(
+    [(""enc"", OneHotEncoder(sparse_output=False), [""object_1"", ""object_2""])],
+    remainder=""passthrough"",
+    verbose_feature_names_out=False,
+)
+
+pipe = Pipeline(
+    [
+        (""enc"", enc),
+        (""regressor"", HistGradientBoostingRegressor()),
+    ]
+)
+
+grid_params = {
+    ""enc__enc"": [
+        OneHotEncoder(sparse_output=False),
+        OrdinalEncoder(),
+    ]
+}
+
+grid_search = GridSearchCV(pipe, grid_params, cv=5)
+grid_search.fit(X, y)
+# RandomizedSearchCV produces the same error
+# rand_search = RandomizedSearchCV(pipe, grid_params, cv=5)
+# rand_search.fit(X, y)
+```
+
+### Expected Results
+I would have expected the pipeline to run without errors, like that:
+![image](https://github.com/scikit-learn/scikit-learn/assets/48819468/2085613d-f2d0-4350-b54c-9ec8efc7efd9)
+
+
+### Actual Results
+```python
+{
+	""name"": ""TypeError"",
+	""message"": ""float() argument must be a string or a real number, not 'OneHotEncoder'"",
+	""stack"": ""---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+Cell In[108], line 1
+----> 1 grid_search.fit(X, y)
+
+File ~/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/sklearn/base.py:1473, in _fit_context.<locals>.decorator.<locals>.wrapper(estimator, *args, **kwargs)
+   1466     estimator._validate_params()
+   1468 with config_context(
+   1469     skip_parameter_validation=(
+   1470         prefer_skip_nested_validation or global_skip_validation
+   1471     )
+   1472 ):
+-> 1473     return fit_method(estimator, *args, **kwargs)
+
+File ~/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/sklearn/model_selection/_search.py:968, in BaseSearchCV.fit(self, X, y, **params)
+    962     results = self._format_results(
+    963         all_candidate_params, n_splits, all_out, all_more_results
+    964     )
+    966     return results
+--> 968 self._run_search(evaluate_candidates)
+    970 # multimetric is determined here because in the case of a callable
+    971 # self.scoring the return type is only known after calling
+    972 first_test_score = all_out[0][\""test_scores\""]
+
+File ~/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/sklearn/model_selection/_search.py:1543, in GridSearchCV._run_search(self, evaluate_candidates)
+   1541 def _run_search(self, evaluate_candidates):
+   1542     \""\""\""Search all candidates in param_grid\""\""\""
+-> 1543     evaluate_candidates(ParameterGrid(self.param_grid))
+
+File ~/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/sklearn/model_selection/_search.py:962, in BaseSearchCV.fit.<locals>.evaluate_candidates(candidate_params, cv, more_results)
+    959         all_more_results[key].extend(value)
+    961 nonlocal results
+--> 962 results = self._format_results(
+    963     all_candidate_params, n_splits, all_out, all_more_results
+    964 )
+    966 return results
+
+File ~/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/sklearn/model_selection/_search.py:1098, in BaseSearchCV._format_results(self, candidate_params, n_splits, out, more_results)
+   1094     arr_dtype = object
+   1095 if len(param_list) == n_candidates and arr_dtype != object:
+   1096     # Exclude `object` else the numpy constructor might infer a list of
+   1097     # tuples to be a 2d array.
+-> 1098     results[key] = MaskedArray(param_list, mask=False, dtype=arr_dtype)
+   1099 else:
+   1100     # Use one MaskedArray and mask all the places where the param is not
+   1101     # applicable for that candidate (which may not contain all the params).
+   1102     ma = MaskedArray(np.empty(n_candidates), mask=True, dtype=arr_dtype)
+
+File ~/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/numpy/ma/core.py:2820, in MaskedArray.__new__(cls, data, mask, dtype, copy, subok, ndmin, fill_value, keep_mask, hard_mask, shrink, order)
+   2811 \""\""\""
+   2812 Create a new masked array from scratch.
+   2813 
+   (...)
+   2817 
+   2818 \""\""\""
+   2819 # Process data.
+-> 2820 _data = np.array(data, dtype=dtype, copy=copy,
+   2821                  order=order, subok=True, ndmin=ndmin)
+   2822 _baseclass = getattr(data, '_baseclass', type(_data))
+   2823 # Check that we're not erasing the mask.
+
+TypeError: float() argument must be a string or a real number, not 'OneHotEncoder'""
+}
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.12.3 (main, Apr  9 2024, 08:09:14) [Clang 15.0.0 (clang-1500.3.9.4)]
+executable: /Users/brice/Documents/Coding/ML_exercises/.venv/bin/python
+   machine: macOS-14.5-arm64-arm-64bit
+
+Python dependencies:
+      sklearn: 1.5.0
+          pip: 24.0
+   setuptools: 70.0.0
+        numpy: 1.26.4
+        scipy: 1.13.1
+       Cython: None
+       pandas: 2.2.2
+   matplotlib: 3.9.0
+       joblib: 1.4.2
+threadpoolctl: 3.5.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 8
+         prefix: libopenblas
+       filepath: /Users/brice/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/numpy/.dylibs/libopenblas64_.0.dylib
+        version: 0.3.23.dev
+threading_layer: pthreads
+   architecture: armv8
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 8
+         prefix: libopenblas
+       filepath: /Users/brice/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/scipy/.dylibs/libopenblas.0.dylib
+        version: 0.3.27
+threading_layer: pthreads
+   architecture: neoversen1
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 8
+         prefix: libomp
+       filepath: /Users/brice/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/sklearn/.dylibs/libomp.dylib
+        version: None
+```
+","2024-06-02T10:58:40Z","closed","Bug,Regression,module:model_selection","TRUE"
+"scikit-learn","29648","https://github.com/scikit-learn/scikit-learn/issues/29648","GaussianNB(priors=...) is useless","### Describe the bug
+
+If I set the class priors to be very small for classes 0 and 2 and very large for class 1, I expect my predictions to be of class 1. However, I get class 0. It seems to be that `GaussianNB(priors=...)` is useless.
+
+### Steps/Code to Reproduce
+
+```python
+from sklearn import datasets
+from sklearn.naive_bayes import GaussianNB
+
+# Load data
+iris = datasets.load_iris()
+features = iris.data
+target = iris.target
+
+# Create Gaussian naive Bayes object
+classifer = GaussianNB()  # The prior is adjusted based on the data
+# Train model
+model = classifer.fit(features, target)
+# Create new observation
+new_observation = [[5.2, 3.6, 1.5, 0.3]]
+# Predict class
+model.predict(new_observation)
+# array([0])
+
+# Set prior probabilities p(y) of each class of 3 (does not work)
+clf = GaussianNB(priors=[1e-12, 1-1e-11, 9e-12])
+# Train model
+model_priors = clf.fit(features, target)
+# Create new observation
+new_observation = [[5.2, 3.6, 1.5, 0.3]]
+# Predict class
+model_priors.predict(new_observation)
+# array([0])
+```
+
+### Expected Results
+
+- `array([0])` for `GaussianNB` without priors
+- `array([1])` for `GaussianNB(priors=...)` with priors
+
+### Actual Results
+
+- `array([0])` for `GaussianNB` without priors
+- `array([0])` for `GaussianNB(priors=...)` with priors
+
+### Versions
+
+```shell
+System:
+    python: 3.11.0rc1 (main, Aug 12 2022, 10:02:14) [GCC 11.2.0]
+machine: Linux-6.5.0-44-generic-x86_64-with-glibc2.35
+
+Python dependencies:
+      sklearn: 1.4.1.post1
+          pip: 24.1.2
+   setuptools: 68.2.0
+        numpy: 1.26.4
+        scipy: 1.12.0
+       Cython: None
+       pandas: 2.2.1
+   matplotlib: 3.8.3
+       joblib: 1.3.2
+threadpoolctl: 3.4.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 8
+         prefix: libopenblas
+       filepath: /home/.../venv/lib/python3.11/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+        version: 0.3.23.dev
+threading_layer: pthreads
+   architecture: Zen
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 8
+         prefix: libgomp
+       filepath: /home/.../venv/lib/python3.11/site-packages/faiss_cpu.libs/libgomp-a34b3233.so.1.0.0
+        version: None
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 8
+         prefix: libopenblas
+       filepath: /home/.../venv/lib/python3.11/site-packages/scipy.libs/libopenblasp-r0-23e5df77.3.21.dev.so
+        version: 0.3.21.dev
+threading_layer: pthreads
+   architecture: Zen
+```","2024-08-10T10:31:12Z","closed","Bug,Needs Triage","TRUE"
+"scikit-learn","30382","https://github.com/scikit-learn/scikit-learn/issues/30382","Gaussian Mixture: Diagonal covariance vectors might contain unreasonably negative values when the input datatype is np.float32","### Describe the bug
+
+The Gaussian Mixture implementation shows numerical instabilities on single-precision floating point input numbers, that even large values of the regularization parameter reg_covar (like 0.1) cannot mitigate.
+
+More specifically, diagonal covariance elements must not be negative. However, due to the numerical instabilities intrinsic to floating point arithmetic, they might end up being tiny negative numbers that reg_covar must compensate.
+It turns out that, for some input float32 , the covariance can reach the unreasonable value of -0.99999979.
+This is because squaring float32 numbers significantly magnifies their precision errors.
+
+The proposed solution consists in converting float32 values to float64 before squaring them.
+Care must be taken to not increase memory consumption in the overall process.
+Hence, as avgX_means is equal to avg_means2, the return value can be simplified.
+
+### Steps/Code to Reproduce
+
+```python
+import numpy as np
+from sklearn.mixture import GaussianMixture
+
+model = GaussianMixture(n_components=2, covariance_type=""spherical"", reg_covar=0.1)
+model.fit(np.array([[9999.0], [0.0]], dtype=np.float32))
+model.covariances_
+```
+
+### Expected Results
+
+```python
+array([0.1, 0.1])
+```
+
+### Actual Results
+
+```python
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+Input In [132], in <cell line: 49>()
+     45 skgm._estimate_gaussian_covariances_diag = _optimized_estimate_gaussian_covariances_diag
+     48 model = GaussianMixture(n_components=2,covariance_type=""spherical"", reg_covar=0.1)
+---> 49 model.fit(np.array([[9999.0], [0.0]], dtype=np.float32))
+     50 model.covariances_
+
+File [~\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\mixture\_base.py:200](http://localhost:8888/lab/tree/~/AppData/Local/Programs/Python/Python39/lib/site-packages/sklearn/mixture/_base.py#line=199), in BaseMixture.fit(self, X, y)
+    174 def fit(self, X, y=None):
+    175     """"""Estimate model parameters with the EM algorithm.
+    176 
+    177     The method fits the model ``n_init`` times and sets the parameters with
+   (...)
+    198         The fitted mixture.
+    199     """"""
+--> 200     self.fit_predict(X, y)
+    201     return self
+
+File [~\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\mixture\_base.py:253](http://localhost:8888/lab/tree/~/AppData/Local/Programs/Python/Python39/lib/site-packages/sklearn/mixture/_base.py#line=252), in BaseMixture.fit_predict(self, X, y)
+    250 self._print_verbose_msg_init_beg(init)
+    252 if do_init:
+--> 253     self._initialize_parameters(X, random_state)
+    255 lower_bound = -np.inf if do_init else self.lower_bound_
+    257 if self.max_iter == 0:
+
+File [~\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\mixture\_base.py:160](http://localhost:8888/lab/tree/~/AppData/Local/Programs/Python/Python39/lib/site-packages/sklearn/mixture/_base.py#line=159), in BaseMixture._initialize_parameters(self, X, random_state)
+    155 else:
+    156     raise ValueError(
+    157         ""Unimplemented initialization method '%s'"" % self.init_params
+    158     )
+--> 160 self._initialize(X, resp)
+
+File [~\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\mixture\_gaussian_mixture.py:723](http://localhost:8888/lab/tree/~/AppData/Local/Programs/Python/Python39/lib/site-packages/sklearn/mixture/_gaussian_mixture.py#line=722), in GaussianMixture._initialize(self, X, resp)
+    721 if self.precisions_init is None:
+    722     self.covariances_ = covariances
+--> 723     self.precisions_cholesky_ = _compute_precision_cholesky(
+    724         covariances, self.covariance_type
+    725     )
+    726 elif self.covariance_type == ""full"":
+    727     self.precisions_cholesky_ = np.array(
+    728         [
+    729             linalg.cholesky(prec_init, lower=True)
+    730             for prec_init in self.precisions_init
+    731         ]
+    732     )
+
+File [~\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\mixture\_gaussian_mixture.py:347](http://localhost:8888/lab/tree/~/AppData/Local/Programs/Python/Python39/lib/site-packages/sklearn/mixture/_gaussian_mixture.py#line=346), in _compute_precision_cholesky(covariances, covariance_type)
+    345 else:
+    346     if np.any(np.less_equal(covariances, 0.0)):
+--> 347         raise ValueError(estimate_precision_error_message)
+    348     precisions_chol = 1.0 / np.sqrt(covariances)
+    349 return precisions_chol
+
+ValueError: Fitting the mixture model failed because some components have ill-defined empirical covariance (for instance caused by singleton or collapsed samples). Try to decrease the number of components, or increase reg_covar.
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]
+executable: C:\Users\leonce.mekinda\AppData\Local\Programs\Python\Python39\python.exe
+   machine: Windows-10-10.0.19043-SP0
+
+Python dependencies:
+      sklearn: 1.1.1
+          pip: 22.0.4
+   setuptools: 58.1.0
+        numpy: 1.22.4
+        scipy: 1.8.1
+       Cython: 0.29.30
+       pandas: 1.4.3
+   matplotlib: 3.5.2
+       joblib: 1.1.0
+threadpoolctl: 3.1.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+         prefix: libopenblas
+       filepath: C:\Users\leonce.mekinda\AppData\Local\Programs\Python\Python39\Lib\site-packages\numpy\.libs\libopenblas.EL2C6PLE4ZYW3ECEVIV3OXXGRN2NRFM2.gfortran-win_amd64.dll
+        version: 0.3.18
+threading_layer: pthreads
+   architecture: Haswell
+    num_threads: 12
+
+       user_api: openmp
+   internal_api: openmp
+         prefix: vcomp
+       filepath: C:\Users\leonce.mekinda\AppData\Local\Programs\Python\Python39\Lib\site-packages\sklearn\.libs\vcomp140.dll
+        version: None
+    num_threads: 12
+
+       user_api: blas
+   internal_api: openblas
+         prefix: libopenblas
+       filepath: C:\Users\leonce.mekinda\AppData\Local\Programs\Python\Python39\Lib\site-packages\scipy\.libs\libopenblas.XWYDX2IKJW2NMTWSFYNGFUWKQU3LYTCZ.gfortran-win_amd64.dll
+        version: 0.3.17
+threading_layer: pthreads
+   architecture: Haswell
+    num_threads: 12
+```
+","2024-12-02T01:02:22Z","open","Bug,Numerical Stability","TRUE"
+"scikit-learn","31659","https://github.com/scikit-learn/scikit-learn/issues/31659","Metadata not routed to transformers in pipeline during cross validation.","### Describe the bug
+
+When using a pipeline with transformers in combination with cross validation, it seems that metadata is not correctly routed to the transformers during prediction. I would expect, that if `set_transform_request` is set, that this is honored when calling predict on the pipeline.
+
+**Edit:** At least according to the code this is a known limitation. Although I couldn't find an issue tracking the progress on this.
+https://github.com/scikit-learn/scikit-learn/blob/9028b518e7a906a806a1dc8994f2714cc980c941/sklearn/model_selection/_validation.py#L362C1-L367C14
+
+### Steps/Code to Reproduce
+
+```python
+import sklearn
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import make_regression
+from sklearn.base import TransformerMixin, _MetadataRequester
+from sklearn.model_selection import cross_validate
+
+print(sklearn.__version__)
+
+sklearn.set_config(enable_metadata_routing=True)
+
+
+class DummyTransfomerWithMetadata(TransformerMixin, _MetadataRequester):
+
+    def fit(self, X, y=None, metadata=None):
+        return self
+
+    def transform(self, X, y=None, metadata=None):
+        print(f""Received {metadata=}"")
+        return X
+
+    # We need to explicitly implement fit_transform,
+    # otherwise transform will not receive metadata during fit
+    def fit_transform(self, X, y=None, metadata=None):
+        return self.transform(X, y, metadata)
+
+
+X, y = make_regression()
+
+transformer = DummyTransfomerWithMetadata()
+transformer.set_fit_request(metadata=True)
+transformer.set_transform_request(metadata=True)
+
+
+pipe = Pipeline([
+    (""transformer"", transformer),
+    (""clf"", LinearRegression())
+])
+
+
+print(f""--- Cross validation ---"")
+cross_validate(
+    pipe, X, y, params={""metadata"": ""Some metadata""}, cv=2
+)
+```
+
+### Expected Results
+
+```
+1.7.0
+--- Cross validation ---
+Received metadata='Some metadata'   # Fit 
+Received metadata='Some metadata'   # Predict
+Received metadata='Some metadata'
+Received metadata='Some metadata'
+```
+
+### Actual Results
+
+```
+1.7.0
+--- Cross validation ---
+Received metadata='Some metadata'
+Received metadata=None
+Received metadata='Some metadata'
+Received metadata=None
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.12.9 (main, Feb 12 2025, 14:50:50) [Clang 19.1.6 ]
+executable: /home/max/.cache/uv/archive-v0/unVsgMut5oyZJu14JLk-G/bin/python
+   machine: Linux-6.1.138-1-MANJARO-x86_64-with-glibc2.41
+
+Python dependencies:
+      sklearn: 1.7.0
+          pip: None
+   setuptools: None
+        numpy: 2.3.1
+        scipy: 1.16.0
+       Cython: None
+       pandas: None
+   matplotlib: None
+       joblib: 1.5.1
+threadpoolctl: 3.6.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 12
+         prefix: libscipy_openblas
+       filepath: /home/max/.cache/uv/archive-v0/unVsgMut5oyZJu14JLk-G/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-56d6093b.so
+        version: 0.3.29
+threading_layer: pthreads
+   architecture: Haswell
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 12
+         prefix: libscipy_openblas
+       filepath: /home/max/.cache/uv/archive-v0/unVsgMut5oyZJu14JLk-G/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-68440149.so
+        version: 0.3.28
+threading_layer: pthreads
+   architecture: Haswell
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 12
+         prefix: libgomp
+       filepath: /home/max/.cache/uv/archive-v0/unVsgMut5oyZJu14JLk-G/lib/python3.12/site-packages/scikit_learn.libs/libgomp-a34b3233.so.1.0.0
+        version: None
+```","2025-06-25T11:47:15Z","open","Bug,Metadata Routing","TRUE"
+"scikit-learn","32718","https://github.com/scikit-learn/scikit-learn/issues/32718","BUG: trees: `criterion=""friedman_mse""` is buggy for multi-output","### Describe the bug
+
+The calculation implemented in `FriedmanMSE.proxy_impurity_improvement` is plain wrong for the multi-output case.
+
+When reading the code, it's fairly obvious that outputs are mixed in a way that doesn't mathematically make sense.
+
+**Note:** I open this issue just for the records, as `""friedman_mse""` will be removed anyway (see #32700 )
+
+### Steps/Code to Reproduce
+
+```Python
+import numpy as np
+from sklearn.tree import DecisionTreeRegressor, plot_tree
+
+X = [[1], [2], [3], [4]]
+y = np.array([
+    [1, -1],
+    [1, -1],
+    [0, 0],
+    [0, 0]
+])
+
+tree = DecisionTreeRegressor(criterion=""friedman_mse"")
+tree.fit(X, y)
+plot_tree(tree);
+```
+
+### Expected Results
+
+Split in the middle (x <= 2.5), reducing the error to 0 in one split.
+
+### Actual Results
+
+non-optimal split:
+
+<img width=""515"" height=""389"" alt=""Image"" src=""https://github.com/user-attachments/assets/7d42c1b5-0647-4b46-b5f5-9daa3b550247"" />
+
+### Versions
+
+```shell
+System:
+    python: 3.12.11 (main, Aug 18 2025, 19:19:11) [Clang 20.1.4 ]
+executable: [/home/arthur/dev-perso/scikit-learn/sklearn-env/bin/python](https://file+.vscode-resource.vscode-cdn.net/home/arthur/dev-perso/scikit-learn/sklearn-env/bin/python)
+   machine: Linux-6.14.0-35-generic-x86_64-with-glibc2.39
+
+Python dependencies:
+      sklearn: 1.8.dev0
+          pip: None
+   setuptools: 80.9.0
+        numpy: 2.3.4
+        scipy: 1.16.2
+       Cython: 3.1.5
+       pandas: 2.3.3
+   matplotlib: 3.10.7
+       joblib: 1.5.2
+threadpoolctl: 3.6.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 16
+         prefix: libscipy_openblas
+       filepath: [/home/arthur/dev-perso/scikit-learn/sklearn-env/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-8fb3d286.so](https://file+.vscode-resource.vscode-cdn.net/home/arthur/dev-perso/scikit-learn/sklearn-env/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-8fb3d286.so)
+        version: 0.3.30
+threading_layer: pthreads
+   architecture: Haswell
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 16
+         prefix: libscipy_openblas
+       filepath: [/home/arthur/dev-perso/scikit-learn/sklearn-env/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-b75cc656.so](https://file+.vscode-resource.vscode-cdn.net/home/arthur/dev-perso/scikit-learn/sklearn-env/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-b75cc656.so)
+        version: 0.3.29.dev
+threading_layer: pthreads
+   architecture: Haswell
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 16
+         prefix: libgomp
+       filepath: [/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0](https://file+.vscode-resource.vscode-cdn.net/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+        version: None
+```","2025-11-15T12:49:20Z","closed","Bug","TRUE"
+"scikit-learn","33174","https://github.com/scikit-learn/scikit-learn/issues/33174","Automatic main lock-file update fails for debian-32 build","I can reproduce locally, no clue where this is coming from:
+```
+python build_tools/update_environments_and_lock_files.py --select-build debian_32 -vvv
+```
+
+[build log](https://github.com/scikit-learn/scikit-learn/actions/runs/21578510209/job/62170869669)
+```
+Traceback (most recent call last):
+  File ""/home/runner/work/scikit-learn/scikit-learn/build_tools/update_environments_and_lock_files.py"", line 792, in <module>
+    main()
+    ~~~~^^
+  File ""/usr/share/miniconda/lib/python3.13/site-packages/click/core.py"", line 1442, in __call__
+    return self.main(*args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File ""/usr/share/miniconda/lib/python3.13/site-packages/click/core.py"", line 1363, in main
+    rv = self.invoke(ctx)
+  File ""/usr/share/miniconda/lib/python3.13/site-packages/click/core.py"", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/share/miniconda/lib/python3.13/site-packages/click/core.py"", line 794, in invoke
+    return callback(*args, **kwargs)
+  File ""/home/runner/work/scikit-learn/scikit-learn/build_tools/update_environments_and_lock_files.py"", line 788, in main
+    write_all_pip_lock_files(filtered_pip_build_metadata_list)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/runner/work/scikit-learn/scikit-learn/build_tools/update_environments_and_lock_files.py"", line 672, in write_all_pip_lock_files
+    write_pip_lock_file(build_metadata)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File ""/home/runner/work/scikit-learn/scikit-learn/build_tools/update_environments_and_lock_files.py"", line 666, in write_pip_lock_file
+    pip_compile(pip_compile_path, requirement_path, lock_file_path)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/runner/work/scikit-learn/scikit-learn/build_tools/update_environments_and_lock_files.py"", line 621, in pip_compile
+    execute_command(
+    ~~~~~~~~~~~~~~~^
+        [
+        ^
+    ...<5 lines>...
+        ]
+        ^
+    )
+    ^
+  File ""/home/runner/work/scikit-learn/scikit-learn/build_tools/update_environments_and_lock_files.py"", line 476, in execute_command
+    raise RuntimeError(
+    ...<5 lines>...
+    )
+RuntimeError: Command exited with non-zero exit code.
+Exit code: 1
+Command:
+/usr/share/miniconda/envs/pip-tools-python3.12.5/bin/pip-compile --upgrade build_tools/azure/debian_32bit_requirements.txt -o build_tools/azure/debian_32bit_lock.txt
+stdout:
+
+stderr:
+Traceback (most recent call last):
+  File ""/usr/share/miniconda/envs/pip-tools-python3.12.5/bin/pip-compile"", line 10, in <module>
+    sys.exit(cli())
+             ^^^^^
+  File ""/usr/share/miniconda/envs/pip-tools-python3.12.5/lib/python3.12/site-packages/click/core.py"", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/share/miniconda/envs/pip-tools-python3.12.5/lib/python3.12/site-packages/click/core.py"", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File ""/usr/share/miniconda/envs/pip-tools-python3.12.5/lib/python3.12/site-packages/click/core.py"", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/share/miniconda/envs/pip-tools-python3.12.5/lib/python3.12/site-packages/click/core.py"", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/share/miniconda/envs/pip-tools-python3.12.5/lib/python3.12/site-packages/click/decorators.py"", line 34, in new_func
+    return f(get_current_context(), *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/share/miniconda/envs/pip-tools-python3.12.5/lib/python3.12/site-packages/piptools/scripts/compile.py"", line 475, in cli
+    prereleases=repository.finder.allow_all_prereleases or pre,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PackageFinder' object has no attribute 'allow_all_prereleases'
+```
+
+cc @AnneBeyer if you want to have a closer look 🙏.","2026-02-02T08:38:01Z","closed","Bug,Build / CI","TRUE"
+"scikit-learn","34003","https://github.com/scikit-learn/scikit-learn/issues/34003","Array API: Ridge with alpha as an array fails due to misconfigured checks","### Describe the bug and give evidence about its user-facing impact
+
+When trying to fit a ridge model with the array API on multi target objective, if one want to pass an array for alpha, the checks are not well configured I think, leading to an impossibility.
+Here is a small reproducer.
+
+### Steps/Code to Reproduce
+
+```python
+import os
+os.environ[""SCIPY_ARRAY_API""] = ""1""
+
+import torch
+
+from sklearn import config_context
+from sklearn.linear_model import Ridge
+from sklearn.datasets import make_regression
+
+X, y = make_regression(1000, n_targets=10)
+with config_context(array_api_dispatch=True):
+    # will consider that alpha is scalar in `_ridge_regression`
+    # and fail the check_scalar check l.703
+    reg = Ridge(alpha=np.array([1.]*10))
+    reg.fit(torch.tensor(X), torch.tensor(y))
+
+     # Will fail on `_validate_params` from the base estimator class
+    reg = Ridge(alpha=torch.tensor([1.]*10))
+    reg.fit(torch.tensor(X), torch.tensor(y))
+```
+
+### Expected Results
+
+Working with both cases :)
+
+### Actual Results
+
+raise errors:
+
+- for np.array
+```python-traceback
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+Cell In[4], line 13
+     11 with config_context(array_api_dispatch=True):
+     12     reg = Ridge(alpha=np.array([1.]*10))
+---> 13     reg.fit(torch.tensor(X), torch.tensor(y))
+     15     reg = Ridge(alpha=torch.tensor([1.]*10))
+     16     reg.fit(torch.tensor(X), torch.tensor(y))
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/base.py:1336, in _fit_context.<locals>.decorator.<locals>.wrapper(estimator, *args, **kwargs)
+   1329     estimator._validate_params()
+   1331 with config_context(
+   1332     skip_parameter_validation=(
+   1333         prefer_skip_nested_validation or global_skip_validation
+   1334     )
+   1335 ):
+-> 1336     return fit_method(estimator, *args, **kwargs)
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/linear_model/_ridge.py:1264, in Ridge.fit(self, X, y, sample_weight)
+   1253 xp, _ = get_namespace(X, y, sample_weight)
+   1254 X, y = validate_data(
+   1255     self,
+   1256     X,
+   (...)   1262     y_numeric=True,
+   1263 )
+-> 1264 return super().fit(X, y, sample_weight=sample_weight)
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/linear_model/_ridge.py:1006, in _BaseRidge.fit(self, X, y, sample_weight)
+   1002     else:
+   1003         # for dense matrices or when intercept is set to 0
+   1004         params = {}
+-> 1006     self.coef_, self.n_iter_, self.solver_ = _ridge_regression(
+   1007         X,
+   1008         y,
+   1009         alpha=self.alpha,
+   1010         sample_weight=sample_weight,
+   1011         max_iter=self.max_iter,
+   1012         tol=self.tol,
+   1013         solver=solver,
+   1014         positive=self.positive,
+   1015         random_state=self.random_state,
+   1016         return_n_iter=True,
+   1017         return_intercept=False,
+   1018         return_solver=True,
+   1019         check_input=False,
+   1020         fit_intercept=self.fit_intercept,
+   1021         **params,
+   1022     )
+   1023     self._set_intercept(X_offset, y_offset, X_scale)
+   1025 return self
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/linear_model/_ridge.py:704, in _ridge_regression(X, y, alpha, sample_weight, solver, max_iter, tol, verbose, positive, random_state, return_n_iter, return_intercept, return_solver, X_scale, X_offset, check_input, fit_intercept)
+    701 # Some callers of this method might pass alpha as single
+    702 # element array which already has been validated.
+    703 if alpha is not None and not isinstance(alpha, type(xp.asarray([0.0]))):
+--> 704     alpha = check_scalar(
+    705         alpha,
+    706         ""alpha"",
+    707         target_type=numbers.Real,
+    708         min_val=0.0,
+    709         include_boundaries=""left"",
+    710     )
+    712 # There should be either 1 or n_targets penalties
+    713 alpha = _ravel(xp.asarray(alpha, device=device_, dtype=X.dtype), xp=xp)
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/utils/validation.py:1861, in check_scalar(x, name, target_type, min_val, max_val, include_boundaries)
+   1858     else:
+   1859         target_type_str = type_name(target_type)
+-> 1861     raise TypeError(
+   1862         f""{name} must be an instance of {target_type_str}, not""
+   1863         f"" {type(x).__qualname__}.""
+   1864     )
+   1866 expected_include_boundaries = (""left"", ""right"", ""both"", ""neither"")
+   1867 if include_boundaries not in expected_include_boundaries:
+
+TypeError: alpha must be an instance of float, not ndarray.
+```
+
+- for torch.tensor
+```python-traceback
+---------------------------------------------------------------------------
+InvalidParameterError                     Traceback (most recent call last)
+Cell In[2], line 13
+     11 with config_context(array_api_dispatch=True):
+     12     reg = Ridge(alpha=torch.tensor([1.]*10))
+---> 13     reg.fit(torch.tensor(X), torch.tensor(y))
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/base.py:1329, in _fit_context.<locals>.decorator.<locals>.wrapper(estimator, *args, **kwargs)
+   1324 partial_fit_and_fitted = (
+   1325     fit_method.__name__ == ""partial_fit"" and _is_fitted(estimator)
+   1326 )
+   1328 if not global_skip_validation and not partial_fit_and_fitted:
+-> 1329     estimator._validate_params()
+   1331 with config_context(
+   1332     skip_parameter_validation=(
+   1333         prefer_skip_nested_validation or global_skip_validation
+   1334     )
+   1335 ):
+   1336     return fit_method(estimator, *args, **kwargs)
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/base.py:492, in BaseEstimator._validate_params(self)
+    484 def _validate_params(self):
+    485     """"""Validate types and values of constructor parameters
+    486 
+    487     The expected type and values must be defined in the `_parameter_constraints`
+   (...)    490     accepted constraints.
+    491     """"""
+--> 492     validate_parameter_constraints(
+    493         self._parameter_constraints,
+    494         self.get_params(deep=False),
+    495         caller_name=self.__class__.__name__,
+    496     )
+
+File ~/.local/miniconda/lib/python3.12/site-packages/sklearn/utils/_param_validation.py:98, in validate_parameter_constraints(parameter_constraints, params, caller_name)
+     92 else:
+     93     constraints_str = (
+     94         f""{', '.join([str(c) for c in constraints[:-1]])} or""
+     95         f"" {constraints[-1]}""
+     96     )
+---> 98 raise InvalidParameterError(
+     99     f""The {param_name!r} parameter of {caller_name} must be""
+    100     f"" {constraints_str}. Got {param_val!r} instead.""
+    101 )
+
+InvalidParameterError: The 'alpha' parameter of Ridge must be a float in the range [0.0, inf) or an instance of 'numpy.ndarray'. Got tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) instead.
+```
+
+### Versions
+
+```shell
+1.8.0
+```
+
+### Interest in fixing the bug
+
+might be if I have time.","2026-05-12T15:47:14Z","closed","Bug,Array API","TRUE"
+"scikit-learn","34005","https://github.com/scikit-learn/scikit-learn/issues/34005","Using dask distributed with a pipeline and column_transformer breaks metadata routing","### Describe the bug and give evidence about its user-facing impact
+
+when using a pipeline with a columns transformer, using the pipeline in a distributed environment seems to raise a strange error.
+
+### Steps/Code to Reproduce
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.compose import make_column_transformer
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler, QuantileTransformer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+
+X, y = make_classification()
+
+pipeline = make_pipeline(
+    make_column_transformer(
+        (StandardScaler(), [0]),
+    ),
+    # StandardScaler(),
+    RandomForestClassifier(
+        max_depth=7, n_estimators=300, random_state=42
+    )
+)
+pipeline
+
+cv_results = cross_val_score(pipeline, X, y, cv=5, n_jobs=1)
+print(""CV score:"", np.mean(cv_results))
+
+from distributed import Client
+from joblib import parallel_config
+
+client = Client()
+
+with parallel_config(""dask""):
+    cv_scores = cross_val_score(pipeline, X, y, cv=5, n_jobs=-1)
+
+print(""CV score:"", np.mean(cv_scores))
+client.close()
+```
+
+### Expected Results
+
+CV score: 0.8300000000000001
+CV score: 0.8300000000000001
+
+### Actual Results
+
+CV score: 0.8300000000000001
+  warnings.warn(
+/home/tom/Work/prog/scikit-learn/sklearn/model_selection/_validation.py:944: UserWarning: Scoring failed. The score on this train-test partition for these parameters will be set to nan. Details: 
+joblib.externals.loky.process_executor._RemoteTraceback: 
+""""""
+Traceback (most recent call last):
+  File ""/home/tom/Work/prog/joblib/joblib/_utils.py"", line 109, in __call__
+    return self.func(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/joblib/joblib/_dask.py"", line 128, in __call__
+    results.append(func(*args, **kwargs))
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/utils/parallel.py"", line 184, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/pipeline.py"", line 1486, in _transform_one
+    res = transformer.transform(X, **params.transform)
+                                     ^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'transform'
+""""""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/metrics/_scorer.py"", line 170, in __call__
+    score = scorer(estimator, *args, **routed_params.get(name).score)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/metrics/_scorer.py"", line 485, in __call__
+    return estimator.score(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/pipeline.py"", line 1138, in score
+    Xt = transform.transform(Xt)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/utils/_set_output.py"", line 334, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/compose/_column_transformer.py"", line 1079, in transform
+    Xs = self._call_func_on_transformers(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/compose/_column_transformer.py"", line 889, in _call_func_on_transformers
+    return Parallel(n_jobs=self.n_jobs)(jobs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/scikit-learn/sklearn/utils/parallel.py"", line 91, in __call__
+    return super().__call__(iterable_with_config_and_warning_filters)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/joblib/joblib/parallel.py"", line 2094, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/joblib/joblib/parallel.py"", line 1704, in _get_outputs
+    yield from self._retrieve()
+  File ""/home/tom/Work/prog/joblib/joblib/parallel.py"", line 1806, in _retrieve
+    self._raise_error_fast()
+  File ""/home/tom/Work/prog/joblib/joblib/parallel.py"", line 1881, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File ""/home/tom/Work/prog/joblib/joblib/parallel.py"", line 780, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/tom/Work/prog/joblib/joblib/parallel.py"", line 795, in _return_or_raise
+    raise self._result
+AttributeError: 'dict' object has no attribute 'transform'
+[...] x 5
+CV score: nan
+
+
+### Versions
+
+```shell
+1.8.0/1.9.dev0
+```
+
+### Interest in fixing the bug
+
+If times allow it.","2026-05-12T21:50:14Z","closed","Bug,Metadata Routing","TRUE"
+"vscode","319414","https://github.com/microsoft/vscode/issues/319414","VSCode won't let me rename a variable","Type: <b>Bug</b>
+
+1. Press F2 to rename a variable.
+
+# Expected Result
+
+I can rename a variable.
+
+# Actual Result
+
+A pop-up shows up, and the renaming action gets canceled.
+
+VS Code version: Code 1.122.1 (8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e, 2026-05-29T09:25:37+02:00)
+OS version: Linux x64 6.17.0-35-generic
+Modes:
+
+<details>
+<summary>System Info</summary>
+
+|Item|Value|
+|---|---|
+|CPUs|Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz (8 x 4499)|
+|GPU Status|2d_canvas: enabled<br>GPU0: VENDOR= 0x10de [Google Inc. (NVIDIA Corporation)], DEVICE=0x1c81 [ANGLE (NVIDIA Corporation, NVIDIA GeForce GTX 1050/PCIe/SSE2, OpenGL 4.5.0 NVIDIA 580.159.03)], DRIVER_VENDOR=Nvidia, DRIVER_VERSION=580.159.03 *ACTIVE*<br>Machine model name: <br>Machine model version: <br>direct_rendering_display_compositor: disabled_off_ok<br>gpu_compositing: enabled<br>multiple_raster_threads: enabled_on<br>opengl: enabled_on<br>rasterization: enabled<br>raw_draw: disabled_off_ok<br>skia_graphite: disabled_off<br>trees_in_viz: disabled_off<br>video_decode: enabled<br>video_encode: disabled_software<br>vulkan: disabled_off<br>webgl: enabled<br>webgl2: enabled<br>webgpu: disabled_off<br>webnn: disabled_off|
+|Load (avg)|0, 1, 1|
+|Memory (System)|31.28GB (20.48GB free)|
+|Process Argv|--crash-reporter-id 9746525a-a815-4ecc-8c8a-eb4404b733be|
+|Screen Reader|no|
+|VM|0%|
+|DESKTOP_SESSION|ubuntu|
+|XDG_CURRENT_DESKTOP|ubuntu:GNOME|
+|XDG_SESSION_DESKTOP|ubuntu|
+|XDG_SESSION_TYPE|x11|
+</details><details><summary>Extensions (57)</summary>
+
+Name|Identifier|Author|Version
+---|---|---|---
+Claude Code for VS Code|anthropic.claude-code|Anthropic|2.1.159
+ty|astral-sh.ty|astral-sh|2026.52.0
+Biome|biomejs.biome|biomejs|3.6.1
+Tailwind CSS IntelliSense|bradlc.vscode-tailwindcss|bradlc|0.14.29
+Ruff|charliermarsh.ruff|charliermarsh|2026.46.0
+ESLint|dbaeumer.vscode-eslint|dbaeumer|3.0.24
+axe Accessibility Linter|deque-systems.vscode-axe-linter|deque-systems|4.11.3
+Docker DX|docker.docker|docker|0.18.0
+GitLens — Git supercharged|eamodio.gitlens|eamodio|18.0.0
+EditorConfig|editorconfig.editorconfig|EditorConfig|0.18.2
+Figma for VS Code|figma.figma-vscode-extension|figma|0.4.4
+shell-format|foxundermoon.shell-format|foxundermoon|7.2.8
+GitHub Actions|github.vscode-github-actions|github|0.31.5
+GitHub Pull Requests|github.vscode-pull-request-github|GitHub|0.146.0
+Go|golang.go|golang|0.52.2
+Gemini CLI Companion|google.gemini-cli-vscode-ide-companion|google|0.20.0
+Gemini Code Assist|google.geminicodeassist|google|2.84.0
+Rainbow CSV|mechatroner.rainbow-csv|mechatroner|3.24.1
+Symbols|miguelsolorio.symbols|miguelsolorio|0.0.26
+shfmt|mkhl.shfmt|mkhl|1.5.2
+Container Tools|ms-azuretools.vscode-containers|ms-azuretools|2.4.5
+Docker|ms-azuretools.vscode-docker|ms-azuretools|2.0.0
+Playwright Test for VSCode|ms-playwright.playwright|ms-playwright|1.1.19
+Python Debugger|ms-python.debugpy|ms-python|2026.6.0
+Python|ms-python.python|ms-python|2026.4.0
+Pylance|ms-python.vscode-pylance|ms-python|2026.2.1
+Python Environments|ms-python.vscode-python-envs|ms-python|1.30.0
+Dev Containers|ms-vscode-remote.remote-containers|ms-vscode-remote|0.459.0
+WSL|ms-vscode-remote.remote-wsl|ms-vscode-remote|0.104.3
+C/C++|ms-vscode.cpptools|ms-vscode|1.32.2
+Makefile Tools|ms-vscode.makefile-tools|ms-vscode|0.12.17
+PowerShell|ms-vscode.powershell|ms-vscode|2025.4.0
+VS Code Speech|ms-vscode.vscode-speech|ms-vscode|0.16.0
+Oxc|oxc.oxc-vscode|oxc|1.57.0
+Emoji|perkovec.emoji|Perkovec|1.0.1
+Prisma|prisma.prisma|Prisma|31.11.0
+Language Support for Java(TM) by Red Hat|redhat.java|redhat|1.54.0
+Live Server|ritwickdey.liveserver|ritwickdey|5.7.10
+Prettier ESLint|rvest.vs-code-prettier-eslint|rvest|6.0.0
+Code Spell Checker|streetsidesoftware.code-spell-checker|streetsidesoftware|4.5.6
+Stylelint|stylelint.vscode-stylelint|stylelint|2.2.1
+audio-preview|sukumo28.wav-preview|sukumo28|2.6.0
+Even Better TOML|tamasfe.even-better-toml|tamasfe|0.21.2
+ShellCheck|timonwong.shellcheck|timonwong|0.39.5
+vscode-pdf|tomoki1207.pdf|tomoki1207|1.2.2
+MDX|unifiedjs.vscode-mdx|unifiedjs|1.8.17
+Error Lens|usernamehw.errorlens|usernamehw|3.28.0
+CodeLLDB|vadimcn.vscode-lldb|vadimcn|1.12.2
+Vitest|vitest.explorer|vitest|1.50.4
+Gradle for Java|vscjava.vscode-gradle|vscjava|3.17.3
+Debugger for Java|vscjava.vscode-java-debug|vscjava|0.59.0
+Extension Pack for Java|vscjava.vscode-java-pack|vscjava|0.31.0
+Test Runner for Java|vscjava.vscode-java-test|vscjava|0.45.0
+Maven for Java|vscjava.vscode-maven|vscjava|0.45.3
+Convert Case|xianjin.convert-case|XianJin|0.0.2
+MDX Preview|xyc.vscode-mdx-preview|xyc|0.3.3
+Pretty TypeScript Errors|yoavbls.pretty-ts-errors|YoavBls|0.8.7
+
+</details><details>
+<summary>A/B Experiments</summary>
+
+```
+vsliv368cf:30146710
+binariesv615:30325510
+nativeloc1:31344060
+dwcopilot:31170013
+dwoutputs:31242946
+copilot_t_ci:31333650
+e5gg6876:31282496
+pythonrdcb7:31342333
+6518g693:31463988
+aj953862:31281341
+82j33506:31327384
+63221493:31336333
+envsactivate1:31505457
+cloudbuttont:31379625
+42190218_ostrepl:31403339
+ec5jj548:31422691
+cp_cls_t_966_ss:31454198
+inlinechat_v2_hd992725:31505030
+4je02754:31466945
+c3h7c220:31478652
+38bie571_auto:31429954
+cp_cls_t_1081:31454832
+conptydll_true:31498968
+ia-use-proxy-models-svc:31452481
+e9c30283:31461165
+test_treatment2:31471001
+46204921:31447328
+control_6dc23131:31520950
+idci7584:31464702
+e3e4d672:31494082
+ei9d7968:31496641
+nes-extended-on:31455476
+chat:31457767
+8hig5102:31480529
+89g7j272:31518289
+7e187181:31503455
+i2gc6536:31499202
+52612955:31516516
+ghj88844:31499326
+ddid_t:31478206
+hmra_i5g22:31518061
+getcmakediagnosticson:31489824
+7df3h592:31512476
+pro_large_t:31499376
+cp_cls_t_1082:31516087
+logging_enabled_new:31498466
+db5d2638:31499441
+jb_cp_cls_c_632:31517842
+56dj4588:31512888
+32d76977:31512328
+ha629193:31508444
+nes-charagree-0:31521369
+31fi7170_t:31522396
+jh5f2457_c:31515489
+05755904:31523164
+61138546:31518536
+
+```
+
+</details>
+
+<!-- generated by issue reporter -->","2026-06-01T17:48:51Z","closed","bug,verified,rename,author-verification-requested,insiders-released","TRUE"
+"vscode","319769","https://github.com/microsoft/vscode/issues/319769","Can't use `#` for attachments in AHP","<!-- ⚠️⚠️ Do Not Delete This! feature_request_template ⚠️⚠️ -->
+<!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->
+<!-- Please search existing issues to avoid creating duplicates. -->
+
+<!-- Describe the feature you'd like. -->
+If I type `#` for a local AHP session, nothing happens.
+
+I can attach files via the `+` or selecting the file pill if I have a file open in the editor.","2026-06-03T15:54:05Z","closed","bug,verified,agent-host","TRUE"
+"vscode","319949","https://github.com/microsoft/vscode/issues/319949","[Error] unhandlederror-Cannot read properties of undefined (reading 'resource')","## Error Message
+````
+unhandlederror-Cannot read properties of undefined (reading 'resource')
+````
+
+## Stack Trace
+&nbsp;&nbsp;&nbsp;&nbsp;at GL._getValue ([./src/vs/workbench/contrib/chat/browser/chatEditing/chatEditingEditorAccessibility.ts:25:123](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/contrib/chat/browser/chatEditing/chatEditingEditorAccessibility.ts#L25))  
+&nbsp;&nbsp;&nbsp;&nbsp;at GL.handleEvent [as value] ([./src/vs/base/common/observableInternal/observables/observableFromEvent.ts:99:24](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/observableInternal/observables/observableFromEvent.ts#L99))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _._deliver ([./src/vs/base/common/event.ts:1364:12](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1364))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _._deliverQueue ([./src/vs/base/common/event.ts:1375:8](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1375))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _.fire ([./src/vs/base/common/event.ts:1399:8](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1399))  
+&nbsp;&nbsp;&nbsp;&nbsp;at Dge.doHandleActiveEditorChangeEvent ([./src/vs/workbench/services/editor/browser/editorService.ts:161:32](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/services/editor/browser/editorService.ts#L161))  
+&nbsp;&nbsp;&nbsp;&nbsp;at Dge.handleActiveEditorChange ([./src/vs/workbench/services/editor/browser/editorService.ts:151:7](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/services/editor/browser/editorService.ts#L151))  
+&nbsp;&nbsp;&nbsp;&nbsp;at Owe.value ([./src/vs/workbench/services/editor/browser/editorService.ts:105:81](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/services/editor/browser/editorService.ts#L105))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _._deliver ([./src/vs/base/common/event.ts:1364:12](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1364))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _._deliverQueue ([./src/vs/base/common/event.ts:1375:8](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1375))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _.fire ([./src/vs/base/common/event.ts:1399:8](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1399))  
+&nbsp;&nbsp;&nbsp;&nbsp;at Owe.value ([./src/vs/workbench/browser/parts/editor/editorParts.ts:284:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/browser/parts/editor/editorParts.ts#L284))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _._deliver ([./src/vs/base/common/event.ts:1364:12](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1364))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _._deliverQueue ([./src/vs/base/common/event.ts:1375:8](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1375))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _.fire ([./src/vs/base/common/event.ts:1399:8](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1399))  
+&nbsp;&nbsp;&nbsp;&nbsp;at bAe.doSetGroupActive ([./src/vs/workbench/browser/parts/editor/editorPart.ts:712:32](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/browser/parts/editor/editorPart.ts#L712))  
+&nbsp;&nbsp;&nbsp;&nbsp;at bAe.activateGroup ([./src/vs/workbench/browser/parts/editor/editorPart.ts:375:7](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/browser/parts/editor/editorPart.ts#L375))  
+&nbsp;&nbsp;&nbsp;&nbsp;at py.doOpenEditor ([./src/vs/workbench/browser/parts/editor/editorGroupView.ts:1246:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/browser/parts/editor/editorGroupView.ts#L1246))  
+&nbsp;&nbsp;&nbsp;&nbsp;at py.openEditor ([./src/vs/workbench/browser/parts/editor/editorGroupView.ts:1146:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/browser/parts/editor/editorGroupView.ts#L1146))  
+&nbsp;&nbsp;&nbsp;&nbsp;at s ([./src/vs/workbench/browser/parts/editor/multiEditorTabsControl.ts:932:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/browser/parts/editor/multiEditorTabsControl.ts#L932))
+
+<details>
+<summary>Raw Stack Trace (minified)</summary>
+
+````
+TypeError: Cannot read properties of undefined (reading 'resource')     at GL._getValue (out/vs/workbench/workbench.desktop.main.js:3328:83760)     at GL.handleEvent [as value] (out/vs/workbench/workbench.desktop.main.js:435:19643)     at _._deliver (out/vs/workbench/workbench.desktop.main.js:433:3269)     at _._deliverQueue (out/vs/workbench/workbench.desktop.main.js:433:3358)     at _.fire (out/vs/workbench/workbench.desktop.main.js:433:3693)     at Dge.doHandleActiveEditorChangeEvent (out/vs/workbench/workbench.desktop.main.js:1825:39875)     at Dge.handleActiveEditorChange (out/vs/workbench/workbench.desktop.main.js:1825:39686)     at Owe.value (out/vs/workbench/workbench.desktop.main.js:1825:38750)     at _._deliver (out/vs/workbench/workbench.desktop.main.js:433:3269)     at _._deliverQueue (out/vs/workbench/workbench.desktop.main.js:433:3358)     at _.fire (out/vs/workbench/workbench.desktop.main.js:433:3693)     at Owe.value (out/vs/workbench/workbench.desktop.main.js:1355:125481)     at _._deliver (out/vs/workbench/workbench.desktop.main.js:433:3269)     at _._deliverQueue (out/vs/workbench/workbench.desktop.main.js:433:3358)     at _.fire (out/vs/workbench/workbench.desktop.main.js:433:3693)     at bAe.doSetGroupActive (out/vs/workbench/workbench.desktop.main.js:1355:67727)     at bAe.activateGroup (out/vs/workbench/workbench.desktop.main.js:1355:63809)     at py.doOpenEditor (out/vs/workbench/workbench.desktop.main.js:1355:31238)     at py.openEditor (out/vs/workbench/workbench.desktop.main.js:1355:30002)     at s (out/vs/workbench/workbench.desktop.main.js:1247:60320)     at HTMLDivElement.<anonymous> (out/vs/workbench/workbench.desktop.main.js:1247:60526)
+````
+
+</details>
+
+## Details
+| Property | Value |
+| --- | --- |
+| Bucket ID | [`d91ca9d3-e8c2-2757-069b-3c940c909aa8`](https://errors.code.visualstudio.com/bucket/d91ca9d3-e8c2-2757-069b-3c940c909aa8?product=VSCode&extension=core&commit=6a44c352bd24569c417e530095901b649960f9f8) |
+| Version | 1.123.0 |
+| Commit | [`6a44c352`](https://insiders.vscode.dev/github/microsoft/vscode/tree/6a44c352bd24569c417e530095901b649960f9f8) |
+| Last Seen | Wed Jun 03 2026 23:59:25 GMT+0000 (Coordinated Universal Time) |
+| Platforms | Mac, Windows, Linux |
+| Product | VSCode |
+
+---
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-04T16:18:23Z","closed","bug,error-telemetry,insiders-released,recent-regression,stable-anomaly,ai-generated,ai-analyzed","TRUE"
+"vscode","320270","https://github.com/microsoft/vscode/issues/320270","Browser tools have trouble when page is in emulation mode","1. Open any page in the integrated browser -- e.g. https://code.visualstudio.com/
+2. Toggle device emulation and resize the page a bit
+3. Ask the agent to click something in the page
+4. 🐛 it often fails, with Playwright failing to find the correct element
+
+Possibly due to some incorrect coordinate logic when Playwright does actionability checks","2026-06-06T23:53:37Z","closed","bug,verified,insiders-released,browser-integration","TRUE"
+"vscode","320352","https://github.com/microsoft/vscode/issues/320352","Editor broken with error code -2147483645","
+Type: <b>Bug</b>
+
+Open anyone code file, chose anything and ctrl+c, open another file, input anything characters, the character showed with a bottom line, and then the editor will broken and a window shows something wrong with error code -2147483645.
+I've reinstalled the editor but the problem still exist.
+
+VS Code version: Code 1.123.0 (6a44c352bd24569c417e530095901b649960f9f8, 2026-06-03T11:29:03+02:00)
+OS version: Windows_NT x64 10.0.22621
+Modes:
+
+<details>
+<summary>System Info</summary>
+
+|Item|Value|
+|---|---|
+|CPUs|12th Gen Intel(R) Core(TM) i7-12700 (20 x 2112)|
+|GPU Status|2d_canvas: enabled<br>GPU0: VENDOR= 0x10de, DEVICE=0x2487 [NVIDIA GeForce RTX 3060], DRIVER_VENDOR=NVIDIA, DRIVER_VERSION=32.0.16.1047 *ACTIVE*<br>GPU1: VENDOR= 0x8086, DEVICE=0x4680 [Intel(R) UHD Graphics 770], DRIVER_VERSION=32.0.101.6129<br>GPU2: VENDOR= 0x8086, DEVICE=0x4680 [Intel(R) UHD Graphics 770], DRIVER_VERSION=32.0.101.6129<br>GPU3: VENDOR= 0x8086, DEVICE=0x4680 [Intel(R) UHD Graphics 770], DRIVER_VERSION=32.0.101.6129<br>GPU4: VENDOR= 0x1414, DEVICE=0x008c [Microsoft Basic Render Driver], DRIVER_VERSION=10.0.22621.5415<br>Machine model name: <br>Machine model version: <br>direct_rendering_display_compositor: disabled_off_ok<br>gpu_compositing: enabled<br>multiple_raster_threads: enabled_on<br>opengl: enabled_on<br>rasterization: enabled<br>raw_draw: disabled_off_ok<br>skia_graphite: disabled_off<br>trees_in_viz: disabled_off<br>video_decode: enabled<br>video_encode: enabled<br>webgl: enabled<br>webgpu: enabled<br>webnn: disabled_off|
+|Load (avg)|undefined|
+|Memory (System)|47.77GB (27.81GB free)|
+|Process Argv|--crash-reporter-id f9e38c2e-c26c-4368-987d-f046df328b6e|
+|Screen Reader|no|
+|VM|0%|
+</details><details><summary>Extensions (1)</summary>
+
+Name|Identifier|Author|Version
+---|---|---|---
+Chinese (Simplified) (简体中文) Language Pack for Visual Studio Code|ms-ceintl.vscode-language-pack-zh-hans|MS-CEINTL|1.123.2026060618
+
+</details><details>
+<summary>A/B Experiments</summary>
+
+```
+vsliv368cf:30146710
+binariesv615:30325510
+nativeloc1:31344060
+dwcopilot:31170013
+dwoutputs:31242946
+copilot_t_ci:31333650
+e5gg6876:31282496
+pythonrdcb7:31342333
+6518g693:31463988
+aj953862:31281341
+82j33506:31327384
+63221493:31336333
+envsdeactivate2:31505458
+cloudbuttont:31379625
+3efgi100_wstrepl:31403338
+ddidt:31399633
+ec5jj548:31422691
+cp_cls_t_966_ss:31526232
+inlinechat_v2_hd992725:31505030
+4je02754:31466945
+c3h7c220:31478652
+38bie571_auto:31426784
+cp_cls_t_1081:31454832
+conptydll_true:31498968
+ia-use-proxy-models-svc:31452481
+e9c30283:31461165
+test_treatment2:31471001
+46204921:31447328
+idci7584:31464702
+e3e4d672:31494082
+ei9d7968:31496641
+chat:31457767
+8hig5102:31480529
+89g7j272:31518289
+7e187181:31503455
+i2gc6536:31499202
+52612955:31516516
+ghj88844:31499326
+23c7c724:31520045
+ddid_t:31478206
+hmra_i5g22:31518061
+getcmakediagnosticson:31489824
+7df3h592:31512476
+cp_cls_t_1082:31516087
+logging_enabled_new:31498466
+db5d2638:31499441
+nes-extended-cfe-himalia-004:31500446
+jb_cp_cls_c_632:31524806
+56dj4588:31512888
+32d76977:31512328
+ha629193:31508444
+cdk-lw-on:31524445
+nes-charagree-3:31521372
+2cfga817_c:31522397
+jh5f2457_c:31515489
+95db8703:31523165
+61138546:31518536
+jf4hg949:31526829
+
+```
+
+</details>
+
+<!-- generated by issue reporter -->","2026-06-08T06:57:03Z","closed","bug,info-needed,editor-input","TRUE"
+"vscode","320442","https://github.com/microsoft/vscode/issues/320442","[Error] unhandlederror-Cannot read properties of undefined (reading 'cellInfo')","## Error Message
+````
+unhandlederror-Cannot read properties of undefined (reading 'cellInfo')
+````
+
+## Stack Trace
+&nbsp;&nbsp;&nbsp;&nbsp;at Owe.value ([./src/vs/workbench/contrib/notebook/browser/view/renderers/backLayerWebView.ts:647:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/contrib/notebook/browser/view/renderers/backLayerWebView.ts#L647))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _._deliver ([./src/vs/base/common/event.ts:1364:12](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1364))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _.fire ([./src/vs/base/common/event.ts:1395:8](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/base/common/event.ts#L1395))  
+&nbsp;&nbsp;&nbsp;&nbsp;at (anonymous) ([./src/vs/workbench/contrib/webview/browser/webviewElement.ts:212:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/contrib/webview/browser/webviewElement.ts#L212))  
+&nbsp;&nbsp;&nbsp;&nbsp;at handler ([./src/vs/workbench/contrib/webview/browser/webviewElement.ts:536:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/contrib/webview/browser/webviewElement.ts#L536))  
+&nbsp;&nbsp;&nbsp;&nbsp;at _messagePort.onmessage ([./src/vs/workbench/contrib/webview/browser/webviewElement.ts:536:0](https://github.com/microsoft/vscode/blob/6a44c352bd24569c417e530095901b649960f9f8/src/vs/workbench/contrib/webview/browser/webviewElement.ts#L536))
+
+<details>
+<summary>Raw Stack Trace (minified)</summary>
+
+````
+TypeError: Cannot read properties of undefined (reading 'cellInfo')     at Owe.value (out/vs/workbench/workbench.desktop.main.js:2305:2746)     at _._deliver (out/vs/workbench/workbench.desktop.main.js:433:3269)     at _.fire (out/vs/workbench/workbench.desktop.main.js:433:3588)     at out/vs/workbench/workbench.desktop.main.js:5405:17286     at out/vs/workbench/workbench.desktop.main.js:5405:23777     at Set.forEach (<anonymous>)     at _messagePort.onmessage (out/vs/workbench/workbench.desktop.main.js:5405:23766)
+````
+
+</details>
+
+## Details
+| Property | Value |
+| --- | --- |
+| Bucket ID | [`70d7571b-c134-e442-2f67-dff02617f470`](https://errors.code.visualstudio.com/bucket/70d7571b-c134-e442-2f67-dff02617f470?product=VSCode&extension=core&commit=6a44c352bd24569c417e530095901b649960f9f8) |
+| Version | 1.123.0 |
+| Commit | [`6a44c352`](https://insiders.vscode.dev/github/microsoft/vscode/tree/6a44c352bd24569c417e530095901b649960f9f8) |
+| Last Seen | Sun Jun 07 2026 23:49:30 GMT+0000 (Coordinated Universal Time) |
+| Platforms | Windows, Mac, Linux |
+| Product | VSCode |
+
+---
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-08T16:36:04Z","open","bug,error-telemetry,recent-regression,stable-anomaly,ai-generated,*fix","TRUE"
+"vscode","320537","https://github.com/microsoft/vscode/issues/320537","BYOK dialog shows up, despite being signed in","BYOK dialog shows up in Sessions Window, despite being signed in:
+
+<img width=""2028"" height=""1204"" alt=""Image"" src=""https://github.com/user-attachments/assets/9bf90bda-9d31-4309-a557-b386a208b40e"" />
+
+I used:
+`code-insiders --transient`
+on Windows.
+This was right after signing in. But it persists after reload windows. I've seen it where it only appears when switching when Copilot CLI to Copilot CLI (Local Agent Host)","2026-06-09T01:32:15Z","open","bug,model-byok,agents-window","TRUE"
+"vscode","320928","https://github.com/microsoft/vscode/issues/320928","Webview resource cache grows unboundedly: media-preview cache-busts with Date.now(), service worker never evicts (21+ GB observed)","<!-- ⚠️⚠️ Do Not Delete This! bug_report_template ⚠️⚠️ -->
+Does this issue occur when all extensions are disabled?: Yes
+(media-preview and the webview service worker are built-in, so `--disable-extensions` does not affect the leak.)
+
+- VS Code Version: 1.123.2 (commit 3c631b164c239e7aeaaae7c626b46c527b361af2, x64)
+- OS Version: Windows 11 Pro 10.0.26200 (also observed under WSL Remote – Ubuntu)
+
+## Summary
+
+`%APPDATA%\Code\WebStorage\<n>\CacheStorage` grew to **23.5 GB** on my machine.
+I parsed the Chromium simple-cache entry keys to find out why. The root cause is a
+combination of two pieces of built-in code:
+
+1. **media-preview cache-busts with the current time, not the file version.**
+   `extensions/media-preview/src/imagePreview/index.ts` (`getResourcePath`) appends
+   `?version=${Date.now()}` on **every render**. Every time an image is opened or
+   re-rendered, the URL is brand new — even if the file is unchanged.
+
+2. **The webview service worker caches every response and never evicts.**
+   `src/vs/workbench/contrib/webview/browser/pre/service-worker.js` does
+   `cache.put(event.request, ...)` for every 200 response with an ETag, keyed by the
+   full URL including the query string. The file contains no eviction, expiry, or
+   quota logic. The `activate` handler doesn't even delete caches from previous
+   `VERSION`s — my disk holds both `vscode-resource-cache-4` (2.09 GB) and
+   `vscode-resource-cache-5` (21.38 GB).
+
+Combined effect: **every view of an image permanently writes a full copy to disk**,
+and each copy is dead on arrival — the `Date.now()` query string guarantees no future
+request can ever hit it.
+
+## Evidence (from parsing the cache entry keys)
+
+My 21.38 GB cache origin contains 6,413 entries:
+
+- They map to only **1,947 unique files** (1,013 files cached ≥ 2 times).
+- The most-viewed image was cached **86 times within a single hour** (one evening,
+  up to 9 copies in one minute) — per-render, not per-modification.
+- In a sample of the 200 most-duplicated paths, **81% point to files that no longer
+  exist** on disk.
+- Zero video/audio entries: `<video>` uses Range requests (206), which the SW marks
+  `no-store` and the Cache API cannot store anyway. The leak therefore only bites
+  image-heavy workflows and grows slowly enough to evade detection — which is
+  presumably why earlier reports (#131226, #166632 [145 GB], #152519 [500 GB]) died
+  as ""cannot reproduce"" / stale.
+
+## Steps to Reproduce
+
+1. Note the size of `%APPDATA%\Code\WebStorage` (`du -sh ~/.config/Code/WebStorage` on Linux).
+2. Launch `code --disable-extensions` and open a large PNG (e.g. 20 MB) in the
+   built-in image preview.
+3. Close the tab and reopen the same file 10 times.
+4. The folder grows by ~10 × the image size. None of the new entries can ever be
+   read back (each was stored under a unique `?version=<timestamp>` URL), and they
+   are never cleaned up.
+
+## Expected
+
+Either of:
+- media-preview keys the cache-busting parameter on the file's mtime instead of
+  `Date.now()`, so unchanged files reuse one cache entry; and/or
+- the service worker evicts stale versions of the same base URL when caching a new
+  one, applies an LRU/size cap to `vscode-resource-cache-*`, and deletes
+  previous-`VERSION` caches on activate.
+
+## Related
+
+#131226 (closed as stale, ""needs repro""), #166632 (145 GB, closed as duplicate),
+#152519 (500 GB, closed as duplicate), #310384 (open, 30 GB via Remote-SSH — same
+mechanism; this report adds the root-cause analysis).
+","2026-06-11T09:30:51Z","open","bug,perf,perf-bloat","TRUE"
+"vscode","321049","https://github.com/microsoft/vscode/issues/321049","Switching between Copilot Chat Sessions Destroys associated Terminal Sessions","
+Type: <b>Bug</b>
+
+Switching between Copilot Chat Sessions Destroys associated agent triggered Terminal Sessions
+
+This is a blocker.  My primary workflow is now broken. if leaving a session results in the associated terminals being lost, my agents can't do their remote work.  And requires human interaction.
+
+This could be VSCode Integrated Terminal manager doing aggressive Garbage Collection.
+Copilot Chat: environment variables it adds, like copilot / copilot-debug
+VS Code Git: Git askpass and auth plumbing
+VS Code Terminal/Workbench: terminal GC, disposal, and session lifecycle
+
+Maybe Terminal garbage collection on agent sessions is too aggressive? 
+
+This is an absolute show stopper.
+
+Current version of VSCode shows this as well as the version i'm running here.
+
+VS Code version: Code 1.121.0 (f6cfa2ea2403534de03f069bdf160d06451ed282, 2026-05-19T11:51:53+02:00)
+OS version: Windows_NT x64 10.0.26200
+Modes:
+
+
+<!-- generated by issue reporter -->","2026-06-11T22:51:08Z","closed","bug,verified,insiders-released,chat-terminal","TRUE"
+"vscode","321441","https://github.com/microsoft/vscode/issues/321441","[Error] [GitHub.copilot-chat] unhandlederror-Failed to allocate memory","## Error Message
+````
+unhandlederror-Failed to allocate memory
+````
+
+## Stack Trace
+&nbsp;&nbsp;&nbsp;&nbsp;at createUnsafeBuffer (node:<REDACTED: user-file-path>:1104:25) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at Buffer.allocUnsafeSlow (node:buffer:466:10) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at createFromString (node:buffer:522:22) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at fromStringFast (node:buffer:500:12) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at fromString (node:buffer:537:51) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at Buffer.from (node:buffer:337:12) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at n.<anonymous> (../node_modules/applicationinsights/Library/Sender.ts:176:55)  
+&nbsp;&nbsp;&nbsp;&nbsp;at FileAccessControl (../node_modules/applicationinsights/Library/FileAccessControl.ts:8:13)  
+&nbsp;&nbsp;&nbsp;&nbsp;at FileAccessControl (../node_modules/applicationinsights/Library/FileAccessControl.ts:8:13)  
+&nbsp;&nbsp;&nbsp;&nbsp;at FileAccessControl (../node_modules/applicationinsights/Library/FileAccessControl.ts:8:13)  
+&nbsp;&nbsp;&nbsp;&nbsp;at FileAccessControl (../node_modules/applicationinsights/Library/FileAccessControl.ts:8:13)  
+&nbsp;&nbsp;&nbsp;&nbsp;at n.send (../node_modules/applicationinsights/Library/Sender.ts:115:94)  
+&nbsp;&nbsp;&nbsp;&nbsp;at n.triggerSend (../node_modules/applicationinsights/Library/Channel.ts:86:29)  
+&nbsp;&nbsp;&nbsp;&nbsp;at Timeout._onTimeout (../node_modules/applicationinsights/Library/Channel.ts:68:21)  
+&nbsp;&nbsp;&nbsp;&nbsp;at listOnTimeout (node:<REDACTED: user-file-path>:605:17) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at processTimers (node:<REDACTED: user-file-path>:541:7) [not deminified]
+
+<details>
+<summary>Raw Stack Trace (minified)</summary>
+
+````
+RangeError: Failed to allocate memory     at createUnsafeBuffer (node:<REDACTED: user-file-path>:1104:25)     at Buffer.allocUnsafeSlow (node:buffer:466:10)     at createFromString (node:buffer:522:22)     at fromStringFast (node:buffer:500:12)     at fromString (node:buffer:537:51)     at Buffer.from (node:buffer:337:12)     at n.<anonymous> (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:526:169)     at l (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:525:7540)     at Object.next (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:525:6823)     at <REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:525:6525     at new Promise (<anonymous>)     at drt (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:525:6322)     at n.send (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:525:9442)     at n.triggerSend (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:524:10976)     at Timeout._onTimeout (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:524:10739)     at listOnTimeout (node:<REDACTED: user-file-path>:605:17)     at processTimers (node:<REDACTED: user-file-path>:541:7)
+````
+
+</details>
+
+## Details
+| Property | Value |
+| --- | --- |
+| Bucket ID | [`d752b064-8531-6e2a-d9eb-181e0bd54d65`](https://errors.code.visualstudio.com/bucket/d752b064-8531-6e2a-d9eb-181e0bd54d65?product=VSCode&extension=GitHub.copilot-chat&commit=6928394f91b684055b873eecb8bc281365131f1c) |
+| Extension Version | 0.51.0 |
+| Last Seen | Sat Jun 13 2026 13:37:57 GMT+0000 (Coordinated Universal Time) |
+| Platforms | win32 |
+| Product | VSCode |
+
+---
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-15T16:38:20Z","open","bug,error-telemetry,recent-regression,extension,ai-generated,ai-analyzed","TRUE"
+"vscode","321729","https://github.com/microsoft/vscode/issues/321729","Workspace becomes invalid after running Copilot CLI","<!-- Please search existing issues to avoid creating duplicates -->
+<!-- Please attach logs to help us diagnose your issue -->
+
+- Copilot Chat Extension Version:GitHub Copilot Chat v0.52.0
+- VS Code Version:1.124.2
+- OS Version:Windows 11 24H2
+- Feature (e.g. agent/edit/ask mode):agent
+- Selected model (e.g. GPT 4.1, Claude 3.7 Sonnet):both
+
+Steps to Reproduce:
+
+1.Open workspace/folder
+2.Open agent windows.
+3.Start a new session.
+4.The document becomes grey and it shows that can't explain workspace folder (ENOPRO:No file system provider found for resource ""vscode-agent-host://wsl_ubuntu/file/-/home/kali"") in the classic window in wsl and unknown:/ ‘s file system provider is not available in both classic window and agent window in windows .
+
+Repro rate: always
+
+Develop tools output:
+ INFO [McpGateway][Workbench] Creating local gateway via main process
+sessions.desktop.main.js:sourcemap:442  INFO [McpGateway][Workbench] Local gateway created with 1 server(s)
+sessions.desktop.main.js:sourcemap:442   ERR CodeExpectedError: ENOPRO: 未找到资源 ""unknown:/.vscode/tasks.json"" 的文件系统提供程序
+    at ine.withProvider (sessions.desktop.main.js:sourcemap:3971:30144)
+    at async ine.doWatch (sessions.desktop.main.js:sourcemap:3971:42999)
+    at async sessions.desktop.main.js:sourcemap:3971:42689...
+
+windows:
+<img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/97a6ccf8-6312-4e2b-a16b-e794084abb39"" />
+
+<img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/bfc0038e-53bc-4d25-a155-8ddb9194a91b"" />
+
+<img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/9f2b1f32-7b44-4d14-a551-b5884f7da426"" />
+
+<img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/30b397c4-8a79-4860-af8c-334466534eca"" />
+
+wsl:
+<img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/30c28655-1d00-4a93-9803-035748bd1ba8"" />","2026-06-17T07:45:25Z","open","bug,agent-host","TRUE"
+"vscode","322051","https://github.com/microsoft/vscode/issues/322051","No credits spent shown when a request is stopped in Auto mode","No credits spent shown when a request is stopped.
+
+When a chat request is halted by the user, the chat does not show which model it chose in Auto mode, nor how many credits it spent.
+
+This is important, since I've seen models freeze or start thinking in a loop and i cannot see which model was the failing one, nor see how many credits it spent.
+
+
+<!-- Please search existing issues to avoid creating duplicates -->
+<!-- Please attach logs to help us diagnose your issue -->
+
+- Copilot Chat Extension Version: v0.53.0
+- VS Code Version: 1.125.0
+- OS Version: Windows_NT x64 10.0.26100 (Windows 11)
+- Feature (e.g. agent/edit/ask mode): Chat
+- Selected model (e.g. GPT 4.1, Claude 3.7 Sonnet): any
+- Logs:
+
+Steps to Reproduce:
+
+1. Write a chat request, question, whatever using Auto for model selection.
+2. Let it work for a little
+3. Press the stop button to halt thinking and text/code generation
+4. Look in the chat footnote for model and credits info, they are not there.
+
+","2026-06-19T07:31:11Z","open","bug,UBB","TRUE"
+"vscode","322174","https://github.com/microsoft/vscode/issues/322174","Noisy logs ""Closing/Hiding terminals""","Seeing many hundreds of log messages like this printed repeatedly. It doesn't make sense to me because I don't think that all of these sessions have terminals. How can a CCA agent have terminals?
+
+```
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/dc446e91-2a5d-4bba-882e-d34d0b712bff (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/77d5313c-4e11-4c26-bd2d-43f572682a05 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/f0cb5ec2-d33d-4e75-beba-6cf84887eeff (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/7a64b2fd-987a-4c91-8ccc-f7025d0e3b15 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/784f4cd9-8c68-45fb-9a71-8eb04b8f5100 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/7f0018d8-d380-420f-9608-c665b75192f9 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/715866d3-0d9f-483b-9b5c-1adf1b241d01 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/02cbde52-856b-41ad-91a5-b96b25a3f6f4 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/c60bb319-d692-4745-b892-cd07b35247b5 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/f6adf45d-eb78-4421-89f5-6f086a56f77c (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/0d590de7-249a-48e4-97dc-8fdee296339e (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/df85acba-3892-48d4-8f6f-27dac7d1f6bf (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/a83ae55c-bd9b-4f76-ab8c-209701c66265 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/6c343eb5-6342-4e9e-ba3d-462511d60c02 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/ef3c91c7-0ac0-4d41-b10d-8c3bc3b57f67 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/14f3e7c5-01b1-49b0-9fac-848cbd15dc13 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/af2dabcb-23c4-4007-ad0c-6a1d934c5fbd (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/baa10dfe-8bb2-4791-b2c5-fa16cd85d332 (session archived)
+2026-06-19 15:21:23.039 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/c69e6408-fd19-4faf-847d-ff9421194b6d (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/8862f88b-db2a-4e8b-84f3-f3c0d9be2582 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/1140f5fe-2226-491b-b198-1da99361468b (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/6a10c92d-5f0e-4a95-b674-1790100f28c3 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/f0bd2fe9-ed09-4b46-b918-7ac3a20edb29 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/d0443303-f359-4074-9d58-4de7c8c09113 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/500c0fe3-9477-4fe1-9817-4e7f8c4fec42 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/8aab3d9f-90c6-4afa-a1b5-50aa7bd3f5e3 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/93a4732c-b2d0-4b49-9961-12a23b4f8c2a (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/bbbf7cb1-97dd-4d59-b926-e0e09e23b363 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/18d12d54-6e55-45c1-8fe4-3a1a5a84a380 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/2bb98b4a-cbc3-46af-9609-636f8926cdab (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/4ee72f03-897d-4f3b-a8bd-6cc51a285faf (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/75ad31db-ce90-4aa6-a52c-96de8a369751 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/3520e366-c4f0-4595-a075-450138006511 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/4013bfe3-26d2-468b-9397-faed3c5058dc (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/b940d2b2-8ba7-4840-9241-2e9697667840 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/43b9e221-6f90-4376-b75e-7e2a57a3a9dc (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/4d51de6d-e612-4088-b3a6-ebc1979a445c (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/47d8291a-d66e-451e-babc-b2bc7ad4fb1c (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/f6f24212-c13a-41b8-b8eb-50867bb5a255 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/1ae8ceeb-7d9e-4500-aabd-ecabd9e32451 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/7b13bcee-c76e-40c9-b9c9-d7d421b98a47 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/32f09653-d2f4-4455-b65d-78e7150256a8 (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/b86601fc-0eb8-4d38-9314-2f91592395ea (session archived)
+2026-06-19 15:21:23.040 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/5fa025ed-8afe-4301-b0ef-46a7ff7a8549 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/b6c91ed8-f79d-418f-a4a5-ef93dfcb6edd (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/1bf23b0b-9f0d-476f-95d3-2e67e1a1a09b (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/fee0d0d2-204a-47bf-b396-493c4eb49cf0 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/41694f0e-e6fb-47a3-b518-0edea91b467c (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/4eb5d26a-fc8e-4674-a1e4-5d79f182b298 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/0adbd639-9fb7-4f35-a4de-1e1f3daf97e3 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/9dae6bff-ab69-43e3-8572-df0ec23c2773 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/12f0e187-6eca-48d3-ba53-d2615a22112b (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/1fab4366-d3a0-411d-8efc-37ad34a5ac0b (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/e7c433b7-c5ac-4964-8f6b-e068efbc657b (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/ff896be1-3aca-41cd-86f2-27d6c4e0bf49 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/182a0e40-6e1c-48ef-bb7c-492e20f5c57b (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/96737980-d48e-4e41-83b0-5a742e976eb5 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/1e0f4f80-d232-4553-9869-0f7c63fa9bea (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/d73ee645-0fef-45a0-b1c8-50e8e03f6d2b (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/ed623d52-fe2d-421a-814b-948f975f5397 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/7447b95b-d142-4a40-a7ab-ecca75030868 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/99b5adec-0622-4762-bab4-5e56686a7bfd (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/68c64ee1-0a3e-4400-82fe-96ede5b36294 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/a265ca84-aedf-436a-948b-ad79f0663f00 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/3972eaa4-0c04-440a-aec9-0fcbfd6b3f56 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/e6fad9f8-3929-434e-8950-c6818519f387 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/c6285b5a-412b-4134-a8c0-b46879558251 (session archived)
+2026-06-19 15:21:23.041 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/983fb1c8-3d22-49a0-87e5-eb7bf7792c34 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/4aa1227b-e930-4962-949c-aef98801bad7 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/38fb17d3-b938-4202-bfb3-b259ec9ac3fd (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/944c6bd9-457f-4a9d-9f2b-9917f8f26384 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/c1f0cac0-6c92-43cf-aa69-3c3862a70475 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/0b01b00a-4515-4d08-bdd6-2abcea384b3d (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/0ca406e0-ea2f-4f72-bcc1-faef17e6d117 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/29e248cd-a408-4baa-9a89-9c770416532a (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/f0be05e2-4ef8-41b3-abf8-1b6571512383 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/e97487d9-6abc-4751-b4d4-b98f77894089 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/9b05c9d6-aab4-4d9f-a9c4-9d545c59e470 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/7c9ba8cf-41c5-4bb0-928c-e07d5139d9ed (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/1e728048-0884-49b7-8fe6-30abac07743d (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/2a7030e7-05d5-42e9-84f8-5b289f8410c2 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/adf8bb85-92ec-4b7b-b2dd-8b9a0357eb6a (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/a4cf0ca9-be73-42e4-a1ba-9217e56a853b (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/74a05eb7-eacc-429d-b47c-5d056f4752c0 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/48fa5362-b12d-4152-98b6-88cce4afffdf (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/cb0c1739-8c29-4359-a799-4d618b075cfe (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/e3bfe095-f767-4011-be91-4dd7c3d1f857 (session archived)
+2026-06-19 15:21:23.042 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/ad148b02-29b7-458a-92d3-70e8da981a7a (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/22c21a88-7a28-4d01-82a0-e8f49bbe8554 (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/82414c90-3c49-40e1-ad24-0130d1f68202 (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/691cf8ec-aa3e-4d20-8850-67b3359d0916 (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/dacba266-6dfd-4d53-a475-5582306d2954 (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/14984d82-7253-4c80-b1ec-884543bbabb9 (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/e0b7b5c7-a367-4ea9-b273-c25762825249 (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/b2f10d71-5589-4f22-8b72-fbaa94166dc6 (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/ce4292bd-ba08-47aa-bb3c-133114f3ee4f (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/de8ace1c-a56e-4e32-8183-b501b40a74ba (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/be796a2d-16df-47b0-a4a1-1cc99853564a (session archived)
+2026-06-19 15:21:23.043 [info] [Window] [SessionsTerminal] Hiding terminals for session agenthost-ssh__macbook-air:remote-ssh__macbook-air-copilotcli:/0f4a617d-a66e-4679-affd-b584f9768bc9 (session archived)
+...
+2026-06-19 15:36:47.593 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/308921 (session removed)
+2026-06-19 15:36:47.593 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/4239 (session removed)
+2026-06-19 15:36:47.593 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/283973 (session removed)
+2026-06-19 15:36:47.593 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/29 (session removed)
+2026-06-19 15:36:47.593 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/28 (session removed)
+2026-06-19 15:36:47.593 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/289532 (session removed)
+2026-06-19 15:36:47.593 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/24 (session removed)
+2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/23 (session removed)
+2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/22 (session removed)
+2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/21 (session removed)
+2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/20 (session removed)
+2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/18 (session removed)
+2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/17 (session removed)
+2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/261134 (session removed)
+```","2026-06-19T22:48:04Z","closed","bug,debt,insiders-released","TRUE"
+"vscode","322280","https://github.com/microsoft/vscode/issues/322280","[Bug] Model Picker Configuration Not Persisted to `chatLanguageModels.json` — Third-Party Providers Cannot Receive User-Configured Model Settings","## Summary
+
+When a user adjusts model parameters (e.g. **Reasoning Effort**, **Context Size**, **Service Tier**) via the **Chat Model Picker dropdown**, the values are correctly persisted for the current chat editor, but third-party `LanguageModelChatProvider` extensions receive the previously persisted value from `chatLanguageModels.json` or the schema default — not the user-selected value — in `modelConfiguration` at request time. The user-visible settings do not flow into the API surface used by non-Copilot providers.
+
+---
+
+## Regression Window
+
+| Item | Detail |
+|---|---|
+| **Last Known Good** | VS Code **1.124.2** (2026-06-10) |
+| **First Known Bad** | VS Code **1.125.0** (2026-06-17) — also **1.125.1** |
+| **Root Cause PR** | [#321011](https://github.com/microsoft/vscode/pull/321011) — *Fix model configurations syncing across editors and locations* |
+| **Underlying Issue** | [#320393](https://github.com/microsoft/vscode/issues/320393) — *Context length selector changes on all open editors* |
+| **Milestone** | [1.125.0](https://github.com/microsoft/vscode/milestone/424) |
+| **Files Changed** | `+725 / −58` across ~8 files |
+
+### What the PR Did
+
+PR [#321011](https://github.com/microsoft/vscode/pull/321011) introduced **per-editor scoped model configuration** to fix a bug where changing context size in one editor affected all other open editors. The key additions were:
+
+- **`chatModelConfigurationStore.ts`** — Per-editor `IStorageService` bucket (resolves per `(location, sessionType)` key)
+- **`chatModelConfigurationLogic.ts`** — Resolution logic: `resolveModelConfiguration()`, `computeStoredConfiguration()`, `filterConfigurationToSchema()`, `extractSchemaDefaults()`
+- **`modelPickerActionItem.ts`** — `IModelConfigurationAccess` interface (read/write/actions contract)
+- **Modifications to `chatInputPart.ts`** — Routes model picker reads/writes through `ChatModelConfigurationStore`
+- **Modifications to `chatService.ts` / `chatServiceImpl.ts`** — Passes `userSelectedModelConfiguration` through to requests
+- **Modifications to `languageModels.ts`** — Extracted `createModelConfigurationActions()` helper
+
+### What Broke
+
+Before 1.125.0, model picker wrote configuration **directly** via `LanguageModelsService.setModelConfiguration()` → both the global `_modelConfigurations` Map and `chatLanguageModels.json`. After the change, the primary write targets the per-editor `IStorageService` bucket, and only *mirrors* to the global service as a secondary operation. The mirror write (`ChatModelConfigurationStore.setModelConfiguration()` → `LanguageModelsService.setModelConfiguration()`) has a **hidden dependency**: it requires the model's metadata to already exist in `_modelCache`. When `_modelCache` is not yet populated (e.g. provider registered asynchronously), `setModelConfiguration()` silently exits without writing anything.
+
+| | **1.124.2 (Good)** | **1.125.0 (Bad)** |
+|---|---|---|
+| **Primary write** | `LanguageModelsService.setModelConfiguration()` | `ChatModelConfigurationStore._applyLocalModelConfiguration()` → per-editor bucket |
+| **Global mirror** | N/A (it was the primary) | `LanguageModelsService.setModelConfiguration()` → ⚠️ depends on `_modelCache` hit |
+| **Copilot reads** | `ChatRequest.modelConfiguration` ← ChatInputPart | `ChatRequest.modelConfiguration` ← `ChatModelConfigurationStore` ✅ |
+| **3rd-party provider reads** | `ProvideLanguageModelChatResponseOptions.modelConfiguration` ← `_modelConfigurations` ✅ | Same path, but `_modelConfigurations` may be empty ⚠️ |
+
+---
+
+## Environment
+
+- **VS Code Version**: ≥ 1.125.0 (Insiders / Stable)
+- **OS**: All platforms
+- **Affected APIs**: `vscode.lm.registerLanguageModelChatProvider` / `LanguageModelChatProvider`
+
+---
+
+## Root Cause Analysis
+
+### The Silent Failure Path
+
+| | **Channel ①: Per-Editor Bucket** | **Channel ②: Global `_modelConfigurations`** | **Channel ③: `chatLanguageModels.json`** |
+|---|---|---|---|
+| **Storage** | `IStorageService` KV store | In-memory `Map<string, IStringDictionary>` | Filesystem JSON |
+| **Written by** | `ChatModelConfigurationStore._applyLocalModelConfiguration()` | `LanguageModelsService.setModelConfiguration()` | `LanguageModelsConfigurationService` |
+| **Write reliability** | ✅ Always succeeds | ⚠️ Depends on `_modelCache` hit | ⚠️ Depends on Channel ② |
+| **Read by Copilot** | ✅ `userSelectedModelConfiguration` | ❌ Not used | ❌ Not used |
+| **Read by 3rd-party LM providers** | ❌ Not accessible | ✅ `getModelConfiguration()` | ❌ Not read directly |
+
+### The Silent Failure
+
+The critical issue is in [`LanguageModelsService.setModelConfiguration()`](https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/chat/common/languageModels.ts):
+
+```typescript
+async setModelConfiguration(modelId: string, values: IStringDictionary<unknown>): Promise<void> {
+    const metadata = this._modelCache.get(modelId);
+    if (!metadata) {
+        return;  // ⚠️ SILENT RETURN — no write, no error, no warning!
+    }
+    // ...
+    // 1. Update _modelConfigurations (in-memory)
+    // 2. Write to chatLanguageModels.json
+    // 3. Fire onDidChangeLanguageModels event
+}
+```
+
+When `_modelCache` does not contain the model metadata (e.g., because the extension provider registered asynchronously and the cache was not yet populated, or was cleared during model re-resolution), the method **silently exits** without:
+- Updating `_modelConfigurations` (the cache from which third-party providers read)  
+- Writing to `chatLanguageModels.json`  
+- Throwing or logging any error  
+
+### Why Copilot Is Unaffected
+
+Copilot participates via the `ChatParticipant` API. Its request path receives configuration through `ChatRequest.modelConfiguration`, which is sourced from `ChatInputPart.getModelConfiguration()` → `ChatModelConfigurationStore.getModelConfiguration()` — the **per-editor bucket (Channel ①)**:
+
+```typescript
+// chatServiceImpl.ts
+modelConfiguration: options?.userSelectedModelConfiguration
+    ?? (options?.userSelectedModelId
+        ? this.languageModelsService.getModelConfiguration(options.userSelectedModelId)
+        : undefined),
+```
+
+The primary value comes from `userSelectedModelConfiguration` (Channel ①), which is always available. The fallback to `getModelConfiguration()` (Channel ②) is only used when that primary source is absent.
+
+### Why Third-Party Providers Are Affected
+
+Third-party `LanguageModelChatProvider` implementations receive configuration through `ProvideLanguageModelChatResponseOptions.modelConfiguration`, which is populated from `LanguageModelsService.getModelConfiguration()` — the **global `_modelConfigurations` cache (Channel ②)**:
+
+```typescript
+// languageModelsService.sendChatRequest()
+async sendChatRequest(modelId, from, messages, options, token) {
+    const configuration = this.getModelConfiguration(modelId);
+    const mergedOptions = configuration
+        ? { ...options, configuration: { ...configuration, ...options.configuration } }
+        : options;
+    return provider.sendChatRequest(modelId, messages, from, mergedOptions, token);
+}
+```
+
+If Channel ② was never populated with the user's latest picker selection (due to the silent failure above), `modelConfiguration` arrives as the previously persisted value from `chatLanguageModels.json` or the schema default.
+
+---
+
+### Steps to Reproduce
+
+1. Install a third-party extension that registers a `LanguageModelChatProvider` with a `configurationSchema` (e.g. one providing `reasoningEffort` and `contextSize` properties).
+2. Open the Chat view and select the third-party model from the model picker.
+3. In the model picker dropdown, change **Reasoning Effort** or **Context Size** to a non-default value (e.g., `max`).
+4. Send a chat request using this model.
+5. Observe in the extension's handler that `options.modelConfiguration` contains the previously persisted value from `chatLanguageModels.json` or the schema default — never the value just selected in the picker.
+
+### Expected
+
+- Third-party providers should receive the user-selected configuration values from the model picker in `ProvideLanguageModelChatResponseOptions.modelConfiguration`.
+
+### Actual
+
+- `options.modelConfiguration` at request time contains the value from `chatLanguageModels.json` or the schema default, not the value the user just selected in the model picker.
+- The model picker UI shows the correct selected value (because it reads from the per-editor bucket), but the actual request uses the persisted/default value visible to third-party providers.
+
+---
+
+## Proposed Fix
+
+### Short-term
+
+At minimum, `setModelConfiguration()` should **log a warning** when `_modelCache` is missing a model, so the silent failure is visible. Additionally, consider retrying the write when the model becomes available:
+
+```typescript
+async setModelConfiguration(modelId: string, values: IStringDictionary<unknown>): Promise<void> {
+    const metadata = this._modelCache.get(modelId);
+    if (!metadata) {
+        this._logService.warn(`[LM] Cannot persist configuration for '${modelId}': model not yet resolved in cache`);
+        // Optionally: queue the write for when the model resolves
+        return;
+    }
+    // ...
+}
+```
+
+### Long-term
+
+1. **Unify the two configuration channels** so there is a single source of truth for per-model configuration, accessible equally to Copilot and third-party providers.
+2. **Expose per-editor model configuration** to extensions through a stable API, so `LanguageModelChatProvider` implementations can access the user's current selection without relying on the global cache.
+3. **Make `chatLanguageModels.json` or a unified service the canonical persistence layer** for all model configuration, ensuring that changes from the model picker are always written to the file/service and are consistently read by all consumers, including third-party providers.
+
+---
+
+## Related Files
+
+| File | Role |
+|---|---|
+| `src/vs/workbench/contrib/chat/browser/widget/input/chatModelConfigurationStore.ts` | Per-editor scoped storage (Channel ①) |
+| `src/vs/workbench/contrib/chat/browser/widget/input/chatModelConfigurationLogic.ts` | Resolution, filtering, schema extraction |
+| `src/vs/workbench/contrib/chat/common/languageModels.ts` | `setModelConfiguration()` / `getModelConfiguration()` / `sendChatRequest()` (Channel ②) |
+| `src/vs/workbench/contrib/chat/browser/languageModelsConfigurationService.ts` | `chatLanguageModels.json` read/write (Channel ③) |
+| `src/vs/workbench/api/common/extHostLanguageModels.ts` | Extension host: `$startChatRequest` — bridges `modelConfiguration` to provider |
+| `src/vs/workbench/api/browser/mainThreadLanguageModels.ts` | Main thread: registers provider & proxies `sendChatRequest` |
+| `src/vs/workbench/contrib/chat/common/chatService/chatServiceImpl.ts` | Chat service: merges `userSelectedModelConfiguration` → `modelConfiguration` |
+
+---
+
+## Impact
+
+This bug affects **all third-party `LanguageModelChatProvider` extensions** that declare a `configurationSchema` and rely on `ProvideLanguageModelChatResponseOptions.modelConfiguration` to receive user-configured model parameters (reasoning effort, context size, service tier, etc.).
+","2026-06-21T15:28:54Z","closed","bug,verified","TRUE"
+"vscode","322371","https://github.com/microsoft/vscode/issues/322371","Copilot Chat auto-switches to 1M context after VS Code restart, ignoring selected model setting","* Copilot Chat Extension Version: latest
+* VS Code Version: latest
+* OS Version: latest
+* Feature: Copilot Chat / existing chat session after VS Code restart
+* Selected model: GPT 5.5 High 272k
+
+## Steps to Reproduce
+
+1. Set Copilot Chat to use GPT 5.5 High with 272k context.
+2. Start or continue a Copilot Chat session.
+3. Restart VS Code.
+4. Continue the existing Copilot Chat session.
+5. Check the model/context shown in the Copilot UI.
+
+## Expected Behavior
+
+Copilot should respect the currently selected model/context setting after VS Code restart.
+
+If I selected GPT 5.5 High 272k, continuing an existing session should keep using GPT 5.5 High 272k, unless I explicitly choose another model/context.
+
+## Actual Behavior
+
+After restarting VS Code and continuing an existing session, Copilot appears to ignore the selected setting and silently switches to the 1M context option.
+
+This is especially serious because 1M is much more expensive. The switch is not explicitly confirmed by the user, but the user is still charged for the more expensive option.
+
+## Impact
+
+This caused unexpected billing charges for me. In one case, I paid around $10 because Copilot silently switched to the 1M option.
+
+This makes Copilot unsafe to use with paid models/context tiers, because the UI setting is not reliably respected across VS Code restarts.
+
+## Request
+
+Please investigate why continuing an existing session after VS Code restart can override the user-selected model/context setting.
+
+At minimum, Copilot should never silently switch to a more expensive model/context tier without explicit user confirmation.
+","2026-06-22T13:08:27Z","closed","bug,verified,context-widget,UBB","TRUE"
+"vscode","323172","https://github.com/microsoft/vscode/issues/323172","BYOK CustomEndpoint Model only thinks, cannot parse or strip `delta.reasoning`","<!-- Please search existing issues to avoid creating duplicates -->
+<!-- Please attach logs to help us diagnose your issue -->
+
+- Copilot Chat Extension Version: GitHub.copilot-chat 0.41
+- VS Code Version: 1.126.0
+- OS Version: Win 11
+- Feature (e.g. agent/edit/ask mode): all responses
+- Selected model (e.g. GPT 4.1, Claude 3.7 Sonnet): CustomEndpoint (Qwen3-VL-235B-A22B-Thinking-FP8)
+
+Steps to Reproduce:
+
+1. Assign a reasoning model as a custom endpoint.
+2. Ask it to do or say anything.
+3. Click on the ""Finished in.."" section when you receive the error to see the thinking.
+
+<img width=""622"" height=""779"" alt=""Image"" src=""https://github.com/user-attachments/assets/eff5e19d-1749-4c26-9656-b101dad682b4"" />
+
+This does not happen with qwen3.6-27b, which can ""think"" and ""respond"" as normal. It seems to be that the extension does not expect and cannot handle `delta.reasoning`. Here is a partial raw response to a ""Hello"" outside of GHCchat:
+
+```
+curl ... '{""model"":""billiken-coder-prodigy"",""messages"":[{""role"":""user"",""content"":""Hello""}],""stream"":true}'
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{""role"":""assistant"",""content"":""""},""logprobs"":null,""finish_reason"":null}],""prompt_token_ids"":null,""prompt_text"":null}
+
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{""reasoning"":""Okay""},""logprobs"":null,""finish_reason"":null,""token_ids"":null}]}
+
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{""reasoning"":"",""},""logprobs"":null,""finish_reason"":null,""token_ids"":null}]}
+
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{""reasoning"":"" the""},""logprobs"":null,""finish_reason"":null,""token_ids"":null}]}
+
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{""reasoning"":"" user""},""logprobs"":null,""finish_reason"":null,""token_ids"":null}]}
+
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{""reasoning"":"" said""},""logprobs"":null,""finish_reason"":null,""token_ids"":null}]}
+
+...
+
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{""content"":"" 😊""},""logprobs"":null,""finish_reason"":null,""token_ids"":null}]}
+
+data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{},""logprobs"":null,""finish_reason"":""stop"",""stop_reason"":null,""token_ids"":null}],""system_fingerprint"":""vllm-0.23.0-tp4-ep-68660ca4""}
+
+data: [DONE]
+```","2026-06-26T17:18:09Z","open","bug,model-byok","TRUE"
