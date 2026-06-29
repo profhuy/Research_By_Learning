@@ -1,4 +1,4 @@
-"repo","issue_id","issue_url","title","body","created_at","state","labels","selected_for_pilot","notes","annotator_1_ob","annotator_1_eb","annotator_1_s2r","annotator_2_ob","annotator_2_eb","annotator_2_s2r","double_labeled","consensus_ob","consensus_eb","consensus_s2r","consensus_notes"
+﻿"repo","issue_id","issue_url","title","body","created_at","state","labels","selected_for_pilot"
 "pandas","62990","https://github.com/pandas-dev/pandas/issues/62990","BUG: Series.loc slicing raises KeyError unexpectedly","### Pandas version checks
 
 - [x] I have checked that this issue has not already been reported.
@@ -98,7 +98,7 @@ None
 ```
 
 </details>
-","2025-11-05T01:29:43Z","closed","Bug,Indexing,Error Reporting","TRUE","","","","","","","","","","","",""
+","2025-11-05T01:29:43Z","closed","Bug,Indexing,Error Reporting","TRUE"
 "pandas","63071","https://github.com/pandas-dev/pandas/issues/63071","BUG: DataFrame.loc[] returns object type instead of float","### Pandas version checks
 
 - [x] I have checked that this issue has not already been reported.
@@ -203,7 +203,7 @@ pyqt5                 : None
 None
 
 </details>
-","2025-11-11T04:15:34Z","closed","Bug,Indexing,Dtype Conversions","TRUE","","","","","","","","","","","",""
+","2025-11-11T04:15:34Z","closed","Bug,Indexing,Dtype Conversions","TRUE"
 "pandas","63518","https://github.com/pandas-dev/pandas/issues/63518","BUG: pd.Grouper converts PyArrow timestamp to numpy datetime64","### Pandas version checks
 
 - [x] I have checked that this issue has not already been reported.
@@ -338,7 +338,7 @@ zstandard             : None
 qtpy                  : None
 pyqt5                 : None
 </details>
-","2025-12-31T02:09:34Z","closed","Bug,Groupby,pyarrow dtype retention","TRUE","","","","","","","","","","","",""
+","2025-12-31T02:09:34Z","closed","Bug,Groupby,pyarrow dtype retention","TRUE"
 "pandas","64825","https://github.com/pandas-dev/pandas/issues/64825","BUG: concatenating Series with overlapping Interval names fails","### Pandas version checks
 
 - [x] I have checked that this issue has not already been reported.
@@ -470,7 +470,7 @@ pyqt5                 : None
 
 
 </details>
-","2026-03-24T13:12:06Z","closed","Bug,Reshaping,Interval","TRUE","","","","","","","","","","","",""
+","2026-03-24T13:12:06Z","closed","Bug,Reshaping,Interval","TRUE"
 "pandas","65710","https://github.com/pandas-dev/pandas/issues/65710","BUG: `DataFrame.any`/`all(skipna=False)` raises ValueError instead of returning NA","### Pandas version checks
 
 - [x] I have checked that this issue has not already been reported.
@@ -567,7 +567,7 @@ qtpy                  : None
 pyqt5                 : None
 
 </details>
-","2026-05-22T14:26:32Z","closed","Bug,Missing-data,NA - MaskedArrays,Reduction Operations","TRUE","","","","","","","","","","","",""
+","2026-05-22T14:26:32Z","closed","Bug,Missing-data,NA - MaskedArrays,Reduction Operations","TRUE"
 "scikit-learn","28977","https://github.com/scikit-learn/scikit-learn/issues/28977","Consider bumping C standard in meson.build from C99 to C17","### Describe the bug
 
 Currently, trying to build scikit-learn with the python 3.13 free-threaded build leads to a compilation error related to usage of `static_assert` in CPython internals. This leaks into public code via cython's adding `#include ""internal/pycore_frame.h""` to module init code.
@@ -621,7 +621,7 @@ successful build
 ```shell
 Current `main` branch.
 ```
-","2024-05-08T16:08:32Z","closed","Bug,free-threading","TRUE","","","","","","","","","","","",""
+","2024-05-08T16:08:32Z","closed","Bug,free-threading","TRUE"
 "scikit-learn","29157","https://github.com/scikit-learn/scikit-learn/issues/29157","TypeError when fitting GridSearchCV or RandomizedSearchCV with OrdinalEncoder and OneHotEncoder in parameters grid","### Describe the bug
 
 Having both `OrdinalEncoder` and `OneHotEncoder` inside the parameters grid to be used by the `GridSearchCV` or `RandomizedSearchCV` results in the following error: `TypeError: float() argument must be a string or a real number, not 'OneHotEncoder'`.
@@ -815,7 +815,7 @@ threading_layer: pthreads
        filepath: /Users/brice/Documents/Coding/ML_exercises/.venv/lib/python3.12/site-packages/sklearn/.dylibs/libomp.dylib
         version: None
 ```
-","2024-06-02T10:58:40Z","closed","Bug,Regression,module:model_selection","TRUE","","","","","","","","","","","",""
+","2024-06-02T10:58:40Z","closed","Bug,Regression,module:model_selection","TRUE"
 "scikit-learn","29648","https://github.com/scikit-learn/scikit-learn/issues/29648","GaussianNB(priors=...) is useless","### Describe the bug
 
 If I set the class priors to be very small for classes 0 and 2 and very large for class 1, I expect my predictions to be of class 1. However, I get class 0. It seems to be that `GaussianNB(priors=...)` is useless.
@@ -908,7 +908,7 @@ threading_layer: pthreads
         version: 0.3.21.dev
 threading_layer: pthreads
    architecture: Zen
-```","2024-08-10T10:31:12Z","closed","Bug,Needs Triage","TRUE","","","","","","","","","","","",""
+```","2024-08-10T10:31:12Z","closed","Bug,Needs Triage","TRUE"
 "scikit-learn","30382","https://github.com/scikit-learn/scikit-learn/issues/30382","Gaussian Mixture: Diagonal covariance vectors might contain unreasonably negative values when the input datatype is np.float32","### Describe the bug
 
 The Gaussian Mixture implementation shows numerical instabilities on single-precision floating point input numbers, that even large values of the regularization parameter reg_covar (like 0.1) cannot mitigate.
@@ -1046,7 +1046,7 @@ threading_layer: pthreads
    architecture: Haswell
     num_threads: 12
 ```
-","2024-12-02T01:02:22Z","open","Bug,Numerical Stability","TRUE","","","","","","","","","","","",""
+","2024-12-02T01:02:22Z","open","Bug,Numerical Stability","TRUE"
 "scikit-learn","31659","https://github.com/scikit-learn/scikit-learn/issues/31659","Metadata not routed to transformers in pipeline during cross validation.","### Describe the bug
 
 When using a pipeline with transformers in combination with cross validation, it seems that metadata is not correctly routed to the transformers during prediction. I would expect, that if `set_transform_request` is set, that this is honored when calling predict on the pipeline.
@@ -1172,7 +1172,7 @@ threading_layer: pthreads
          prefix: libgomp
        filepath: /home/max/.cache/uv/archive-v0/unVsgMut5oyZJu14JLk-G/lib/python3.12/site-packages/scikit_learn.libs/libgomp-a34b3233.so.1.0.0
         version: None
-```","2025-06-25T11:47:15Z","open","Bug,Metadata Routing","TRUE","","","","","","","","","","","",""
+```","2025-06-25T11:47:15Z","open","Bug,Metadata Routing","TRUE"
 "scikit-learn","32718","https://github.com/scikit-learn/scikit-learn/issues/32718","BUG: trees: `criterion=""friedman_mse""` is buggy for multi-output","### Describe the bug
 
 The calculation implemented in `FriedmanMSE.proxy_impurity_improvement` is plain wrong for the multi-output case.
@@ -1257,7 +1257,7 @@ threading_layer: pthreads
          prefix: libgomp
        filepath: [/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0](https://file+.vscode-resource.vscode-cdn.net/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
         version: None
-```","2025-11-15T12:49:20Z","closed","Bug","TRUE","","","","","","","","","","","",""
+```","2025-11-15T12:49:20Z","closed","Bug","TRUE"
 "scikit-learn","33174","https://github.com/scikit-learn/scikit-learn/issues/33174","Automatic main lock-file update fails for debian-32 build","I can reproduce locally, no clue where this is coming from:
 ```
 python build_tools/update_environments_and_lock_files.py --select-build debian_32 -vvv
@@ -1334,7 +1334,7 @@ Traceback (most recent call last):
 AttributeError: 'PackageFinder' object has no attribute 'allow_all_prereleases'
 ```
 
-cc @AnneBeyer if you want to have a closer look 🙏.","2026-02-02T08:38:01Z","closed","Bug,Build / CI","TRUE","","","","","","","","","","","",""
+cc @AnneBeyer if you want to have a closer look 🙏.","2026-02-02T08:38:01Z","closed","Bug,Build / CI","TRUE"
 "scikit-learn","34003","https://github.com/scikit-learn/scikit-learn/issues/34003","Array API: Ridge with alpha as an array fails due to misconfigured checks","### Describe the bug and give evidence about its user-facing impact
 
 When trying to fit a ridge model with the array API on multi target objective, if one want to pass an array for alpha, the checks are not well configured I think, leading to an impossibility.
@@ -1509,7 +1509,7 @@ InvalidParameterError: The 'alpha' parameter of Ridge must be a float in the ran
 
 ### Interest in fixing the bug
 
-might be if I have time.","2026-05-12T15:47:14Z","closed","Bug,Array API","TRUE","","","","","","","","","","","",""
+might be if I have time.","2026-05-12T15:47:14Z","closed","Bug,Array API","TRUE"
 "scikit-learn","34005","https://github.com/scikit-learn/scikit-learn/issues/34005","Using dask distributed with a pipeline and column_transformer breaks metadata routing","### Describe the bug and give evidence about its user-facing impact
 
 when using a pipeline with a columns transformer, using the pipeline in a distributed environment seems to raise a strange error.
@@ -1634,7 +1634,7 @@ CV score: nan
 
 ### Interest in fixing the bug
 
-If times allow it.","2026-05-12T21:50:14Z","closed","Bug,Metadata Routing","TRUE","","","","","","","","","","","",""
+If times allow it.","2026-05-12T21:50:14Z","closed","Bug,Metadata Routing","TRUE"
 "vscode","319414","https://github.com/microsoft/vscode/issues/319414","VSCode won't let me rename a variable","Type: <b>Bug</b>
 
 1. Press F2 to rename a variable.
@@ -1794,7 +1794,7 @@ jh5f2457_c:31515489
 
 </details>
 
-<!-- generated by issue reporter -->","2026-06-01T17:48:51Z","closed","bug,verified,rename,author-verification-requested,insiders-released","TRUE","","","","","","","","","","","",""
+<!-- generated by issue reporter -->","2026-06-01T17:48:51Z","closed","bug,verified,rename,author-verification-requested,insiders-released","TRUE"
 "vscode","319769","https://github.com/microsoft/vscode/issues/319769","Can't use `#` for attachments in AHP","<!-- ⚠️⚠️ Do Not Delete This! feature_request_template ⚠️⚠️ -->
 <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->
 <!-- Please search existing issues to avoid creating duplicates. -->
@@ -1802,7 +1802,7 @@ jh5f2457_c:31515489
 <!-- Describe the feature you'd like. -->
 If I type `#` for a local AHP session, nothing happens.
 
-I can attach files via the `+` or selecting the file pill if I have a file open in the editor.","2026-06-03T15:54:05Z","closed","bug,verified,agent-host","TRUE","","","","","","","","","","","",""
+I can attach files via the `+` or selecting the file pill if I have a file open in the editor.","2026-06-03T15:54:05Z","closed","bug,verified,agent-host","TRUE"
 "vscode","319949","https://github.com/microsoft/vscode/issues/319949","[Error] unhandlederror-Cannot read properties of undefined (reading 'resource')","## Error Message
 ````
 unhandlederror-Cannot read properties of undefined (reading 'resource')
@@ -1850,13 +1850,13 @@ TypeError: Cannot read properties of undefined (reading 'resource')     at GL._g
 | Product | VSCode |
 
 ---
-*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-04T16:18:23Z","closed","bug,error-telemetry,insiders-released,recent-regression,stable-anomaly,ai-generated,ai-analyzed","TRUE","","","","","","","","","","","",""
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-04T16:18:23Z","closed","bug,error-telemetry,insiders-released,recent-regression,stable-anomaly,ai-generated,ai-analyzed","TRUE"
 "vscode","320270","https://github.com/microsoft/vscode/issues/320270","Browser tools have trouble when page is in emulation mode","1. Open any page in the integrated browser -- e.g. https://code.visualstudio.com/
 2. Toggle device emulation and resize the page a bit
 3. Ask the agent to click something in the page
 4. 🐛 it often fails, with Playwright failing to find the correct element
 
-Possibly due to some incorrect coordinate logic when Playwright does actionability checks","2026-06-06T23:53:37Z","closed","bug,verified,insiders-released,browser-integration","TRUE","","","","","","","","","","","",""
+Possibly due to some incorrect coordinate logic when Playwright does actionability checks","2026-06-06T23:53:37Z","closed","bug,verified,insiders-released,browser-integration","TRUE"
 "vscode","320352","https://github.com/microsoft/vscode/issues/320352","Editor broken with error code -2147483645","
 Type: <b>Bug</b>
 
@@ -1952,7 +1952,7 @@ jf4hg949:31526829
 
 </details>
 
-<!-- generated by issue reporter -->","2026-06-08T06:57:03Z","closed","bug,info-needed,editor-input","TRUE","","","","","","","","","","","",""
+<!-- generated by issue reporter -->","2026-06-08T06:57:03Z","closed","bug,info-needed,editor-input","TRUE"
 "vscode","320442","https://github.com/microsoft/vscode/issues/320442","[Error] unhandlederror-Cannot read properties of undefined (reading 'cellInfo')","## Error Message
 ````
 unhandlederror-Cannot read properties of undefined (reading 'cellInfo')
@@ -1986,7 +1986,7 @@ TypeError: Cannot read properties of undefined (reading 'cellInfo')     at Owe.v
 | Product | VSCode |
 
 ---
-*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-08T16:36:04Z","open","bug,error-telemetry,recent-regression,stable-anomaly,ai-generated,*fix","TRUE","","","","","","","","","","","",""
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-08T16:36:04Z","open","bug,error-telemetry,recent-regression,stable-anomaly,ai-generated,*fix","TRUE"
 "vscode","320537","https://github.com/microsoft/vscode/issues/320537","BYOK dialog shows up, despite being signed in","BYOK dialog shows up in Sessions Window, despite being signed in:
 
 <img width=""2028"" height=""1204"" alt=""Image"" src=""https://github.com/user-attachments/assets/9bf90bda-9d31-4309-a557-b386a208b40e"" />
@@ -1994,7 +1994,7 @@ TypeError: Cannot read properties of undefined (reading 'cellInfo')     at Owe.v
 I used:
 `code-insiders --transient`
 on Windows.
-This was right after signing in. But it persists after reload windows. I've seen it where it only appears when switching when Copilot CLI to Copilot CLI (Local Agent Host)","2026-06-09T01:32:15Z","open","bug,model-byok,agents-window","TRUE","","","","","","","","","","","",""
+This was right after signing in. But it persists after reload windows. I've seen it where it only appears when switching when Copilot CLI to Copilot CLI (Local Agent Host)","2026-06-09T01:32:15Z","open","bug,model-byok,agents-window","TRUE"
 "vscode","320928","https://github.com/microsoft/vscode/issues/320928","Webview resource cache grows unboundedly: media-preview cache-busts with Date.now(), service worker never evicts (21+ GB observed)","<!-- ⚠️⚠️ Do Not Delete This! bug_report_template ⚠️⚠️ -->
 Does this issue occur when all extensions are disabled?: Yes
 (media-preview and the webview service worker are built-in, so `--disable-extensions` does not affect the leak.)
@@ -2064,7 +2064,7 @@ Either of:
 #131226 (closed as stale, ""needs repro""), #166632 (145 GB, closed as duplicate),
 #152519 (500 GB, closed as duplicate), #310384 (open, 30 GB via Remote-SSH — same
 mechanism; this report adds the root-cause analysis).
-","2026-06-11T09:30:51Z","open","bug,perf,perf-bloat","TRUE","","","","","","","","","","","",""
+","2026-06-11T09:30:51Z","open","bug,perf,perf-bloat","TRUE"
 "vscode","321049","https://github.com/microsoft/vscode/issues/321049","Switching between Copilot Chat Sessions Destroys associated Terminal Sessions","
 Type: <b>Bug</b>
 
@@ -2088,7 +2088,7 @@ OS version: Windows_NT x64 10.0.26200
 Modes:
 
 
-<!-- generated by issue reporter -->","2026-06-11T22:51:08Z","closed","bug,verified,insiders-released,chat-terminal","TRUE","","","","","","","","","","","",""
+<!-- generated by issue reporter -->","2026-06-11T22:51:08Z","closed","bug,verified,insiders-released,chat-terminal","TRUE"
 "vscode","321441","https://github.com/microsoft/vscode/issues/321441","[Error] [GitHub.copilot-chat] unhandlederror-Failed to allocate memory","## Error Message
 ````
 unhandlederror-Failed to allocate memory
@@ -2131,7 +2131,7 @@ RangeError: Failed to allocate memory     at createUnsafeBuffer (node:<REDACTED:
 | Product | VSCode |
 
 ---
-*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-15T16:38:20Z","open","bug,error-telemetry,recent-regression,extension,ai-generated,ai-analyzed","TRUE","","","","","","","","","","","",""
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-15T16:38:20Z","open","bug,error-telemetry,recent-regression,extension,ai-generated,ai-analyzed","TRUE"
 "vscode","321729","https://github.com/microsoft/vscode/issues/321729","Workspace becomes invalid after running Copilot CLI","<!-- Please search existing issues to avoid creating duplicates -->
 <!-- Please attach logs to help us diagnose your issue -->
 
@@ -2168,7 +2168,7 @@ windows:
 <img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/30b397c4-8a79-4860-af8c-334466534eca"" />
 
 wsl:
-<img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/30c28655-1d00-4a93-9803-035748bd1ba8"" />","2026-06-17T07:45:25Z","open","bug,agent-host","TRUE","","","","","","","","","","","",""
+<img width=""1804"" height=""1132"" alt=""Image"" src=""https://github.com/user-attachments/assets/30c28655-1d00-4a93-9803-035748bd1ba8"" />","2026-06-17T07:45:25Z","open","bug,agent-host","TRUE"
 "vscode","322051","https://github.com/microsoft/vscode/issues/322051","No credits spent shown when a request is stopped in Auto mode","No credits spent shown when a request is stopped.
 
 When a chat request is halted by the user, the chat does not show which model it chose in Auto mode, nor how many credits it spent.
@@ -2193,7 +2193,7 @@ Steps to Reproduce:
 3. Press the stop button to halt thinking and text/code generation
 4. Look in the chat footnote for model and credits info, they are not there.
 
-","2026-06-19T07:31:11Z","open","bug,UBB","TRUE","","","","","","","","","","","",""
+","2026-06-19T07:31:11Z","open","bug,UBB","TRUE"
 "vscode","322174","https://github.com/microsoft/vscode/issues/322174","Noisy logs ""Closing/Hiding terminals""","Seeing many hundreds of log messages like this printed repeatedly. It doesn't make sense to me because I don't think that all of these sessions have terminals. How can a CCA agent have terminals?
 
 ```
@@ -2311,7 +2311,7 @@ Steps to Reproduce:
 2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/18 (session removed)
 2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/17 (session removed)
 2026-06-19 15:36:47.594 [info] [Window] [SessionsTerminal] Closing terminals for session default-copilot:copilot-cloud-agent:/261134 (session removed)
-```","2026-06-19T22:48:04Z","closed","bug,debt,insiders-released","TRUE","","","","","","","","","","","",""
+```","2026-06-19T22:48:04Z","closed","bug,debt,insiders-released","TRUE"
 "vscode","322280","https://github.com/microsoft/vscode/issues/322280","[Bug] Model Picker Configuration Not Persisted to `chatLanguageModels.json` — Third-Party Providers Cannot Receive User-Configured Model Settings","## Summary
 
 When a user adjusts model parameters (e.g. **Reasoning Effort**, **Context Size**, **Service Tier**) via the **Chat Model Picker dropdown**, the values are correctly persisted for the current chat editor, but third-party `LanguageModelChatProvider` extensions receive the previously persisted value from `chatLanguageModels.json` or the schema default — not the user-selected value — in `modelConfiguration` at request time. The user-visible settings do not flow into the API surface used by non-Copilot providers.
@@ -2490,7 +2490,7 @@ async setModelConfiguration(modelId: string, values: IStringDictionary<unknown>)
 ## Impact
 
 This bug affects **all third-party `LanguageModelChatProvider` extensions** that declare a `configurationSchema` and rely on `ProvideLanguageModelChatResponseOptions.modelConfiguration` to receive user-configured model parameters (reasoning effort, context size, service tier, etc.).
-","2026-06-21T15:28:54Z","closed","bug,verified","TRUE","","","","","","","","","","","",""
+","2026-06-21T15:28:54Z","closed","bug,verified","TRUE"
 "vscode","322371","https://github.com/microsoft/vscode/issues/322371","Copilot Chat auto-switches to 1M context after VS Code restart, ignoring selected model setting","* Copilot Chat Extension Version: latest
 * VS Code Version: latest
 * OS Version: latest
@@ -2528,7 +2528,7 @@ This makes Copilot unsafe to use with paid models/context tiers, because the UI 
 Please investigate why continuing an existing session after VS Code restart can override the user-selected model/context setting.
 
 At minimum, Copilot should never silently switch to a more expensive model/context tier without explicit user confirmation.
-","2026-06-22T13:08:27Z","closed","bug,verified,context-widget,UBB","TRUE","","","","","","","","","","","",""
+","2026-06-22T13:08:27Z","closed","bug,verified,context-widget,UBB","TRUE"
 "vscode","323172","https://github.com/microsoft/vscode/issues/323172","BYOK CustomEndpoint Model only thinks, cannot parse or strip `delta.reasoning`","<!-- Please search existing issues to avoid creating duplicates -->
 <!-- Please attach logs to help us diagnose your issue -->
 
@@ -2569,4 +2569,4 @@ data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk""
 data: {""id"":""chatcmpl-be7c326e84b87a6e"",""object"":""chat.completion.chunk"",""created"":1782492920,""model"":""billiken-coder-prodigy"",""choices"":[{""index"":0,""delta"":{},""logprobs"":null,""finish_reason"":""stop"",""stop_reason"":null,""token_ids"":null}],""system_fingerprint"":""vllm-0.23.0-tp4-ep-68660ca4""}
 
 data: [DONE]
-```","2026-06-26T17:18:09Z","open","bug,model-byok","TRUE","","","","","","","","","","","",""
+```","2026-06-26T17:18:09Z","open","bug,model-byok","TRUE"
