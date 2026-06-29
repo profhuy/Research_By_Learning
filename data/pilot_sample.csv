@@ -1,4 +1,4 @@
-﻿"repo","issue_id","issue_url","title","body","created_at","state","labels","selected_for_pilot"
+"repo","issue_id","issue_url","title","body","created_at","state","labels","selected_for_pilot"
 "pandas","62990","https://github.com/pandas-dev/pandas/issues/62990","BUG: Series.loc slicing raises KeyError unexpectedly","### Pandas version checks
 
 - [x] I have checked that this issue has not already been reported.
