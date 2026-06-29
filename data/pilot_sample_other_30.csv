@@ -1,0 +1,3550 @@
+﻿"repo","issue_id","issue_url","title","body","created_at","state","labels","selected_for_pilot","notes"
+"pandas","63437","https://github.com/pandas-dev/pandas/issues/63437","BUG: 3.0.0rc1 sdist fails tests with `--no-strict-data-files`","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+pytest pandas/tests --no-strict-data-files -m ""not single_cpu and not slow and not network and not db""  # from sdist
+```
+
+### Issue Description
+
+The test suite in 3.0.0rc1 fails with errors such as:
+
+```pytb
+______________________________________________ test_read_csv_chained_url_no_error[infer] ______________________________________________
+[gw9] linux -- Python 3.11.14 /tmp/portage/dev-python/pandas-3.0.0_rc1/work/pandas-3.0.0rc1-python3_11/install/usr/bin/python3.11
+
+compression = 'infer'
+
+    @td.skip_if_no(""fsspec"")
+    @pytest.mark.parametrize(""compression"", [None, ""infer""])
+    def test_read_csv_chained_url_no_error(compression):
+        # GH 60100
+        tar_file_path = ""pandas/tests/io/data/tar/test-csv.tar""
+        chained_file_url = f""tar://test.csv::file://{tar_file_path}""
+    
+>       result = pd.read_csv(chained_file_url, compression=compression, sep="";"")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+chained_file_url = 'tar://test.csv::file://pandas/tests/io/data/tar/test-csv.tar'
+compression = 'infer'
+tar_file_path = 'pandas/tests/io/data/tar/test-csv.tar'
+
+pandas/tests/io/test_common.py:649: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+[…]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+self = <fsspec.implementations.local.LocalFileOpener object at 0x7efb680194b0>
+
+    def _open(self):
+        if self.f is None or self.f.closed:
+            if self.autocommit or ""w"" not in self.mode:
+>               self.f = open(self.path, mode=self.mode)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               FileNotFoundError: [Errno 2] No such file or directory: '/tmp/portage/dev-python/pandas-3.0.0_rc1/work/pandas-3.0.0rc1-python3_11/install/usr/lib/python3.11/site-packages/pandas/tests/io/data/tar/test-csv.tar'
+
+self       = <fsspec.implementations.local.LocalFileOpener object at 0x7efb680194b0>
+
+/usr/lib/python3.11/site-packages/fsspec/implementations/local.py:392: FileNotFoundError
+```
+
+…when run from the source distribution, even though `--no-strict-data-files` is passed.
+
+### Expected Behavior
+
+Tests passing.
+
+### Installed Versions
+
+<details>
+
+```
+INSTALLED VERSIONS
+------------------
+commit                : 72427599b673c58e91c4e96a610fe753e3edc550
+python                : 3.11.14
+python-bits           : 64
+OS                    : Linux
+OS-release            : 6.18.2-gentoo-dist
+Version               : #1 SMP PREEMPT_DYNAMIC Thu Dec 18 17:15:32 -00 2025
+machine               : x86_64
+processor             : AMD Ryzen 5 3600 6-Core Processor
+byteorder             : little
+LC_ALL                : None
+LANG                  : C.UTF8
+LOCALE                : en_US.UTF-8
+
+pandas                : 3.0.0rc1
+numpy                 : 2.3.5
+dateutil              : 2.9.0.post0
+pip                   : 25.3
+Cython                : 3.2.3
+sphinx                : None
+IPython               : 9.8.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.14.3
+bottleneck            : 1.6.0
+fastparquet           : None
+fsspec                : 2025.12.0
+html5lib              : 1.2-dev
+hypothesis            : 6.148.7
+gcsfs                 : None
+jinja2                : 3.1.6
+lxml.etree            : 6.0.2
+matplotlib            : 3.10.8
+numba                 : None
+numexpr               : 2.14.1
+odfpy                 : None
+openpyxl              : 3.1.5
+psycopg2              : 2.9.11
+pymysql               : 1.4.6
+pyarrow               : 22.0.0
+pyiceberg             : None
+pyreadstat            : None
+pytest                : 9.0.2
+python-calamine       : None
+pytz                  : 2025.2
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.17.0rc1
+sqlalchemy            : 2.0.45
+tables                : 3.10.2
+tabulate              : 0.9.0
+xarray                : 2025.12.0
+xlrd                  : 2.0.2
+xlsxwriter            : 3.2.9
+zstandard             : 0.25.0
+qtpy                  : 2.4.3
+pyqt5                 : None
+```
+
+</details>
+","2025-12-20T08:01:21Z","closed","Bug,Testing","TRUE",""
+"pandas","63732","https://github.com/pandas-dev/pandas/issues/63732","BUG: Inconsistent NaN detection based on Series dtype, to_numeric dtype_backend, None vs np.nan, strings in orig list","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import numpy as np
+import pandas as pd
+import pyarrow as pa
+# Create 'float' Series with numeric and np.nan (or None)
+ser = pd.Series([1, np.nan], dtype=np.float64)
+# Passing either dtype_backend results in failure to find nulls
+for backend in ['numpy_nullable', 'pyarrow']:
+    s = pd.to_numeric(ser, dtype_backend=backend)
+    assert 0 == s.isna().sum() # should be 1
+    assert 2 == s.dropna().size # should be 1
+
+# See 54 different in df_failures under the Full Testing section
+```
+
+### Issue Description
+
+The `.isna()` and `.dropna()` methods do not always find nulls in float and float-like Series. This includes Series that have been passed to `pd.to_numeric`. The behavior depends on...  
+- The `dtype_backend` of `to_numeric`  
+- Whether the original data were numbers, strings, or mixed  
+- The `dtype` of the Series when it was created    
+
+Please, see the **Full testing** section below for combinations.
+
+This is tagged with `to_numeric`, but given some of the behavior happens even before `to_numeric` is called, it may be more of a general pandas issue.
+
+# Reproduction  steps 
+There are several variations that will reproduce the issue as shown in the Full Testing section; this is just one example:  
+
+1. Create a list that has only numbers and `np.nan` values
+2. Create a pandas Series from the list with `dtype=np.float64`
+3. Use `pd.to_numeric()` on that Series with one of the `dtype_backend` options
+    - You must pass either `'numpy_nullable'` or `'pyarrow'`
+4. Check the number of nulls with `pd.isna().sum()` and see it returns `0`
+    - Or use `.dropna()` and see that all values are still in the Series
+
+# Other notes  
+
+## NaN != null, so what is actually ""expected""?  
+I read some of the discussion about whether `np.nan` should be treated as the result of a failed mathematical calculation rather than as a `null` value. I assume decisions about that are partly responsible for some of the behavior documented here, so it's possible some of what I see as ""unexpected"" behavior is actually ""expected"" and I just don't understand the inner mechanics.
+
+However, that doesn't explain everything I found in testing, particularly not after running `to_numeric`.
+
+## Cases where `isna` fails before we run `to_numeric`  
+Putting aside `to_numeric` for a moment, simply creating a Series with `dtype=pd.Float64Dtype()` causes `isna` to not find nulls if the original list...  
+- Included any string values  
+- Had nulls as `np.nan`, not `None`  
+
+It *always* finds nulls if the Series is created with `None`. That's because `pd.Float64Dtype()` converts `None` to `pd.NA`, but it doesn't always convert `np.nan`.
+
+## Conditions where `isna` works as expected every time  
+
+Using `isna` works as expected every time...
+
+1. If the initial `dtype` used when creating the Series is... 
+    - `'object'`
+    - `pd.ArrowDtype(pa.float64())`
+    - `'Int64'` (when the input list has only ints, ints as str, or nulls)
+
+2. If the nulls are `pd.NA` (as opposed to `np.nan` or `None`).
+
+3. If `isna` is applied element-wise (e.g., `ser.apply(pd.isna).sum()`)
+
+
+## Other documentation of issue  
+
+I looked through the issues and didn't find much. After posting this on [r/learnpython](https://www.reddit.com/r/learnpython/comments/1qdum99/pdto_numeric_and_dtype_backend_seemingly/), a user reproduced this on 3.0.0rc2 and found something that might be related in the release notes ([Changed treatment of NaN values in pyarrow and numpy-nullable floating dtypes](https://pandas.pydata.org/pandas-docs/version/3.0/whatsnew/v3.0.0.html#changed-treatment-of-nan-values-in-pyarrow-and-numpy-nullable-floating-dtypes)).
+
+# Full testing  
+
+Below are the results of my testing with various combinations. I found it helpful to put the output df into a Pivot Table to look for patterns, but I added a `FindPatterns` class here if you want to get a quick overview while in python.
+
+This looks at each combination of...  
+- Base list type (floats, ints, strings, mixed, etc.)
+- Null value type (`None` and `np.nan`; `pd.NA` was tested but always worked as expected)
+- Dtype used when creating the Series (`np.float64`, `pd.Float64Dtype()`, etc.); there were others, but I commented out ones that always worked as expected
+- `dtype_backend` methods of `to_numeric`  
+
+<details>
+
+```python  
+
+import numpy as np
+import pandas as pd
+import pyarrow as pa
+from itertools import product, combinations
+from collections.abc import Callable
+from typing import Any
+
+pd.options.future.infer_string = True
+pd.options.mode.copy_on_write = True
+
+BASE_LIST = {
+    'floats': [1.0, 2.0],
+    'ints': [1, 2],
+    'nums': [1.0, 2],
+    'floats_as_str': ['1.0', '2.0'],
+    'ints_as_str': ['1', '2'],
+    'nums_as_str': ['1.0', '2'],
+    'mixed_str_float': [1.0, '2'],
+    'mixed_str_int': [1, '2'],
+    'mixed_str_float_int': [1.0, 2, '3.0', '4']
+}
+
+NULL_VALUES = {
+    'None': None,
+    'np.nan': np.nan,
+    # 'pd.NA': pd.NA,
+}
+"""""" 
+If the null value is pd.NA,
+`to_numeric` works as expected every time
+""""""
+
+DTYPES = {
+    'dtype_np_float64': np.float64,
+    'dtype_pd_Float64': pd.Float64Dtype(),
+    # 'dtype_object': 'object',
+    # 'dtype_pa_float64': pd.ArrowDtype(pa.float64()),
+    # 'dtype_float': 'float',
+    # 'dtype_float64': 'float64',
+    # 'dtype_Int64': 'Int64',
+}
+"""""" 
+Removed dtypes that always worked as expected  
+
+Passing `np.float64`, `'float'`, or `'float64'` had unexpected results,
+but they all produced identical results to each other,
+so I kept only `np.float64` for simplicity.
+""""""
+
+CONVERSIONS = {
+    'no_args': lambda s: pd.to_numeric(s),
+    'numpy_nullable': lambda s: pd.to_numeric(s, dtype_backend='numpy_nullable'),
+    'pyarrow': lambda s: pd.to_numeric(s, dtype_backend='pyarrow'),
+}
+
+CARTESIAN = product(
+    BASE_LIST.items(),
+    NULL_VALUES.items(),
+    DTYPES.items(),
+    CONVERSIONS.items()
+)
+
+type TBaseList = tuple[str, list]
+type TNullValue = tuple[str, Any]
+type TDtype = tuple[str, str | type]
+type TConversion = tuple[str, Callable]
+
+class Trial:
+
+    def __init__(self, trial_vars: tuple[TBaseList, TNullValue, TDtype, TConversion]):
+        self.lst_name, self.lst_vals = trial_vars[0]
+        self.null_name, self.null_val = trial_vars[1]
+        self.dtype_name, self.dtype_passed_to_ser_constructor = trial_vars[2]
+        self.conv_name, self.conv_func = trial_vars[3]
+
+        self.list_values = self.lst_vals + [self.null_val]
+        self.ser_orig = self._create_series()
+        self.ser_converted = self._apply_conversion()
+
+    @property
+    def trial_result(self) -> str:
+        if self.ser_converted is None:
+            return ""Ignore""
+        sum_isna = self._sum_isna(self.ser_converted)
+        sum_elementwise = self._sum_elementwise()
+        if (sum_isna is None) or (sum_elementwise is None):
+            return ""ERROR SUMMING""
+        if np.isclose(sum_isna, sum_elementwise):
+            return ""AsExpected""
+        else:
+            return ""Failure""
+
+    def _create_series(self) -> pd.Series | None:
+        try:
+            return pd.Series(self.list_values, dtype=self.dtype_passed_to_ser_constructor)
+        except Exception:
+            return None
+
+    def _apply_conversion(self) -> pd.Series | None:
+        if self.ser_orig is None:
+            return None
+        try:
+            return self.conv_func(self.ser_orig)
+        except Exception:
+            return None
+
+    def _sum_isna(sel, ser: pd.Series) -> float | None:
+        if ser is not None:
+            return ser.isna().sum()
+
+    def _sum_elementwise(self) -> float | None:
+        if self.ser_converted is not None:
+            return self.ser_converted.apply(pd.isna).sum()
+
+    def _get_unique_types_in_ser_elements(self, s: pd.Series) -> set[str] | None:
+        if s is None:
+            return None
+        return set(type(x) for x in s)
+
+    def _format_dtype_for_display(self, dtype_to_format) -> str:
+        if dtype_to_format == np.float64:
+            return 'np.float64'
+        elif dtype_to_format == pd.Float64Dtype():
+            return 'pd.Float64Dtype()'
+        elif dtype_to_format == pd.ArrowDtype(pa.float64()):
+            return 'pd.ArrowDtype(pa.float64())'
+        else:
+            return f""'{dtype_to_format}'""
+
+    def _get_str_to_reproduce(self) -> str:
+        """"""Generate code string to reproduce the trial.""""""
+        dtype_backend = '' if 'dtype_backend' not in self.conv_name else ', dtype_backend='
+        dtype_display = self._format_dtype_for_display(self.dtype_passed_to_ser_constructor)
+        str_ser = f""pd.Series({self.lst_vals + [self.null_val]}, dtype="" + dtype_display + "")""
+        str_ser = str_ser.replace(""nan"", ""np.nan"").replace(""NA"", ""pd.NA"")
+        return f""pd.to_numeric({str_ser}{dtype_backend}).isna().sum()""    
+
+    def as_dict(self) -> dict:
+
+        def display_dtype_of_series(s: pd.Series) -> str | None:
+            if s is None:
+                return None
+            return self._format_dtype_for_display(s.dtype).replace(""'"", """")
+
+        return {
+            'result': self.trial_result,
+            'conversion': self.conv_name,
+            'list_name': self.lst_name,
+            'null_type': self.null_name,
+            'dtype_passed_to_ser_constructor': self._format_dtype_for_display(self.dtype_passed_to_ser_constructor).replace(""'"", """"),
+            'dtype_of_ser_orig': display_dtype_of_series(self.ser_orig),
+            'dtype_of_ser_conv': display_dtype_of_series(self.ser_converted),
+            'dtypes_of_ser_orig_elements': self._get_unique_types_in_ser_elements(self.ser_orig),
+            'dtypes_of_ser_conv_elements': self._get_unique_types_in_ser_elements(self.ser_converted),
+            'sum_isna_orig': self._sum_isna(self.ser_orig),
+            'sum_isna': self._sum_isna(self.ser_converted),
+            'sum_elementwise': self._sum_elementwise(),
+            'base_list': self.lst_vals,
+            'str_to_reproduce': self._get_str_to_reproduce()
+        }
+
+class RunTrials:
+
+    def __init__(self, cartesian_product):
+        self.objs_trials = []
+        self.results = []
+        for situation in cartesian_product:
+            self.obj = Trial(situation)
+            self.objs_trials.append(self.obj)
+            self.results.append(self.obj.as_dict())
+    
+    def to_df_all(self) -> pd.DataFrame:
+        df = pd.DataFrame(self.results)
+        df.index.name = 'TrialNum'
+        return df
+
+    def to_df(self) -> pd.DataFrame:
+        df_all = self.to_df_all()
+        return df_all.query('result != ""Ignore""')
+    def to_df_failures(self) -> pd.DataFrame:
+        df_all = self.to_df_all()
+        return df_all.query('result == ""Failure""')
+
+
+class FindPatterns:
+    def __init__(self, df_results: pd.DataFrame):
+        self.df_results = df_results
+        self.group_vars = ['conversion', 'list_name', 'null_type', 'dtype_passed_to_ser_constructor']
+        self.all_combos = self._get_all_combinations()
+
+    def _get_all_combinations(self) -> dict[str, pd.DataFrame]:
+        all_combos = {}
+        for idx_group_vars in range(1, len(self.group_vars) + 1):
+            for variable_combo in combinations(self.group_vars, idx_group_vars):
+                pattern = (
+                    self.df_results
+                    .groupby(list(variable_combo))['result']
+                    .agg([
+                        ('total_count', 'count'),
+                        ('failure_count', lambda x: (x == 'Failure').sum()),
+                        ('failure_rate', lambda x: (x == 'Failure').sum() / len(x))
+                    ])
+                    .sort_values('failure_rate', ascending=False)
+                )
+                combo_name = ' + '.join(variable_combo)
+                all_combos[combo_name] = pattern
+        return all_combos
+
+    def _get_txt_combos_at_specific_failure_rate(self, failure_rate: float) -> list[str | pd.DataFrame]:
+        msg_parts = []
+        for combo_name, pattern in self.all_combos.items():
+            meets_fail_rate = pattern[pattern['failure_rate'] == failure_rate]
+            if len(meets_fail_rate) > 0:
+                msg_parts.append(f""\n{combo_name}:\n"")
+                msg_parts.append(meets_fail_rate)
+        return msg_parts
+
+    def _get_text_always_header(self, text: str) -> list[str]:
+        hr = '\n' + ('=' * 80) + '\n'
+        return [hr, text, hr]
+
+    def show_summary(self) -> None:
+
+        # Find combinations that always fail (100% failure rate)
+        hdr_always_fail = self._get_text_always_header('PATTERNS THAT ALWAYS FAIL')
+        txt_always_fail = self._get_txt_combos_at_specific_failure_rate(1.0)
+        
+        # Find combinations that always succeed (0% failure rate)
+        hdr_always_succeed = self._get_text_always_header('PATTERNS THAT ALWAYS SUCCEED')
+        txt_always_succeed = self._get_txt_combos_at_specific_failure_rate(0.0)
+
+        for content in hdr_always_fail + txt_always_fail + hdr_always_succeed + txt_always_succeed:
+            print(content)
+
+obj_run = RunTrials(CARTESIAN)
+df_results = obj_run.to_df()
+df_failures = obj_run.to_df_failures()
+# df_results.to_clipboard()
+
+obj_patterns = FindPatterns(df_results)
+# obj_patterns.show_summary()
+
+```
+
+</details>
+
+### Expected Behavior
+
+Using `isna` and `dropna` should consistently find null-like values.  
+```python  
+ser = pd.Series([1, np.nan], dtype=np.float64) # 1 na value
+pd.to_numeric(ser, dtype_backend='numpy_nullable').isna().sum() # Should return 1
+pd.to_numeric(ser, dtype_backend='pyarrow').isna().sum() # Should return 1
+```
+
+See `df_results.query('result == ""AsExpected""')` from the *Full Details* section for 54 examples of the expected behavior.
+
+### Installed Versions
+
+## Local device 
+
+<details>
+
+```text
+INSTALLED VERSIONS
+------------------
+commit                : 9c8bc3e55188c8aff37207a74f1dd144980b8874
+python                : 3.13.9
+python-bits           : 64
+OS                    : Windows
+OS-release            : 11
+Version               : 10.0.26200
+machine               : AMD64
+processor             : Intel64 Family 6 Model 170 Stepping 4, GenuineIntel
+byteorder             : little
+LC_ALL                : None
+LANG                  : en_US.UTF-8
+LOCALE                : English_United States.1252
+
+pandas                : 2.3.3
+numpy                 : 2.3.4
+pytz                  : 2025.2
+dateutil              : 2.9.0.post0
+pip                   : 25.2
+Cython                : None
+sphinx                : None
+IPython               : 9.7.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.14.2
+blosc                 : None
+bottleneck            : None
+dataframe-api-compat  : None
+fastparquet           : None
+fsspec                : None
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : 3.1.6
+lxml.etree            : 6.0.2
+matplotlib            : 3.10.7
+numba                 : None
+numexpr               : None
+odfpy                 : None
+openpyxl              : 3.1.5
+pandas_gbq            : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : 22.0.0
+pyreadstat            : 1.3.2
+pytest                : 9.0.2
+python-calamine       : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.16.3
+sqlalchemy            : None
+tables                : None
+tabulate              : None
+xarray                : None
+xlrd                  : None
+xlsxwriter            : 3.2.9
+zstandard             : 0.25.0
+tzdata                : 2025.2
+qtpy                  : None
+pyqt5                 : None
+```
+</details>
+
+## Replicated on Google Colab  
+
+<details>  
+
+```text
+INSTALLED VERSIONS
+------------------
+commit                : d9cdd2ee5a58015ef6f4d15c7226110c9aab8140
+python                : 3.12.12.final.0
+python-bits           : 64
+OS                    : Linux
+OS-release            : 6.6.105+
+Version               : #1 SMP Thu Oct  2 10:42:05 UTC 2025
+machine               : x86_64
+processor             : x86_64
+byteorder             : little
+LC_ALL                : en_US.UTF-8
+LANG                  : en_US.UTF-8
+LOCALE                : en_US.UTF-8
+
+pandas                : 2.2.2
+numpy                 : 2.0.2
+pytz                  : 2025.2
+dateutil              : 2.9.0.post0
+setuptools            : 75.2.0
+pip                   : 24.1.2
+Cython                : 3.0.12
+pytest                : 8.4.2
+hypothesis            : None
+sphinx                : 8.2.3
+blosc                 : None
+feather               : None
+xlsxwriter            : None
+lxml.etree            : 6.0.2
+html5lib              : 1.1
+pymysql               : None
+psycopg2              : 2.9.11
+jinja2                : 3.1.6
+IPython               : 7.34.0
+pandas_datareader     : 0.10.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.13.5
+bottleneck            : 1.4.2
+dataframe-api-compat  : None
+fastparquet           : None
+fsspec                : 2025.3.0
+gcsfs                 : 2025.3.0
+matplotlib            : 3.10.0
+numba                 : 0.60.0
+numexpr               : 2.14.1
+odfpy                 : None
+openpyxl              : 3.1.5
+pandas_gbq            : 0.30.0
+pyarrow               : 18.1.0
+pyreadstat            : None
+python-calamine       : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.16.3
+sqlalchemy            : 2.0.45
+tables                : 3.10.2
+tabulate              : 0.9.0
+xarray                : 2025.12.0
+xlrd                  : 2.0.2
+zstandard             : 0.25.0
+tzdata                : 2025.3
+qtpy                  : None
+pyqt5                 : None  
+```
+</details>","2026-01-18T08:12:37Z","open","Bug,Needs Triage","TRUE",""
+"pandas","63757","https://github.com/pandas-dev/pandas/issues/63757","BUG: inconsistent date string conversion leads to large downstream performance degradation.  ","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+Depending on the csv format, matplot lib can't understand the date format and prints string instead of dates. This prevent plt from properly handling overlapping x points.
+
+```python
+    import pandas as pd
+    data = pd.read_csv(outfile, parse_dates=[""timestamp""])
+    print(data)
+    plt.figure(figsize=(10, 6))
+    plt.plot(
+        data[""timestamp""], data[""mean_ms""], label=""Mean Latency (ms)"", color=""blue""
+    )
+    plt.plot(
+        data[""timestamp""], data[""median_ms""], label=""Median Latency (ms)"", color=""green""
+    )
+
+    plt.xlabel(""Time"")
+    plt.ylabel(""Latency (ms)"")
+    plt.yscale(""log"")  # <-- Logarithmic Y-axis
+    plt.title(f""Filesystem Latency Over Time: {name_label}"")
+    plt.legend()
+    plt.grid(True, which=""both"", linestyle=""--"", linewidth=0.5)  # optional, improves log-scale grid
+    plt.tight_layout()
+    out_png = f""latency_trend_{name_label}.png""
+    plt.savefig(out_png)
+    plt.close()
+    print(f""Plot updated -> {out_png}"")
+```
+
+### Actual outcome
+
+Assume two csv, one leading to a broken state:
+```
+timestamp,count,min_ms,max_ms,median_ms,q10_ms,q90_ms,mean_ms
+2026-01-18T09:54:55.992045,3,125.598282,177.849797,134.512944,127.3812144,169.1824264,145.98700766666664
+2026-01-18T09:55:06.003724,3,127.66462,177.592098,136.003603,129.3324166,169.274399,147.08677366666666
+2026-01-18T09:55:16.414701,3,127.038487,174.363733,131.508812,127.932552,165.7927488,144.30367733333333
+2026-01-18T09:55:25.994860,3,124.867563,178.87952,136.773244,127.2486992,170.45826480000002,146.840109
+2026-01-18T09:55:36.418578,3,125.242661,179.326366,134.553067,127.1047422,170.3717062,146.37403133333333
+2026-01-18T10:18:05.425304,3,127.058796,180.138256,134.612707,128.5695782,171.0331462,147.26991966666668
+2026-01-19T16:08:00.017532,3,126.138651,147.071413,136.932927,128.2975062,145.0437158,136.71433033333332
+2026-01-19T16:08:13.082541,3,127.325453,145.948022,136.355741,129.13151059999998,144.0295658,136.54307200000002
+2026-01-19T16:08:22.997793,3,131.911903,147.166113,137.220907,132.9737038,145.1770718,138.76630766666668
+2026-01-19T16:09:55,3,129.603559,147.074926,135.932547,130.8693566,144.8464502,137.53701066666667
+```
+
+Note the last line. this leads matplotlib to generate a graph like so:
+<img width=""1000"" height=""600"" alt=""Image"" src=""https://github.com/user-attachments/assets/b534ab81-be6d-4d22-8cb4-e7fb83e65f52"" />
+
+### Expected outcome
+
+An other one not triggering the bug:
+```
+timestamp,count,min_ms,max_ms,median_ms,q10_ms,q90_ms,mean_ms
+2026-01-18T09:54:55.992045,3,125.598282,177.849797,134.512944,127.3812144,169.1824264,145.98700766666664
+2026-01-18T09:55:06.003724,3,127.66462,177.592098,136.003603,129.3324166,169.274399,147.08677366666666
+2026-01-18T09:55:16.414701,3,127.038487,174.363733,131.508812,127.932552,165.7927488,144.30367733333333
+2026-01-18T09:55:25.994860,3,124.867563,178.87952,136.773244,127.2486992,170.45826480000002,146.840109
+2026-01-18T09:55:36.418578,3,125.242661,179.326366,134.553067,127.1047422,170.3717062,146.37403133333333
+2026-01-18T10:18:05.425304,3,127.058796,180.138256,134.612707,128.5695782,171.0331462,147.26991966666668
+2026-01-19T16:08:00.017532,3,126.138651,147.071413,136.932927,128.2975062,145.0437158,136.71433033333332
+2026-01-19T16:08:13.082541,3,127.325453,145.948022,136.355741,129.13151059999998,144.0295658,136.54307200000002
+2026-01-19T16:08:22.997793,3,131.911903,147.166113,137.220907,132.9737038,145.1770718,138.76630766666668
+2026-01-19T16:09:55.0,3,129.603559,147.074926,135.932547,130.8693566,144.8464502,137.53701066666667
+2026-01-19T16:12:13.636429,3,128.80892,148.316719,138.636018,130.7743396,146.3805788,138.587219
+2026-01-19T16:12:23.561082,3,131.215027,148.959601,136.480908,132.2682032,146.46386239999998,138.88517866666666
+```
+
+Instead of the valid:
+<img width=""1000"" height=""600"" alt=""Image"" src=""https://github.com/user-attachments/assets/62aa45c4-1416-43b1-8ffe-c28e1fd9c369"" />
+
+### Additional information
+
+_No response_
+
+### Operating system
+
+_No response_
+
+### Matplotlib Version
+
+3.10.0
+
+### Installation
+
+pip
+```
+
+### Installed Versions
+
+<details>
+INSTALLED VERSIONS
+------------------
+commit                : 0691c5cf90477d3503834d983f69350f250a6ff7
+python                : 3.12.1
+python-bits           : 64
+OS                    : Linux
+OS-release            : 4.18.0-553.22.1.el8_10.x86_64
+Version               : #1 SMP Wed Sep 11 18:02:00 EDT 2024
+machine               : x86_64
+processor             : x86_64
+byteorder             : little
+LC_ALL                : None
+LANG                  : en_US.UTF-8
+LOCALE                : en_US.UTF-8
+
+pandas                : 2.2.3
+numpy                 : 2.2.6
+pytz                  : 2025.2
+dateutil              : 2.8.2
+pip                   : 25.2
+Cython                : 0.29.36
+sphinx                : None
+IPython               : 8.32.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.13.4
+blosc                 : None
+bottleneck            : None
+dataframe-api-compat  : None
+fastparquet           : None
+fsspec                : 2023.10.0
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : 3.1.5
+lxml.etree            : 5.4.0
+matplotlib            : 3.10.0
+numba                 : None
+numexpr               : 2.10.2
+odfpy                 : None
+openpyxl              : None
+pandas_gbq            : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : 19.0.0
+pyreadstat            : None
+pytest                : None
+python-calamine       : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.13.1
+sqlalchemy            : 2.0.41
+tables                : None
+tabulate              : 0.9.0
+xarray                : 2025.1.2
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+tzdata                : 2025.2
+qtpy                  : None
+pyqt5                 : None
+
+</details>
+","2026-01-19T16:20:16Z","open","Bug,Needs Triage","TRUE",""
+"pandas","64123","https://github.com/pandas-dev/pandas/issues/64123","BUG: Different result from str.find depending on dtype","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+examples=['ga',
+          'Áa',
+          '永a',
+          '🐍a']
+for t in examples:
+    objects = pd.Series([t], dtype=object)
+    strs = pd.Series([t], dtype=str)
+    print('python:', t.find('a'), 
+          'pandas with object type:', objects.str.find('a')[0],
+          'pandas with string type:', strs.str.find('a')[0],          
+          )
+```
+
+### Issue Description
+
+`str.find` appears to be indexing its result based on bytes rather than characters. In the example, the basic python `str` type, and a `Series` using the `object` `dtype`, `find('a')` is `1` for all the example strings, as expected. With a `Series` using the new `str` `dtype`, the result is 1, 2, 3, and 4 respectively. Note that encoded in UTF-8, Á takes two bytes, 永 takes three, and 🐍 takes four, so I suspect it's counting bytes instead of characters. `len` gives a result of 2 regardless of dtype.
+
+### Expected Behavior
+
+The result of `str.find` shouldn't change depending on dtype.
+
+### Installed Versions
+
+<details>
+
+INSTALLED VERSIONS
+------------------
+commit                : cc9e131258c3f6a2df793c3876ea708e192b4875
+python                : 3.13.12
+python-bits           : 64
+OS                    : Windows
+OS-release            : 11
+Version               : 10.0.26200
+machine               : AMD64
+processor             : Intel64 Family 6 Model 140 Stepping 1, GenuineIntel
+byteorder             : little
+LC_ALL                : None
+LANG                  : None
+LOCALE                : English_United States.1252
+
+pandas                : 3.1.0.dev0+140.gcc9e131258
+numpy                 : 2.4.2
+dateutil              : 2.9.0.post0
+pip                   : 26.0.1
+Cython                : None
+sphinx                : 9.1.0
+IPython               : 9.10.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.14.3
+bottleneck            : None
+fastparquet           : None
+fsspec                : None
+html5lib              : 1.1
+hypothesis            : None
+gcsfs                 : None
+jinja2                : 3.1.6
+lxml.etree            : 6.0.2
+matplotlib            : 3.10.8
+numba                 : None
+numexpr               : None
+odfpy                 : None
+openpyxl              : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : 23.0.0
+pyiceberg             : None
+pyreadstat            : None
+pytest                : 9.0.2
+python-calamine       : None
+pytz                  : 2025.2
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.17.0
+sqlalchemy            : None
+tables                : None
+tabulate              : 0.9.0
+xarray                : 2026.1.0
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+qtpy                  : 2.4.3
+pyqt5                 : None
+</details>
+","2026-02-12T00:14:15Z","closed","Bug,Strings,Arrow","TRUE",""
+"pandas","64196","https://github.com/pandas-dev/pandas/issues/64196","BUG: For `infer_dtype` `skipna` is ignored for Period / Interval","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+import numpy as np
+from pandas.api.types import infer_dtype
+
+print(""interval skipna=True :"", infer_dtype([pd.Interval(0, 1), None], skipna=True))
+print(""interval skipna=False:"", infer_dtype([pd.Interval(0, 1), None], skipna=False))
+
+print(""period skipna=True   :"", infer_dtype([pd.Period(""2020Q1""), np.nan], skipna=True))
+print(""period skipna=False  :"", infer_dtype([pd.Period(""2020Q1""), np.nan], skipna=False))
+```
+
+### Issue Description
+
+`pandas.api.types.infer_dtype` accepts a `skipna` argument, but for `Period` and `Interval` inputs it is currently not applied:
+
+* Interval inference does not pass `skipna` into its validation helper.
+* Period inference contains a `FIXME` noting that `skipna` is not actually used.
+
+As a result, `skipna=False` has no effect for these dtypes.
+
+The wiring itself is straightforward, but I’d like to discuss and confirm the desired behavior once `skipna` is honored (e.g. whether the result should become `mixed`, remain `period`/`interval`, or something different? ) before proceeding with an implementation.
+
+
+
+### Expected Behavior
+
+`skipna` should actually be honored for `Period` and `Interval` inference. Once we wire it through, I’d expect `skipna=False` to have a real effect when missing values are present (i.e., it shouldn’t behave the same as `skipna=True`).
+
+
+### Installed Versions
+
+<details>
+
+
+INSTALLED VERSIONS
+------------------
+commit                : d9cdd2ee5a58015ef6f4d15c7226110c9aab8140
+python                : 3.12.12.final.0
+python-bits           : 64
+OS                    : Linux
+OS-release            : 6.6.105+
+Version               : #1 SMP Thu Oct  2 10:42:05 UTC 2025
+machine               : x86_64
+processor             : x86_64
+byteorder             : little
+LC_ALL                : en_US.UTF-8
+LANG                  : en_US.UTF-8
+LOCALE                : en_US.UTF-8
+
+pandas                : 2.2.2
+numpy                 : 2.0.2
+pytz                  : 2025.2
+dateutil              : 2.9.0.post0
+setuptools            : 75.2.0
+pip                   : 24.1.2
+Cython                : 3.0.12
+pytest                : 8.4.2
+hypothesis            : None
+sphinx                : 8.2.3
+blosc                 : None
+feather               : None
+xlsxwriter            : None
+lxml.etree            : 6.0.2
+html5lib              : 1.1
+pymysql               : None
+psycopg2              : 2.9.11
+jinja2                : 3.1.6
+IPython               : 7.34.0
+pandas_datareader     : 0.10.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.13.5
+bottleneck            : 1.4.2
+dataframe-api-compat  : None
+fastparquet           : None
+fsspec                : 2025.3.0
+gcsfs                 : 2025.3.0
+matplotlib            : 3.10.0
+numba                 : 0.60.0
+numexpr               : 2.14.1
+odfpy                 : None
+openpyxl              : 3.1.5
+pandas_gbq            : 0.30.0
+pyarrow               : 18.1.0
+pyreadstat            : None
+python-calamine       : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.16.3
+sqlalchemy            : 2.0.46
+tables                : 3.10.2
+tabulate              : 0.9.0
+xarray                : 2025.12.0
+xlrd                  : 2.0.2
+zstandard             : 0.25.0
+tzdata                : 2025.3
+qtpy                  : None
+pyqt5                 : None
+
+</details>
+","2026-02-17T15:32:58Z","open","Bug,Needs Triage","TRUE",""
+"pandas","64978","https://github.com/pandas-dev/pandas/issues/64978","BUG: read_parquet fails with tz aware data","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+
+# Create datetime ranges
+date_range_naive = pd.date_range(start='2024-01-01', periods=5, freq='D')
+date_range_aware = pd.date_range(start='2024-01-01', periods=5, freq='D', tz='Europe/Berlin')
+
+# Create DataFrames
+df_naive = pd.DataFrame({
+    'value': range(5)
+}, index=date_range_naive)
+
+df_aware = pd.DataFrame({
+    'value': range(5, 10)
+}, index=date_range_aware)
+
+
+df_naive.to_parquet('df_naive.parquet')
+df_aware.to_parquet('df_aware.parquet')
+
+# Read DataFrames back from Parquet files
+df_naive_read = pd.read_parquet('df_naive.parquet')
+df_aware_read = pd.read_parquet('df_aware.parquet')
+```
+
+### Issue Description
+
+Loading data with tz aware Datetime Index from parquet seems to fail. I have a lot of data saved this way with pandas 2.x where loading does work. Using pandas 3, loading fails. Same goes for data newly created. Writing completes, reading fails. See Sample above yields
+`AttributeError: 'NoneType' object has no attribute 'timezone'`
+
+### Expected Behavior
+
+Read in dataframe the same manner as it was written, especially with a tz aware `DateTimeIndex`
+
+### Installed Versions
+
+<details>
+
+```
+INSTALLED VERSIONS
+------------------
+commit                : ab90747e3dae0e69b1bdbf083820b8075689b34b
+python                : 3.11.11
+python-bits           : 64
+OS                    : Windows
+OS-release            : 10
+Version               : 10.0.26100
+machine               : AMD64
+processor             : Intel64 Family 6 Model 140 Stepping 1, GenuineIntel
+byteorder             : little
+LC_ALL                : None
+LANG                  : en
+LOCALE                : de_DE.cp1252
+
+pandas                : 3.0.2
+numpy                 : 2.3.4
+dateutil              : 2.9.0.post0
+pip                   : 24.3.1
+Cython                : None
+sphinx                : 8.1.3
+IPython               : 8.31.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.12.3
+bottleneck            : None
+fastparquet           : 2026.3.0
+fsspec                : 2026.3.0
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : 3.1.5
+lxml.etree            : 5.3.0
+matplotlib            : 3.10.0
+numba                 : 0.62.1
+numexpr               : 2.10.2
+odfpy                 : None
+openpyxl              : 3.1.5
+psycopg2              : None
+pymysql               : None
+pyarrow               : 18.1.0
+pyiceberg             : None
+pyreadstat            : None
+pytest                : None
+python-calamine       : None
+pytz                  : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.15.1
+sqlalchemy            : None
+tables                : None
+tabulate              : 0.9.0
+xarray                : None
+xlrd                  : 2.0.1
+xlsxwriter            : 3.2.0
+zstandard             : 0.23.0
+qtpy                  : 2.4.2
+pyqt5                 : None
+```
+
+</details>
+","2026-04-01T12:19:42Z","closed","Bug,Timezones,IO Parquet","TRUE",""
+"pandas","65458","https://github.com/pandas-dev/pandas/issues/65458","BUG: `Series.values` returns inconsistent type (`ndarray` vs `MaskedArray`) depending on whether DataFrame rows are pre-sorted by groupby key","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [x] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import numpy as np
+import pandas as pd
+
+print(pd.__version__)
+
+bins = np.linspace(0., 100., 101)
+xc   = 0.5 * (bins[1:] + bins[:-1])
+
+for label, x, y in [
+    (""non-empty, y sorted by bin"",   np.ma.array([0.1, 0.2, 0.3]), np.array([25., 50., 75.])),
+    (""non-empty, y unsorted by bin"", np.ma.array([0.1, 0.2, 0.3]), np.array([50., 75., 25.])),
+    (""empty"",                        np.ma.array([], dtype=float),  np.array([])),
+]:
+    df = pd.DataFrame()
+    df[""x""] = x
+    df[""y""] = y
+    df = df.loc[:, [""x"", ""y""]]
+    df.reset_index(inplace=True)
+    df[""bin""] = pd.cut(df[""y""].values, bins=bins, labels=[str(c) for c in xc])
+    for name, grp in df.groupby(""bin"", observed=False):
+        print(f""{label}: {type(grp['x'].values).__name__}"")
+        break
+```
+prints
+```
+3.1.0.dev0+824.gb00d4f6710
+non-empty, y sorted by bin: MaskedArray
+non-empty, y unsorted by bin: ndarray
+empty: MaskedArray
+```
+
+### Issue Description
+
+When a `numpy.ma.MaskedArray` column is stored in a DataFrame and groups are iterated via `groupby(..., observed=False)`, the type returned by `Series.values` depends on whether the rows happen to be pre-sorted by the groupby key and on whether the DataFrame is empty. The same column, same dtype, same group, just different row ordering or DataFrame size, produces either `ndarray` or `MaskedArray`.
+
+### Expected Behavior
+
+`Series.values` should return a consistent type regardless of whether the underlying DataFrame rows are sorted, unsorted, or empty. Given the column dtype is numeric (e.g. `float64`), `ndarray` is the expected return type in all three cases.
+
+### Installed Versions
+
+<details>
+INSTALLED VERSIONS
+------------------
+commit                : b00d4f6710ff6c1c80319196657c31c2cf6c70ff
+python                : 3.13.13
+python-bits           : 64
+OS                    : Linux
+OS-release            : 6.19.13-arch1-1
+Version               : #1 SMP PREEMPT_DYNAMIC Tue, 21 Apr 2026 23:38:22 +0000
+machine               : x86_64
+processor             :
+byteorder             : little
+LC_ALL                : None
+LANG                  : en_US.UTF-8
+LOCALE                : en_US.UTF-8
+
+pandas                : 3.1.0.dev0+824.gb00d4f6710
+numpy                 : 2.4.3
+dateutil              : 2.9.0.post0
+pip                   : 26.0.1
+Cython                : None
+sphinx                : None
+IPython               : 9.13.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.14.3
+bottleneck            : None
+fastparquet           : None
+fsspec                : 2026.3.0
+html5lib              : None
+hypothesis            : None
+gcsfs                 : None
+jinja2                : 3.1.6
+lxml.etree            : None
+matplotlib            : 3.10.9
+numba                 : 0.65.1
+numexpr               : 2.14.1
+odfpy                 : None
+openpyxl              : None
+psycopg2              : None
+pymysql               : None
+pyarrow               : 24.0.0
+pyiceberg             : None
+pyreadstat            : None
+pytest                : 9.0.3
+python-calamine       : None
+pytz                  : None
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.17.1
+sqlalchemy            : None
+tables                : None
+tabulate              : None
+xarray                : None
+xlrd                  : None
+xlsxwriter            : None
+zstandard             : None
+qtpy                  : None
+pyqt5                 : None
+
+</details>
+","2026-05-04T06:56:26Z","open","Bug,Algos","TRUE",""
+"pandas","65833","https://github.com/pandas-dev/pandas/issues/65833","BUG: ignore_index=True has no effect on already sorted Series","### Pandas version checks
+
+- [x] I have checked that this issue has not already been reported.
+
+- [x] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.
+
+- [ ] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.
+
+
+### Reproducible Example
+
+```python
+import pandas as pd
+
+x = pd.Series([1, 2, 3], index=[2, 3, 4])
+y = pd.Series([2, 1, 3], index=[2, 3, 4])
+
+print(x.sort_values(ignore_index=True))
+print(y.sort_values(ignore_index=True))
+print(x.sort_values(ignore_index=True, ascending=False))
+```
+
+### Issue Description
+
+```python
+import pandas as pd
+
+x = pd.Series([1, 2, 3], index=[2, 3, 4])
+y = pd.Series([2, 1, 3], index=[2, 3, 4])
+x, y
+```
+
+
+
+
+    (2    1
+     3    2
+     4    3
+     dtype: int64,
+     2    2
+     3    1
+     4    3
+     dtype: int64)
+
+
+
+
+```python
+x.sort_values(ignore_index=True) # sort_values(ignore_index=True) returns original index instead of 0,1,…,n-1 when Series is already sorted
+```
+
+
+
+
+    2    1
+    3    2
+    4    3
+    dtype: int64
+
+
+
+
+```python
+y.sort_values(ignore_index=True)
+```
+
+
+
+
+    0    1
+    1    2
+    2    3
+    dtype: int64
+
+
+
+
+```python
+x.sort_values(ignore_index=True, ascending=False)
+```
+
+
+
+
+    0    3
+    1    2
+    2    1
+    dtype: int64
+
+
+
+
+### Expected Behavior
+
+```python
+x.sort_values(ignore_index=True)
+```
+
+
+
+
+    0    1
+    1    2
+    2    3
+    dtype: int64
+
+
+
+
+
+### Installed Versions
+
+<details>
+
+
+INSTALLED VERSIONS
+------------------
+commit                : 72f2fea91530b5abb3cf2100cb22d84e504695c0
+python                : 3.14.0
+python-bits           : 64
+OS                    : Windows
+OS-release            : 11
+Version               : 10.0.26200
+machine               : AMD64
+processor             : AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD
+byteorder             : little
+LC_ALL                : None
+LANG                  : None
+LOCALE                : Chinese (Simplified)_China.936
+
+pandas                : 3.0.3
+numpy                 : 2.3.4
+dateutil              : 2.9.0.post0
+pip                   : 25.2
+Cython                : None
+sphinx                : None
+IPython               : 9.6.0
+adbc-driver-postgresql: None
+adbc-driver-sqlite    : None
+bs4                   : 4.14.2
+bottleneck            : None
+fastparquet           : None
+fsspec                : None
+html5lib              : 1.1
+hypothesis            : None
+gcsfs                 : None
+jinja2                : 3.1.6
+lxml.etree            : 6.0.2
+matplotlib            : 3.10.7
+numba                 : None
+numexpr               : None
+odfpy                 : None
+openpyxl              : 3.1.5
+psycopg2              : None
+pymysql               : None
+pyarrow               : None
+pyiceberg             : None
+pyreadstat            : None
+pytest                : None
+python-calamine       : None
+pytz                  : 2025.2
+pyxlsb                : None
+s3fs                  : None
+scipy                 : 1.16.3
+sqlalchemy            : None
+tables                : None
+tabulate              : 0.10.0
+xarray                : None
+xlrd                  : 2.0.2
+xlsxwriter            : None
+zstandard             : None
+qtpy                  : None
+pyqt5                 : None
+
+
+</details>
+","2026-06-09T14:02:43Z","closed","Bug,Series,Sorting","TRUE",""
+"scikit-learn","28632","https://github.com/scikit-learn/scikit-learn/issues/28632","[Bug] `sklearn.base.BaseEstimator` subclasses not decoratable","### Describe the bug
+
+Greetings, wondrous `sklearn` maintainers. This is @leycec, the maintainer of @beartype – a third-generation hybrid static-runtime type-checker with far too many hyphens in its description. Who even knows what that means at this point. The point is that I recently [fielded an issue](https://github.com/beartype/beartype/issues/340) from [one of my favourite users](https://github.com/tvdboom) requesting support for `sklearn` ""metadata routing."" I don't even know what that is... *but it sounds hot.*
+
+Sadly, @beartype cannot provide this support – because the `sklearn.base.BaseEstimator` subclass fails to support decoration at a core level. That's outside our scope of control. But first, the minimal reproducible example (MRE) exhibiting this issue:
+
+### Steps/Code to Reproduce
+
+```python
+import sklearn
+from sklearn.base import BaseEstimator
+
+sklearn.set_config(enable_metadata_routing=True)
+
+class A(BaseEstimator):
+    def fit(self, X, y, sample_weight=None):
+        return self
+
+A.set_fit_request = A.set_fit_request
+a = A().set_fit_request(sample_weight=True)
+```
+
+### Expected Results
+
+No exception is raised.
+
+### Actual Results
+
+```python
+Traceback (most recent call last):
+  File ""/home/leycec/tmp/mopy.py"", line 13, in <module>
+    a = A().set_fit_request(sample_weight=True)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: RequestMethod.__get__.<locals>.func() takes 0 positional arguments but 1 was given
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.12.2 (main, Mar  9 2024, 18:58:45) [GCC 13.2.1 20240113]
+executable: /usr/bin/python3.12
+   machine: Linux-6.1.67-gentoo-x86_64-AMD_Athlon-tm-_II_X2_240_Processor-with-glibc2.38
+
+Python dependencies:
+      sklearn: 1.3.2
+          pip: 24.0
+   setuptools: 69.1.1
+        numpy: 1.26.4
+        scipy: 1.12.0
+       Cython: 3.0.8
+       pandas: 2.2.0
+   matplotlib: 3.8.3
+       joblib: 1.3.2
+threadpoolctl: 3.3.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 6
+         prefix: libopenblas
+       filepath: /usr/lib64/libopenblas_barcelonap-r0.3.25.so
+        version: 0.3.25
+threading_layer: openmp
+   architecture: BARCELONA
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 2
+         prefix: libgomp
+       filepath: /usr/lib/gcc/x86_64-pc-linux-gnu/13/libgomp.so.1.0.0
+        version: None
+```
+```
+","2024-03-15T05:53:52Z","closed","Bug","TRUE",""
+"scikit-learn","28859","https://github.com/scikit-learn/scikit-learn/issues/28859","`parametrize_with_checks` fails if custom estimator implements `__call__`","### Describe the bug
+
+Title.
+
+### Steps/Code to Reproduce
+
+```python
+from sklearn.utils.estimator_checks import parametrize_with_checks
+
+
+class MyEstimator:
+    """"""Dummy estimator.""""""
+
+    def get_params(self, *, deep=True):
+        return {}
+
+    def set_params(self, **kwargs):
+        pass
+
+    def fit(self, X, y=None):
+        return self
+
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
+
+    def transform(self, X):
+        return X
+
+    def __call__(self, X):
+        return self.transform(X)
+
+
+@parametrize_with_checks([MyEstimator()])
+def test_sklearn_compatibility(estimator, check):
+    check(estimator)
+```
+
+### Expected Results
+
+The tests should run.
+
+### Actual Results
+
+Parametrizing the tests fails, because `_get_check_estimator_ids` thinks it's a function tries to look up `obj.__name__`, which doesn't exist.
+
+### Versions
+
+```shell
+System:
+    python: 3.11.6 (main, Oct 16 2023, 19:37:59) [GCC 11.4.0]
+executable: /home/rscholz/Projects/KIWI/tsdm/.venv/bin/python
+   machine: Linux-6.5.0-27-generic-x86_64-with-glibc2.35
+
+Python dependencies:
+      sklearn: 1.4.2
+          pip: 24.0
+   setuptools: 69.5.1
+        numpy: 1.26.4
+        scipy: 1.13.0
+       Cython: None
+       pandas: 2.2.2
+   matplotlib: 3.8.4
+       joblib: 1.4.0
+threadpoolctl: 3.4.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 24
+         prefix: libgomp
+       filepath: /home/rscholz/Projects/KIWI/tsdm/.venv/lib/python3.11/site-packages/scikit_learn.libs/libgomp-a34b3233.so.1.0.0
+        version: None
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 24
+         prefix: libopenblas
+       filepath: /home/rscholz/Projects/KIWI/tsdm/.venv/lib/python3.11/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+        version: 0.3.23.dev
+threading_layer: pthreads
+   architecture: Zen
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 24
+         prefix: libopenblas
+       filepath: /home/rscholz/Projects/KIWI/tsdm/.venv/lib/python3.11/site-packages/scipy.libs/libopenblasp-r0-24bff013.3.26.dev.so
+        version: 0.3.26.dev
+threading_layer: pthreads
+   architecture: Zen
+```
+","2024-04-19T09:45:21Z","closed","Bug","TRUE",""
+"scikit-learn","29202","https://github.com/scikit-learn/scikit-learn/issues/29202","scikit-learn algorithm cheat sheet (Diagram)","### Describe the bug
+
+It seems there is some wrong path, described for choosing the estimator in the main diagram as compared to the previous versions.
+https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
+So, the moment you hit the above link you will get a diagram to choose the right estimator, but it is not taking me in the right direction. I think so (issue mentioned in the screenshot)
+Wrong diagram screenshot
+![image](https://github.com/scikit-learn/scikit-learn/assets/40638304/bb37002d-5549-4b71-92ce-42b7c0ea1c3b)
+
+correct diagram screenshot
+![image](https://github.com/scikit-learn/scikit-learn/assets/40638304/ec26f3ee-9f4b-482c-b2f5-916ace942ae7)
+
+
+### Steps/Code to Reproduce
+
+Getting wrong direction for estimator
+
+### Expected Results
+
+correct diagram screenshot
+![image](https://github.com/scikit-learn/scikit-learn/assets/40638304/ec26f3ee-9f4b-482c-b2f5-916ace942ae7)
+
+### Actual Results
+
+Wrong diagram screenshot
+![image](https://github.com/scikit-learn/scikit-learn/assets/40638304/bb37002d-5549-4b71-92ce-42b7c0ea1c3b)
+
+### Versions
+
+```shell
+v1.5.0
+```
+","2024-06-06T10:27:55Z","closed","Bug,Needs Triage","TRUE",""
+"scikit-learn","29989","https://github.com/scikit-learn/scikit-learn/issues/29989","GaussianMixture log-probabilities are numerically inaccurate","### Describe the bug
+
+While building an extension to (already fitted) GaussianMixture models (https://github.com/JohannesBuchner/askcarl/),
+I was using https://hypothesis.readthedocs.io/ for testing and came across numerical inaccuracies in the log-probabilities computed by scikit-learn's GaussianMixture. These already occur with single components, where one can take  scipy.stats.multivariate_normal.logpdf as the ground truth.
+
+The inaccuracies appear in the function `_estimate_log_gaussian_prob`.
+
+The log-probabilities can be off by 0.2 (see the very last example), which really is not small if those probabilities are used for likelihoods.
+
+I uploaded the full script at https://github.com/JohannesBuchner/gmm-tests/blob/main/test_sklearn.py but the important excerpts are below. A unrelated issue I have is that I want to build sklearn.mixture.GaussianMixture from scratch without fitting it, but .score and .predict_proba always give 0 and 1, respectively. Is there a initialization step I am missing to be allowed to use these functions?
+
+EDIT (by @ogrisel): here is a copy of the reproducer (to make this report self-contained):
+
+<details>
+
+```python
+
+import numpy as np
+from numpy import array
+from scipy.stats import multivariate_normal
+from scipy.special import logsumexp
+from numpy.testing import assert_allclose
+from hypothesis import given, strategies as st, example, settings
+from hypothesis.extra.numpy import arrays
+import sklearn.mixture
+from  sklearn.mixture._gaussian_mixture import _estimate_log_gaussian_prob
+
+def valid_QR(vectors):
+    q, r = np.linalg.qr(vectors)
+    return q.shape == vectors.shape and np.all(np.abs(np.diag(r)) > 1e-3) and np.all(np.abs(np.diag(r)) < 1000)
+
+def make_covariance_matrix_via_QR(normalisations, vectors):
+    q, r = np.linalg.qr(vectors)
+    orthogonal_vectors = q @ np.diag(np.diag(r))
+    cov = orthogonal_vectors @ np.diag(normalisations) @ orthogonal_vectors.T
+    return cov
+
+def valid_covariance_matrix(A, min_std=1e-6):
+    if not np.isfinite(A).all():
+        return False
+    #if not np.std(A) > min_std:
+    #    return False
+    if (np.diag(A) <= min_std).any():
+        return False
+
+    try:
+        np.linalg.inv(np.linalg.inv(A))
+    except np.linalg.LinAlgError:
+        return False
+
+    try:
+        multivariate_normal(mean=np.zeros(len(A)), cov=A)
+    except ValueError:
+        return False
+
+    return True
+
+# Strategy to generate arbitrary dimensionality mean and covariance
+@st.composite
+def mean_and_cov(draw):
+    dim = draw(st.integers(min_value=1, max_value=10))  # Arbitrary dimensionality
+    mu = draw(arrays(np.float64, (dim,), elements=st.floats(-10, 10)))  # Mean vector
+    eigval = draw(arrays(np.float64, (dim,), elements=st.floats(1e-6, 10)))
+    vectors = draw(arrays(np.float64, (dim,dim), elements=st.floats(-10, 10)).filter(valid_QR))
+    cov = make_covariance_matrix_via_QR(eigval, vectors)
+    x = draw(arrays(np.float64, (2, dim), elements=st.floats(-1e6, 1e6)))
+    return dim, mu, cov, x
+
+
+@settings(max_examples=1000)
+@given(mean_and_cov())
+@example(
+    mean_cov=(2, array([0., 0.]), array([[1., 0.],
+            [0., 1.]]), array([[0., 0.],
+            [0., 0.]])),
+).via('discovered failure')
+@example(
+    mean_cov=(1, array([0.]), array([[1.]]), array([[1.],
+            [0.]])),
+).via('discovered failure')
+@example(
+    mean_cov=(6,
+     array([0., 0., 0., 0., 0., 0.]),
+     array([[ 1.00000107e+00, -5.71254024e-08,  9.99999696e-01,
+              9.99999583e-01,  9.99999675e-01,  9.99999979e-01],
+            [-5.71254024e-08,  1.54534373e-06,  1.67651586e-08,
+             -2.54656267e-07, -4.52842673e-09,  2.99544937e-07],
+            [ 9.99999696e-01,  1.67651586e-08,  1.00000095e+00,
+              9.99999657e-01,  9.99999707e-01,  9.99999994e-01],
+            [ 9.99999583e-01, -2.54656267e-07,  9.99999657e-01,
+              1.00000119e+00,  9.99999635e-01,  9.99999940e-01],
+            [ 9.99999675e-01, -4.52842673e-09,  9.99999707e-01,
+              9.99999635e-01,  1.00000099e+00,  9.99999990e-01],
+            [ 9.99999979e-01,  2.99544937e-07,  9.99999994e-01,
+              9.99999940e-01,  9.99999990e-01,  1.00000010e+00]]),
+     array([[0., 0., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 0., 0.]])),
+).via('discovered failure')
+@example(
+    mean_cov=(6,
+     array([0., 0., 0., 0., 0., 0.]),
+     array([[ 2.28000099, -4.12000012,  2.27999939, -1.59999953,  2.27999988,
+              2.27999986],
+            [-4.12000012, 21.48000008, -4.12000007,  6.39999967, -4.11999995,
+             -4.11999995],
+            [ 2.27999939, -4.12000007,  2.28000087, -1.59999973,  2.27999991,
+              2.2799999 ],
+            [-1.59999953,  6.39999967, -1.59999973,  2.0000013 , -1.60000021,
+             -1.6000002 ],
+            [ 2.27999988, -4.11999995,  2.27999991, -1.60000021,  2.28000032,
+              2.27999984],
+            [ 2.27999986, -4.11999995,  2.2799999 , -1.6000002 ,  2.27999984,
+              2.28000035]]),
+     array([[0., 0., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 0., 0.]])),
+).via('discovered failure')
+@example(
+    mean_cov=(7,
+     array([0., 0., 0., 0., 0., 0., 0.]),
+     array([[156.25637361, -31.26969455,  12.40439959, -31.24564618,
+              -31.22989933, -31.24225165, -31.2688804 ],
+             [-31.26969455,   6.33006684,  -2.20457805,   6.2198964 ,
+                6.16861271,   6.20884123,   6.34227887],
+             [ 12.40439959,  -2.20457805,   2.43400622,  -2.56530348,
+               -2.80150635,  -2.61622149,  -2.21679021],
+             [-31.24564618,   6.2198964 ,  -2.56530348,   7.16206397,
+                5.80788728,   5.8481158 ,   6.20768424],
+             [-31.22989933,   6.16861271,  -2.80150635,   5.80788728,
+                7.34003101,   5.75696927,   6.15640055],
+             [-31.24225165,   6.20884123,  -2.61622149,   5.8481158 ,
+                5.75696927,   7.23169779,   6.19662906],
+             [-31.2688804 ,   6.34227887,  -2.21679021,   6.20768424,
+                6.15640055,   6.19662906,   6.36588918]]),
+     array([[0., 0., 0., 0., 0., 0., 0.], [0., 0., 0., 0., 0., 0., 0.]])),
+).via('discovered failure')
+@example(
+    mean_cov=(1, array([0.]), array([[1.]]), array([[0.], [0.]])),
+).via('discovered failure')
+@example(
+    mean_cov=(8,
+     array([0., 0., 0., 0., 0., 0., 0., 0.]),
+     array([[ 1.53365164e-06, -4.56057424e-07, -2.47157040e-07,
+              -1.88188005e-07,  1.47416388e-07,  1.47416391e-07,
+               4.49153299e-07,  1.47416391e-07],
+             [-4.56057424e-07,  1.76562629e+00,  9.99999625e-01,
+               9.99999679e-01, -3.26562499e+00,  1.98437501e+00,
+               2.53124938e+00,  1.98437501e+00],
+             [-2.47157040e-07,  9.99999625e-01,  1.00000099e+00,
+               9.99999580e-01,  9.99999915e-01,  9.99999915e-01,
+               1.00000006e+00,  9.99999915e-01],
+             [-1.88188005e-07,  9.99999679e-01,  9.99999580e-01,
+               1.00000091e+00,  9.99999927e-01,  9.99999927e-01,
+               1.00000005e+00,  9.99999927e-01],
+             [ 1.47416388e-07, -3.26562499e+00,  9.99999915e-01,
+               9.99999927e-01,  2.47656250e+01, -4.48437497e+00,
+              -7.53124995e+00, -4.48437497e+00],
+             [ 1.47416391e-07,  1.98437501e+00,  9.99999915e-01,
+               9.99999927e-01, -4.48437497e+00,  2.26562529e+00,
+               2.96875004e+00,  2.26562479e+00],
+             [ 4.49153299e-07,  2.53124938e+00,  1.00000006e+00,
+               1.00000005e+00, -7.53124995e+00,  2.96875004e+00,
+               4.06250038e+00,  2.96875004e+00],
+             [ 1.47416391e-07,  1.98437501e+00,  9.99999915e-01,
+               9.99999927e-01, -4.48437497e+00,  2.26562479e+00,
+               2.96875004e+00,  2.26562529e+00]]),
+     array([[0., 0., 0., 0., 0., 0., 0., 0.], [0., 0., 0., 0., 0., 0., 0., 0.]])),
+).via('discovered failure')
+@example(
+    mean_cov=(7,
+        array([0., 0., 0., 0., 0., 0., 0.]),
+        array([[ 7.52684752, -4.9545883 , -0.31361835,  0.52269766,  0.52269929,
+             6.92515709, -9.70648636],
+           [-4.9545883 ,  3.26139136,  0.20644122, -0.3440688 , -0.34406688,
+            -4.55852195,  6.38935566],
+           [-0.31361835,  0.20644122,  0.01308347, -0.02177316, -0.0217791 ,
+            -0.28854817,  0.40443697],
+           [ 0.52269766, -0.3440688 , -0.02177316,  0.03630094,  0.0362984 ,
+             0.48091352, -0.67406172],
+           [ 0.52269929, -0.34406688, -0.0217791 ,  0.0362984 ,  0.03630217,
+             0.48091543, -0.67405981],
+           [ 6.92515709, -4.55852195, -0.28854817,  0.48091352,  0.48091543,
+             6.37156541, -8.9305567 ],
+           [-9.70648636,  6.38935566,  0.40443697, -0.67406172, -0.67405981,
+            -8.9305567 , 12.51732134]]),
+       array([[0., 0., 0., 0., 0., 0., 0.], [0., 0., 0., 0., 0., 0., 0.]]))
+).via('discovered failure')
+def test_single(mean_cov):
+    # a askcarl with one component must behave the same as a single gaussian
+    ndim, mu, cov, x = mean_cov
+    ncomponents = 1
+    if not valid_covariance_matrix(cov):
+        return
+
+    rv_truth = multivariate_normal(mu, cov)
+    covs = [cov]
+    means = [mu]
+    weights = [1.0]
+    assert x.shape == (2, ndim), (x.shape, 2, ndim)
+
+    truth_logp = rv_truth.logpdf(x)
+    assert truth_logp.shape == (len(x),)
+    truth_p = rv_truth.pdf(x)
+
+    precisions = [np.linalg.inv(cov) for cov in covs]
+
+    # initialize GMM:
+    skgmm = sklearn.mixture.GaussianMixture(
+        n_components=ncomponents, weights_init=weights,
+        means_init=means, precisions_init=precisions)
+    skgmm._initialize(np.zeros((1, 1)), None)
+    skgmm._set_parameters((weights, np.array(means), covs, skgmm.precisions_cholesky_))
+    assert_allclose(skgmm.weights_, weights)
+    assert_allclose(skgmm.means_, means)
+    assert_allclose(skgmm.covariances_, covs)
+    print('input:', x, skgmm.weights_, skgmm.means_, 'covs:', skgmm.covariances_, skgmm.precisions_cholesky_)
+    print('expectation:', truth_p, 'log:', truth_logp)
+
+    # compute probability:
+    sk_logp = _estimate_log_gaussian_prob(x, skgmm.means_, skgmm.precisions_cholesky_, 'full').flatten()
+    print('actual (_estimate_log_gaussian_prob):', sk_logp)
+    assert sk_logp.shape == (len(x),), (sk_logp.shape, len(x))
+    assert_allclose(truth_logp, sk_logp, atol=1e-4, rtol=1e-4)
+    sk_logp1, sk_logp2 = skgmm._estimate_log_prob_resp(x)
+    print('actual (_estimate_log_prob_resp):', sk_logp1, sk_logp2)
+    assert_allclose(truth_logp, sk_logp1, atol=1e-4, rtol=1e-4)
+    #assert_allclose(truth_logp, sk_logp2)
+
+    sk_logp = skgmm.score(x)
+    sk_p = skgmm.predict_proba(x)
+    print('actual:', sk_p, 'log', sk_logp)
+
+    # TODO: enable these two tests as well
+    # assert_allclose(truth_logp, sk_logp, atol=1e-2, rtol=1e-2)  # -> sklearn-GMM gives score=0
+    # assert_allclose(truth_p, sk_p, atol=1e-300, rtol=1e-4)  # -> sklearn-GMM gives p=1
+
+```
+
+</details>
+
+### Steps/Code to Reproduce
+
+1. test setup, given means `mu`, covariances `covs` and its inversion `precisions` (values are listed further down).
+```
+    skgmm = sklearn.mixture.GaussianMixture(
+        n_components=ncomponents, weights_init=weights,
+        means_init=means, precisions_init=precisions)
+    skgmm._initialize(np.zeros((1, 1)), None)
+    skgmm._set_parameters((weights, np.array(means), covs, skgmm.precisions_cholesky_))
+```
+
+2. compute logprob:
+```
+    truth_logp = rv_truth.logpdf(x)   # expectation
+    sk_logp = _estimate_log_gaussian_prob(x, skgmm.means_, skgmm.precisions_cholesky_, 'full').flatten()   # actual
+```
+
+3. test:
+```
+    print('actual (_estimate_log_gaussian_prob):', sk_logp)
+    assert sk_logp.shape == (len(x),), (sk_logp.shape, len(x))
+    assert_allclose(truth_logp, sk_logp, atol=1e-4, rtol=1e-4)
+    sk_logp1, sk_logp2 = skgmm._estimate_log_prob_resp(x)
+    print('actual (_estimate_log_prob_resp):', sk_logp1, sk_logp2)
+    assert_allclose(truth_logp, sk_logp1, atol=1e-4, rtol=1e-4)
+```
+
+### Expected Results
+
+failing example:
+```
+    |     mean_cov=(6,
+    |      array([0., 0., 0., 0., 0., 0.]),
+    |      array([[ 2.28000099, -4.12000012,  2.27999939, -1.59999953,  2.27999988,
+    |               2.27999986],
+    |             [-4.12000012, 21.48000008, -4.12000007,  6.39999967, -4.11999995,
+    |              -4.11999995],
+    |             [ 2.27999939, -4.12000007,  2.28000087, -1.59999973,  2.27999991,
+    |               2.2799999 ],
+    |             [-1.59999953,  6.39999967, -1.59999973,  2.0000013 , -1.60000021,
+    |              -1.6000002 ],
+    |             [ 2.27999988, -4.11999995,  2.27999991, -1.60000021,  2.28000032,
+    |               2.27999984],
+    |             [ 2.27999986, -4.11999995,  2.2799999 , -1.6000002 ,  2.27999984,
+    |               2.28000035]]),
+    |      array([[0., 0., 0., 0., 0., 0.],
+    |             [0., 0., 0., 0., 0., 0.]])),
+```
+where `mean_cov` is the tuple ndim, mu, cov, and points x where the density is evaluated.
+
+fails at: `assert_allclose(truth_logp, sk_logp, atol=1e-4, rtol=1e-4)` with x=truth_logp, y=sk_logp.
+    |  x: array([20.388033, 20.388033])
+
+### Actual Results
+
+    |  y: array([20.385592, 20.385592])
+
+
+further failures:
+```
+    | Mismatched elements: 2 / 2 (100%)
+    | Max absolute difference: 0.00596896
+    | Max relative difference: 0.00098574
+    |  x: array([6.061245, 6.061245])
+    |  y: array([6.055276, 6.055276])
+    | Falsifying explicit example: test_single(
+    |     mean_cov=(7,
+    |      array([0., 0., 0., 0., 0., 0., 0.]),
+    |      array([[156.25637361, -31.26969455,  12.40439959, -31.24564618,
+    |              -31.22989933, -31.24225165, -31.2688804 ],
+    |             [-31.26969455,   6.33006684,  -2.20457805,   6.2198964 ,
+    |                6.16861271,   6.20884123,   6.34227887],
+    |             [ 12.40439959,  -2.20457805,   2.43400622,  -2.56530348,
+    |               -2.80150635,  -2.61622149,  -2.21679021],
+    |             [-31.24564618,   6.2198964 ,  -2.56530348,   7.16206397,
+    |                5.80788728,   5.8481158 ,   6.20768424],
+    |             [-31.22989933,   6.16861271,  -2.80150635,   5.80788728,
+    |                7.34003101,   5.75696927,   6.15640055],
+    |             [-31.24225165,   6.20884123,  -2.61622149,   5.8481158 ,
+    |                5.75696927,   7.23169779,   6.19662906],
+    |             [-31.2688804 ,   6.34227887,  -2.21679021,   6.20768424,
+    |                6.15640055,   6.19662906,   6.36588918]]),
+    |      array([[0., 0., 0., 0., 0., 0., 0.],
+    |             [0., 0., 0., 0., 0., 0., 0.]])),
+```
+and
+```
+    | Mismatched elements: 2 / 2 (100%)
+    | Max absolute difference: 0.04808096
+    | Max relative difference: 0.00142038
+    |  x: array([33.89883, 33.89883])
+    |  y: array([33.850749, 33.850749])
+    | Falsifying explicit example: test_single(
+    |     mean_cov=(8,
+    |      array([0., 0., 0., 0., 0., 0., 0., 0.]),
+    |      array([[ 1.53365164e-06, -4.56057424e-07, -2.47157040e-07,
+    |              -1.88188005e-07,  1.47416388e-07,  1.47416391e-07,
+    |               4.49153299e-07,  1.47416391e-07],
+    |             [-4.56057424e-07,  1.76562629e+00,  9.99999625e-01,
+    |               9.99999679e-01, -3.26562499e+00,  1.98437501e+00,
+    |               2.53124938e+00,  1.98437501e+00],
+    |             [-2.47157040e-07,  9.99999625e-01,  1.00000099e+00,
+    |               9.99999580e-01,  9.99999915e-01,  9.99999915e-01,
+    |               1.00000006e+00,  9.99999915e-01],
+    |             [-1.88188005e-07,  9.99999679e-01,  9.99999580e-01,
+    |               1.00000091e+00,  9.99999927e-01,  9.99999927e-01,
+    |               1.00000005e+00,  9.99999927e-01],
+    |             [ 1.47416388e-07, -3.26562499e+00,  9.99999915e-01,
+    |               9.99999927e-01,  2.47656250e+01, -4.48437497e+00,
+    |              -7.53124995e+00, -4.48437497e+00],
+    |             [ 1.47416391e-07,  1.98437501e+00,  9.99999915e-01,
+    |               9.99999927e-01, -4.48437497e+00,  2.26562529e+00,
+    |               2.96875004e+00,  2.26562479e+00],
+    |             [ 4.49153299e-07,  2.53124938e+00,  1.00000006e+00,
+    |               1.00000005e+00, -7.53124995e+00,  2.96875004e+00,
+    |               4.06250038e+00,  2.96875004e+00],
+    |             [ 1.47416391e-07,  1.98437501e+00,  9.99999915e-01,
+    |               9.99999927e-01, -4.48437497e+00,  2.26562479e+00,
+    |               2.96875004e+00,  2.26562529e+00]]),
+    |      array([[0., 0., 0., 0., 0., 0., 0., 0.],
+    |             [0., 0., 0., 0., 0., 0., 0., 0.]])),
+```
+and
+```
+    | Mismatched elements: 2 / 2 (100%)
+    | Max absolute difference: 0.1614742
+    | Max relative difference: 0.00484743
+    |  x: array([33.149859, 33.149859])
+    |  y: array([33.311333, 33.311333])
+    | Falsifying explicit example: test_single(
+    |     mean_cov=(7,
+    |      array([0., 0., 0., 0., 0., 0., 0.]),
+    |      array([[ 7.52684752, -4.9545883 , -0.31361835,  0.52269766,  0.52269929,
+    |               6.92515709, -9.70648636],
+    |             [-4.9545883 ,  3.26139136,  0.20644122, -0.3440688 , -0.34406688,
+    |              -4.55852195,  6.38935566],
+    |             [-0.31361835,  0.20644122,  0.01308347, -0.02177316, -0.0217791 ,
+    |              -0.28854817,  0.40443697],
+    |             [ 0.52269766, -0.3440688 , -0.02177316,  0.03630094,  0.0362984 ,
+    |               0.48091352, -0.67406172],
+    |             [ 0.52269929, -0.34406688, -0.0217791 ,  0.0362984 ,  0.03630217,
+    |               0.48091543, -0.67405981],
+    |             [ 6.92515709, -4.55852195, -0.28854817,  0.48091352,  0.48091543,
+    |               6.37156541, -8.9305567 ],
+    |             [-9.70648636,  6.38935566,  0.40443697, -0.67406172, -0.67405981,
+    |              -8.9305567 , 12.51732134]]),
+    |      array([[0., 0., 0., 0., 0., 0., 0.],
+    |             [0., 0., 0., 0., 0., 0., 0.]])),
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.12.3 (main, Sep 11 2024, 14:17:37) [GCC 13.2.0]
+executable: /usr/bin/python3
+   machine: Linux-6.8.0-45-generic-x86_64-with-glibc2.39
+
+Python dependencies:
+      sklearn: 1.5.0
+          pip: 24.0
+   setuptools: 68.1.2
+        numpy: 1.26.3
+        scipy: 1.14.1
+       Cython: 3.0.11
+       pandas: 2.2.2
+   matplotlib: 3.9.2
+       joblib: 1.4.2
+threadpoolctl: 3.5.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 20
+         prefix: libopenblas
+       filepath: /home/user/.local/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+        version: 0.3.23.dev
+threading_layer: pthreads
+   architecture: Prescott
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 20
+         prefix: libscipy_openblas
+       filepath: /home/user/.local/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-c128ec02.so
+        version: 0.3.27.dev
+threading_layer: pthreads
+   architecture: Haswell
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 20
+         prefix: libgomp
+       filepath: /home/user/.local/lib/python3.12/site-packages/scikit_learn.libs/libgomp-a34b3233.so.1.0.0
+        version: None
+```
+","2024-10-02T13:32:40Z","closed","Bug,Needs Investigation,Numerical Stability","TRUE",""
+"scikit-learn","31149","https://github.com/scikit-learn/scikit-learn/issues/31149","BUG: Build from source fails for scikit-learn v1.6.1 on Windows 11 with Visual Studio Build Tools 2022, Ninja subprocess error","### Describe the bug
+
+First of all, thank you guys for the fantastic job with Sklearn. 
+I'm trying to build from source to start contributing to the project, but it ended with me bringing more issues to you. 
+After struggling for some days with this problem, I'm seeking help. Maybe if you have some clue or workaround, I could open a Pull Request with the solution for this.
+
+I am following the guidelines for [Contributing with Scikit-learn](https://scikit-learn.org/stable/developers/contributing.html#contributing), and for that, it is necessary to [Build from source on Windows](https://scikit-learn.org/stable/developers/advanced_installation.html#windows), which recomends install  Build Tools for Visual Studio 2019, but nowadays is not possible to download the 2019 version just the [Build Tools for Visual Studio 2022 installer](https://aka.ms/vs/17/release/vs_buildtools.exe).
+
+The installation of Build Tools for Visual Studio 2022 runs smoothly(and also the initialization of its Environment), as well as the creation of the Python virtual environment and the installation of the packages `wheel, numpy, scipy, cython, meson-python, ninja`.
+
+But in the step of building from source using the `pip install --editable`, the build breaks when Compiling C objects after some [C4090 warnings](https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4090?view=msvc-170), throwing an `metadata-generation-failed error` from a subprocess of `ninja build`.
+
+This seems related/similar to issue #31123. Despite not being the same problem, if we find a solution, it may work for both issues.
+
+### Steps/Code to Reproduce
+
+I have tried the steps using `pip install` and also `conda-forge` in different versions of Python: pip :{3.10.11, 3.12.7} conda:{ 3.13.2}  to check if it was a problem with Python/pip itself.
+
+1. **Environment Setup:**
+- OS:  Windows 11 Pro, Version 24H2, OS build 26100.3476
+- System type: 64-bit operating system, x64-based processor
+- Installed Visual Studio Build **2022**, version 17.13.5 (It is not possible to download from Microsoft the 2019 version as recommended)
+  -  I also restarted the computer after installing (because it is Windows, so you never know)
+
+![VSbuildTools](https://github.com/user-attachments/assets/3fd83a4d-0451-4c79-97f4-ff6d796a75d9)
+
+2. **Project directory**
+- `C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn`
+
+3. **Installing compiler**
+Installed [Microsoft build Tools 2022](https://aka.ms/vs/17/release/vs_buildtools.exe)
+
+Initialized the enviroment:
+```
+SET DISTUTILS_USE_SDK=1
+
+""C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat"" x64
+```
+Which gives the output:
+
+```
+**********************************************************************
+** Visual Studio 2022 Developer Command Prompt v17.13.5
+** Copyright (c) 2022 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x64'
+```
+ 
+4. **Steps Using pip**, the same error occurs using Python 3.10 or 3.12. I will provide the steps and logs just for 3.10 for the sake of simplicity.
+
+Navigated to the project directory: `C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn`
+
+Created the Python virtual environment, upgraded pip, and installed the dependencies
+```
+py -3.10 -m venv envsklearn
+
+envsklearn\Scripts\python.exe -m pip install --upgrade pip
+
+envsklearn\Scripts\activate
+
+pip install wheel numpy scipy cython meson-python ninja
+```
+
+Until here, everything works as expected. But when building from source, in the command below, the error occurs:
+
+```
+pip install --editable . --verbose --no-build-isolation --config-settings editable-verbose=true
+```
+
+5. **Using conda forge**:
+To check if it wasn't a problem with pip I have also used `conda-forge`, as described in the [Building from Source tutorial](https://scikit-learn.org/stable/developers/advanced_installation.html#building-from-source):
+
+`conda create -n sklearn-env -c conda-forge python numpy scipy cython meson-python ninja`
+`conda activate sklearn-env`
+`pip install --editable . --verbose --no-build-isolation --config-settings editable-verbose=true`
+
+> Note: I used 2 different environment names to avoid confusion: `envsklearn` is the `venv` that uses `pip`, and `sklearn-env` is the `conda env`
+
+### Expected Results
+
+The build of scikit-learn should finish and install without error, or at least with a few warnings.
+
+### Actual Results
+
+## Using pip install
+It seems that the Meson build system finds the compiler for C, C+++, and also the `ninja.exe` in the environment. But ninja subprocess breaks when compiling `C object sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__dist_metrics.pyx.c.obj`
+
+Error message:
+```
+[...]
+[46/164] Compiling C object sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__dist_metrics.pyx.c.obj
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(29605): warning C4090: '=': different 'const' qualifiers
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(30390): warning C4090: '=': different 'const' qualifiers
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(49229): warning C4090: '=': different 'const' qualifiers
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(50014): warning C4090: '=': different 'const' qualifiers
+  ninja: build stopped: subcommand failed.
+  INFO: autodetecting backend as ninja
+  INFO: calculating backend command to run: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\Scripts\ninja.EXE
+  error: subprocess-exited-with-error
+
+  × Preparing editable metadata (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> See above for output.
+
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  full command: 'C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\Scripts\python.exe' 'C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\_in_process.py' prepare_metadata_for_build_editable 'C:\Users\VITOR~1.POH\AppData\Local\Temp\tmpp45ks547'
+  cwd: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn
+  Preparing editable metadata (pyproject.toml) ... error
+error: metadata-generation-failed
+
+× Encountered error while generating package metadata.
+╰─> See above for output.
+
+note: This is an issue with the package mentioned above, not pip.
+hint: See above for details.
+```
+
+<details><summary>Full Log</summary>
+
+```
+Using pip 25.0.1 from C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\lib\site-packages\pip (python 3.10)
+Obtaining file:///C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn
+  Running command Checking if build backend supports build_editable
+  Checking if build backend supports build_editable ... done
+  Running command Preparing editable metadata (pyproject.toml)
+  + meson setup --reconfigure C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\build\cp310 -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\build\cp310\meson-python-native-file.ini
+  Cleaning... 0 files.
+  The Meson build system
+  Version: 1.7.1
+  Source dir: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn
+  Build dir: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\build\cp310
+  Build type: native build
+  Project name: scikit-learn
+  Project version: 1.7.dev0
+  C compiler for the host machine: cl (msvc 19.43.34809 ""Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34809 for x64"")
+  C linker for the host machine: link link 14.43.34809.0
+  C++ compiler for the host machine: cl (msvc 19.43.34809 ""Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34809 for x64"")
+  C++ linker for the host machine: link link 14.43.34809.0
+  Cython compiler for the host machine: cython (cython 3.0.12)
+  Host machine cpu family: x86_64
+  Host machine cpu: x86_64
+  Compiler for C supports arguments -Wno-unused-but-set-variable: NO (cached)
+  Compiler for C supports arguments -Wno-unused-function: NO (cached)
+  Compiler for C supports arguments -Wno-conversion: NO (cached)
+  Compiler for C supports arguments -Wno-misleading-indentation: NO (cached)
+  Library m found: NO
+  Program sklearn/_build_utils/tempita.py found: YES (C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\Scripts\python.exe C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\sklearn/_build_utils/tempita.py)
+  Program python found: YES (C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\Scripts\python.exe)
+  Dependency OpenMP found: YES 2.0 (cached)
+  Build targets in project: 111
+
+  scikit-learn 1.7.dev0
+
+    User defined options
+      Native files: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\build\cp310\meson-python-native-file.ini
+      b_ndebug    : if-release
+      b_vscrt     : md
+      buildtype   : release
+
+  Found ninja.EXE-1.11.1.git.kitware.jobserver-1 at C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\Scripts\ninja.EXE
+  + meson compile
+  [1/164] Generating sklearn/write_built_with_meson_file with a custom command
+  [2/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/metrics/cluster/_expected_mutual_info_fast.pyx
+  [3/164] Compiling Cython source sklearn/utils/_seq_dataset.pyx
+  [4/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/cluster/_dbscan_inner.pyx
+  [5/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/utils/_vector_sentinel.pyx
+  [6/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/metrics/_pairwise_fast.pyx
+  [7/164] Compiling Cython source sklearn/utils/_weight_vector.pyx
+  [8/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/utils/_isfinite.pyx
+  [9/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/cluster/_hierarchical_fast.pyx
+  [10/164] Compiling Cython source sklearn/metrics/_pairwise_distances_reduction/_base.pyx
+  [11/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/utils/_fast_dict.pyx
+  [12/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/utils/arrayfuncs.pyx
+  [13/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/cluster/_k_means_common.pyx
+  [14/164] Compiling Cython source sklearn/metrics/_pairwise_distances_reduction/_datasets_pair.pyx
+  [15/164] Compiling Cython source sklearn/metrics/_pairwise_distances_reduction/_argkmin_classmode.pyx
+  [16/164] Compiling Cython source sklearn/metrics/_pairwise_distances_reduction/_argkmin.pyx
+  [17/164] Compiling Cython source sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.pyx
+  [18/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/utils/_cython_blas.pyx
+  [19/164] Compiling Cython source sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.pyx
+  [20/164] Compiling C object sklearn/utils/_weight_vector.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils__weight_vector.pyx.c.obj
+  [21/164] Compiling Cython source C:/Users/vitor.pohlenz/Documents/Python/vpz/scikit-learn/sklearn/utils/sparsefuncs_fast.pyx
+  [22/164] Compiling Cython source sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors.pyx
+  [23/164] Compiling Cython source sklearn/metrics/_dist_metrics.pyx
+  warning: sklearn\metrics\_dist_metrics.pyx:855:44: Assigning to 'float64_t *' from 'const float64_t *' discards const qualifier
+
+  warning: sklearn\metrics\_dist_metrics.pyx:918:40: Assigning to 'float64_t *' from 'const float64_t *' discards const qualifier
+
+  warning: sklearn\metrics\_dist_metrics.pyx:3435:44: Assigning to 'float32_t *' from 'const float32_t *' discards const qualifier
+
+  warning: sklearn\metrics\_dist_metrics.pyx:3498:40: Assigning to 'float32_t *' from 'const float32_t *' discards const qualifier
+
+  [24/164] Compiling C object sklearn/utils/_seq_dataset.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils__seq_dataset.pyx.c.obj
+  [25/164] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__radius_neighbors_classmode.pyx.cpp.obj
+  FAILED: sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__radius_neighbors_classmode.pyx.cpp.obj
+  ""cl"" ""-Isklearn\metrics\_pairwise_distances_reduction\_radius_neighbors_classmode.cp310-win_amd64.pyd.p"" ""-Isklearn\metrics\_pairwise_distances_reduction"" ""-I..\..\sklearn\metrics\_pairwise_distances_reduction"" ""-I..\..\envsklearn\lib\site-packages\numpy\_core\include"" ""-IC:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\Include"" ""-DNDEBUG"" ""/MD"" ""/nologo"" ""/showIncludes"" ""/utf-8"" ""/Zc:__cplusplus"" ""/W2"" ""/EHsc"" ""/std:c++14"" ""/permissive-"" ""/O2"" ""/Gw"" ""-DMS_WIN64="" ""/openmp"" ""-DNPY_NO_DEPRECATED_API=NPY_1_9_API_VERSION"" ""/Fdsklearn\metrics\_pairwise_distances_reduction\_radius_neighbors_classmode.cp310-win_amd64.pyd.p\meson-generated_sklearn_metrics__pairwise_distances_reduction__radius_neighbors_classmode.pyx.cpp.pdb"" /Fosklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__radius_neighbors_classmode.pyx.cpp.obj ""/c"" sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.pyx.cpp
+  sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors_classmode.pyx.cpp(32619): warning C4551: function call missing argument list
+  C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\build\cp310\sklearn\metrics\_pairwise_distances_reduction\_radius_neighbors_classmode.cp310-win_amd64.pyd.p\sklearn\metrics\_pairwise_distances_reduction\_radius_neighbors_classmode.pyx.cpp : fatal error C1083: Cannot open compiler generated file: '': Invalid argument
+  [26/164] Linking target sklearn/utils/_weight_vector.cp310-win_amd64.pyd
+     Creating library sklearn\utils\_weight_vector.cp310-win_amd64.lib and object sklearn\utils\_weight_vector.cp310-win_amd64.exp
+  [27/164] Linking target sklearn/utils/_seq_dataset.cp310-win_amd64.pyd
+     Creating library sklearn\utils\_seq_dataset.cp310-win_amd64.lib and object sklearn\utils\_seq_dataset.cp310-win_amd64.exp
+
+  [28/164] Compiling C++ object sklearn/utils/_vector_sentinel.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils__vector_sentinel.pyx.cpp.obj
+  sklearn/utils/_vector_sentinel.cp310-win_amd64.pyd.p/sklearn/utils/_vector_sentinel.pyx.cpp(15416): warning C4551: function call missing argument list
+  [29/164] Compiling C object sklearn/metrics/_pairwise_fast.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_fast.pyx.c.obj
+  [30/164] Compiling C++ object sklearn/cluster/_dbscan_inner.cp310-win_amd64.pyd.p/meson-generated_sklearn_cluster__dbscan_inner.pyx.cpp.obj
+  sklearn/cluster/_dbscan_inner.cp310-win_amd64.pyd.p/sklearn/cluster/_dbscan_inner.pyx.cpp(23107): warning C4551: function call missing argument list
+  [31/164] Compiling C object sklearn/metrics/cluster/_expected_mutual_info_fast.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics_cluster__expected_mutual_info_fast.pyx.c.obj
+  sklearn/metrics/cluster/_expected_mutual_info_fast.cp310-win_amd64.pyd.p/sklearn/metrics/cluster/_expected_mutual_info_fast.pyx.c(18720): warning C4244: 'function': conversion from 'Py_ssize_t' to 'double', possible loss of data
+  sklearn/metrics/cluster/_expected_mutual_info_fast.cp310-win_amd64.pyd.p/sklearn/metrics/cluster/_expected_mutual_info_fast.pyx.c(18720): warning C4244: 'function': conversion from 'Py_ssize_t' to 'double', possible loss of data
+  sklearn/metrics/cluster/_expected_mutual_info_fast.cp310-win_amd64.pyd.p/sklearn/metrics/cluster/_expected_mutual_info_fast.pyx.c(18720): warning C4244: 'function': conversion from 'Py_ssize_t' to 'double', possible loss of data
+  [32/164] Compiling C object sklearn/utils/arrayfuncs.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils_arrayfuncs.pyx.c.obj
+  [33/164] Compiling C++ object sklearn/utils/_fast_dict.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils__fast_dict.pyx.cpp.obj
+  sklearn/utils/_fast_dict.cp310-win_amd64.pyd.p/sklearn/utils/_fast_dict.pyx.cpp(26950): warning C4551: function call missing argument list
+  [34/164] Compiling C object sklearn/utils/_isfinite.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils__isfinite.pyx.c.obj
+  [35/164] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_argkmin_classmode.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__argkmin_classmode.pyx.cpp.obj
+  cl : Command line warning D9002 : ignoring unknown option '-fno-sized-deallocation'
+  sklearn/metrics/_pairwise_distances_reduction/_argkmin_classmode.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_argkmin_classmode.pyx.cpp(29323): warning C4551: function call missing argument list
+  [36/164] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_base.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__base.pyx.cpp.obj
+  sklearn/metrics/_pairwise_distances_reduction/_base.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_base.pyx.cpp(32606): warning C4551: function call missing argument list
+  [37/164] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_argkmin.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__argkmin.pyx.cpp.obj
+  sklearn/metrics/_pairwise_distances_reduction/_argkmin.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_argkmin.pyx.cpp(35870): warning C4551: function call missing argument list
+  [38/164] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__middle_term_computer.pyx.cpp.obj
+  sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.pyx.cpp(42045): warning C4551: function call missing argument list
+  [39/164] Compiling C++ object sklearn/cluster/_hierarchical_fast.cp310-win_amd64.pyd.p/meson-generated_sklearn_cluster__hierarchical_fast.pyx.cpp.obj
+  sklearn/cluster/_hierarchical_fast.cp310-win_amd64.pyd.p/sklearn/cluster/_hierarchical_fast.pyx.cpp(23677): warning C4244: '=': conversion from '__pyx_t_7sklearn_5utils_9_typedefs_intp_t' to '__pyx_t_7sklearn_5utils_9_typedefs_float64_t', possible loss of data
+  sklearn/cluster/_hierarchical_fast.cp310-win_amd64.pyd.p/sklearn/cluster/_hierarchical_fast.pyx.cpp(23688): warning C4244: '=': conversion from '__pyx_t_7sklearn_5utils_9_typedefs_intp_t' to '__pyx_t_7sklearn_5utils_9_typedefs_float64_t', possible loss of data
+  sklearn/cluster/_hierarchical_fast.cp310-win_amd64.pyd.p/sklearn/cluster/_hierarchical_fast.pyx.cpp(23712): warning C4244: '=': conversion from '__pyx_t_7sklearn_5utils_9_typedefs_intp_t' to '__pyx_t_7sklearn_5utils_9_typedefs_float64_t', possible loss of data
+  sklearn/cluster/_hierarchical_fast.cp310-win_amd64.pyd.p/sklearn/cluster/_hierarchical_fast.pyx.cpp(24838): warning C4244: '=': conversion from '__pyx_t_7sklearn_5utils_9_typedefs_intp_t' to '__pyx_t_7sklearn_5utils_9_typedefs_float64_t', possible loss of data
+  sklearn/cluster/_hierarchical_fast.cp310-win_amd64.pyd.p/sklearn/cluster/_hierarchical_fast.pyx.cpp(24849): warning C4244: '=': conversion from '__pyx_t_7sklearn_5utils_9_typedefs_intp_t' to '__pyx_t_7sklearn_5utils_9_typedefs_float64_t', possible loss of data
+  sklearn/cluster/_hierarchical_fast.cp310-win_amd64.pyd.p/sklearn/cluster/_hierarchical_fast.pyx.cpp(33802): warning C4551: function call missing argument list
+  [40/164] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_datasets_pair.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__datasets_pair.pyx.cpp.obj
+  sklearn/metrics/_pairwise_distances_reduction/_datasets_pair.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_datasets_pair.pyx.cpp(43425): warning C4551: function call missing argument list
+  [41/164] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__radius_neighbors.pyx.cpp.obj
+  sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors.cp310-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors.pyx.cpp(38873): warning C4551: function call missing argument list
+  [42/164] Compiling C object sklearn/cluster/_k_means_common.cp310-win_amd64.pyd.p/meson-generated_sklearn_cluster__k_means_common.pyx.c.obj
+  [43/164] Compiling Cython source sklearn/_loss/_loss.pyx
+  [44/164] Compiling C object sklearn/utils/_cython_blas.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils__cython_blas.pyx.c.obj
+  [45/164] Compiling C object sklearn/utils/sparsefuncs_fast.cp310-win_amd64.pyd.p/meson-generated_sklearn_utils_sparsefuncs_fast.pyx.c.obj
+  [46/164] Compiling C object sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/meson-generated_sklearn_metrics__dist_metrics.pyx.c.obj
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(29605): warning C4090: '=': different 'const' qualifiers
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(30390): warning C4090: '=': different 'const' qualifiers
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(49229): warning C4090: '=': different 'const' qualifiers
+  sklearn/metrics/_dist_metrics.cp310-win_amd64.pyd.p/sklearn/metrics/_dist_metrics.pyx.c(50014): warning C4090: '=': different 'const' qualifiers
+  ninja: build stopped: subcommand failed.
+  INFO: autodetecting backend as ninja
+  INFO: calculating backend command to run: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\Scripts\ninja.EXE
+  error: subprocess-exited-with-error
+
+  × Preparing editable metadata (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> See above for output.
+
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  full command: 'C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\Scripts\python.exe' 'C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn\envsklearn\lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\_in_process.py' prepare_metadata_for_build_editable 'C:\Users\VITOR~1.POH\AppData\Local\Temp\tmpp45ks547'
+  cwd: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn
+  Preparing editable metadata (pyproject.toml) ... error
+error: metadata-generation-failed
+
+× Encountered error while generating package metadata.
+╰─> See above for output.
+
+note: This is an issue with the package mentioned above, not pip.
+hint: See above for details.
+```
+
+</details> 
+
+## Using Conda
+
+For `conda env`, the problem seems to be associated with `undeclared identifiers` and `syntax errors`
+
+```
+ [22/136] Compiling C++ object sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.cp313t-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__middle_term_computer.pyx.cpp.obj
+  FAILED: sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.cp313t-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__middle_term_computer.pyx.cpp.obj
+  ""cl"" ""-Isklearn\metrics\_pairwise_distances_reduction\_middle_term_computer.cp313t-win_amd64.pyd.p"" ""-Isklearn\metrics\_pairwise_distances_reduction"" ""-I..\..\sklearn\metrics\_pairwise_distances_reduction"" ""-I..\..\..\..\..\..\AppData\Local\anaconda3\envs\sklearn-env\Lib\site-packages\numpy\_core\include"" ""-IC:\Users\vitor.pohlenz\AppData\Local\anaconda3\envs\sklearn-env\Include"" ""-DNDEBUG"" ""/MD"" ""/nologo"" ""/showIncludes"" ""/utf-8"" ""/Zc:__cplusplus"" ""/W2"" ""/EHsc"" ""/std:c++14"" ""/permissive-"" ""/O2"" ""/Gw"" ""-DPy_GIL_DISABLED"" ""-DNPY_NO_DEPRECATED_API=NPY_1_9_API_VERSION"" ""/Fdsklearn\metrics\_pairwise_distances_reduction\_middle_term_computer.cp313t-win_amd64.pyd.p\meson-generated_sklearn_metrics__pairwise_distances_reduction__middle_term_computer.pyx.cpp.pdb"" /Fosklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.cp313t-win_amd64.pyd.p/meson-generated_sklearn_metrics__pairwise_distances_reduction__middle_term_computer.pyx.cpp.obj ""/c"" sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.cp313t-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.pyx.cpp
+
+[lots of lines similar to the line below ...]
+
+ sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.cp313t-win_amd64.pyd.p/sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.pyx.cpp(43156): error C2065: 'vc': undeclared identifier
+  ninja: build stopped: subcommand failed.
+  INFO: autodetecting backend as ninja
+  INFO: calculating backend command to run: C:\Users\vitor.pohlenz\AppData\Local\anaconda3\envs\sklearn-env\Library\bin\ninja.EXE
+  error: subprocess-exited-with-error
+
+  × Preparing editable metadata (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> See above for output.
+
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  full command: 'C:\Users\vitor.pohlenz\AppData\Local\anaconda3\envs\sklearn-env\python.exe' 'C:\Users\vitor.pohlenz\AppData\Local\anaconda3\envs\sklearn-env\Lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\_in_process.py' prepare_metadata_for_build_editable 'C:\Users\VITOR~1.POH\AppData\Local\Temp\tmp25gfqq4d'
+  cwd: C:\Users\vitor.pohlenz\Documents\Python\vpz\scikit-learn
+  Preparing editable metadata (pyproject.toml) ... error
+error: metadata-generation-failed
+
+× Encountered error while generating package metadata.
+╰─> See above for output.
+
+note: This is an issue with the package mentioned above, not pip.
+hint: See above for details.
+
+``` 
+
+[Gist of Full conda log](https://gist.github.com/vitorpohlenz/bc6a1599e99e4042b31cdde1d406054c)
+
+
+### Versions
+
+```shell
+## General and OS
+
+- OS: Windows 11 Pro, Version 24H2, OS build 26100.3476
+- System type: 64-bit operating system, x64-based processor
+- Installed Visual Studio Build 2022, version 17.13.5
+
+Neither using `pip` in the `venv`, nor using `conda env`, I could use the `import sklearn; sklearn.show_versions()`.
+
+### venv using pip
+
+- Python: 3.10.11
+- pip 25.0.1
+- Libs inside env:
+  - Cython==3.0.12
+  - meson==1.7.2
+  - meson-python==0.17.1
+  - ninja==1.11.1.4
+  - numpy==2.2.4
+  - packaging==24.2
+  - pyproject-metadata==0.9.1
+  - scipy==1.15.2
+  - tomli==2.2.1
+
+
+### conda env
+
+- Python 3.13.2
+- conda 24.11.3
+
+Libs inside conda env:
+
+# Name                    Version                   Build  Channel
+bzip2                     1.0.8                h2466b09_7    conda-forge
+ca-certificates           2025.1.31            h56e8100_0    conda-forge
+cython                    3.0.12           pyh2c78169_100    conda-forge
+intel-openmp              2024.2.1          h57928b3_1083    conda-forge
+libblas                   3.9.0           31_h641d27c_mkl    conda-forge
+libcblas                  3.9.0           31_h5e41251_mkl    conda-forge
+libexpat                  2.7.0                he0c23c2_0    conda-forge
+libffi                    3.4.6                h537db12_1    conda-forge
+libhwloc                  2.11.2          default_ha69328c_1001    conda-forge
+libiconv                  1.18                 h135ad9c_1    conda-forge
+liblapack                 3.9.0           31_h1aa476e_mkl    conda-forge
+liblzma                   5.8.1                h2466b09_0    conda-forge
+libmpdec                  4.0.0                h2466b09_0    conda-forge
+libsqlite                 3.49.1               h67fdade_2    conda-forge
+libwinpthread             12.0.0.r4.gg4f2fc60ca      h57928b3_9    conda-forge
+libxml2                   2.14.0               had0eb51_0    conda-forge
+libzlib                   1.3.1                h2466b09_2    conda-forge
+meson                     1.7.1              pyhd8ed1ab_0    conda-forge
+meson-python              0.17.1             pyh70fd9c4_1    conda-forge
+mkl                       2024.2.2            h66d3029_15    conda-forge
+ninja                     1.12.1               hc790b64_0    conda-forge
+numpy                     2.2.4           py313hd96daed_0    conda-forge
+openssl                   3.4.1                ha4e3fda_0    conda-forge
+packaging                 24.2               pyhd8ed1ab_2    conda-forge
+pip                       25.0.1             pyh145f28c_0    conda-forge
+pyproject-metadata        0.9.1              pyhd8ed1ab_0    conda-forge
+python                    3.13.2          hd7c436d_1_cp313t    conda-forge
+python_abi                3.13                   5_cp313t    conda-forge
+scipy                     1.15.2          py313h8a36d7e_0    conda-forge
+setuptools                78.1.0             pyhff2d567_0    conda-forge
+tbb                       2021.13.0            h62715c5_1    conda-forge
+tk                        8.6.13               h5226925_1    conda-forge
+tomli                     2.2.1              pyhd8ed1ab_1    conda-forge
+tzdata                    2025b                h78e105d_0    conda-forge
+ucrt                      10.0.22621.0         h57928b3_1    conda-forge
+vc                        14.3                h2b53caa_26    conda-forge
+vc14_runtime              14.42.34438         hfd919c2_26    conda-forge
+```","2025-04-04T20:08:35Z","closed","Bug","TRUE",""
+"scikit-learn","31185","https://github.com/scikit-learn/scikit-learn/issues/31185","BUG:  examples\applications\plot_out_of_core_classification.py breaks with StopIteration error","### Describe the bug
+
+I was building the documentation from source, following [The contributing Tutorial](https://scikit-learn.org/stable/developers/contributing.html#documentation).
+
+When I ran the command `make html`, I noticed the following error from Sphinx build:
+
+```
+Extension error:
+Here is a summary of the problems encountered when running the examples:
+
+Unexpected failing examples (1):
+
+    ..\examples\applications\plot_out_of_core_classification.py failed leaving traceback:
+
+    Traceback (most recent call last):
+      File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\examples\applications\plot_out_of_core_classification.py"", line 252, in <module>
+        X_test = vectorizer.transform(X_test_text)
+      File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn\feature_extraction\text.py"", line 878, in transform
+        X = self._get_hasher().transform(analyzer(doc) for doc in X)
+      File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn\utils\_set_output.py"", line 316, in wrapped
+        data_to_wrap = f(self, X, *args, **kwargs)
+      File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn\feature_extraction\_hash.py"", line 175, in transform
+        first_raw_X = next(raw_X)
+    StopIteration
+
+-------------------------------------------------------------------------------
+
+Build finished. The HTML pages are in _build/html.
+```
+
+[Here is the full log of the build](https://gist.github.com/vitorpohlenz/2367944e20a0c05b29225631dbdaeb82)
+
+It seems that the `raw_X` varible is empty.
+
+Also when running the file `examples\applications\plot_out_of_core_classification.py` directly in the python environment we get the same error.
+
+### Steps/Code to Reproduce
+
+The simple way to reproduce is just to run the file `plot_out_of_core_classification.py` in the sklearn-env.
+
+1. Activate sklearn-env
+2. Supposing that you are in the folder `scikit-learn`, run:
+`python examples\applications\plot_out_of_core_classification.py`
+
+Alternatively, you may enter the `doc` folder, and execute `make html` for building the entire documentation.
+
+### Expected Results
+
+The plot should be displayed when running the file, and saved when building the documentation.
+
+### Actual Results
+
+When running directly `python examples\applications\plot_out_of_core_classification.py ` in the Python sklearn-env.
+I also get the same error:
+
+```
+Traceback (most recent call last):
+  File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\examples\applications\plot_out_of_core_classification.py"", line 252, in <module>        
+    X_test = vectorizer.transform(X_test_text)
+  File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn\feature_extraction\text.py"", line 878, in transform
+    X = self._get_hasher().transform(analyzer(doc) for doc in X)
+  File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn\utils\_set_output.py"", line 316, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File ""C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn\feature_extraction\_hash.py"", line 175, in transform
+    first_raw_X = next(raw_X)
+StopIteration
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]
+executable: C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn-env\Scripts\python.exe
+   machine: Windows-10-10.0.26100-SP0
+
+Python dependencies:
+      sklearn: 1.7.dev0
+          pip: 25.0.1
+   setuptools: 65.5.0
+        numpy: 2.2.4
+        scipy: 1.15.2
+       Cython: 3.0.12
+       pandas: 2.2.3
+   matplotlib: 3.10.1
+       joblib: 1.4.2
+threadpoolctl: 3.6.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 20
+         prefix: libscipy_openblas
+       filepath: C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn-env\Lib\site-packages\numpy.libs\libscipy_openblas64_-43e11ff0749b8cbe0a615c9cf6737e0e.dll
+        version: 0.3.28
+threading_layer: pthreads
+   architecture: Haswell
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 20
+         prefix: libscipy_openblas
+       filepath: C:\Users\vitor.pohlenz\vpz\scikit-learn\sklearn-env\Lib\site-packages\scipy.libs\libscipy_openblas-f07f5a5d207a3a47104dca54d6d0c86a.dll
+        version: 0.3.28
+threading_layer: pthreads
+   architecture: Haswell
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 20
+         prefix: vcomp
+       filepath: C:\Windows\System32\vcomp140.dll
+        version: None
+```","2025-04-11T21:08:08Z","closed","Bug,Documentation","TRUE",""
+"scikit-learn","33002","https://github.com/scikit-learn/scikit-learn/issues/33002","Downloading 20_newsgroups results in 403 error","### Describe the bug
+
+When trying to download the 20_newsgroups, I'm getting the following error:
+
+```
+File [~/miniconda3/lib/python3.13/urllib/request.py:613](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=612), in HTTPDefaultErrorHandler.http_error_default(self, req, fp, code, msg, hdrs)
+    612 def http_error_default(self, req, fp, code, msg, hdrs):
+--> 613     raise HTTPError(req.full_url, code, msg, hdrs, fp)
+
+HTTPError: HTTP Error 403: Forbidden
+```
+
+### Steps/Code to Reproduce
+
+Steps to reproduce (if you ever downloaded this dataset, delete it from `~/scikit-learn` or change the `data_home ` parameter to point to another path):
+
+```python
+from sklearn.datasets import fetch_20newsgroups
+
+# Load the 20 Newsgroups dataset
+newsgroups_train = fetch_20newsgroups()
+```
+
+### Expected Results
+
+Dataset should be downloaded and loaded in memory.
+
+### Actual Results
+
+```python
+---------------------------------------------------------------------------
+HTTPError                                 Traceback (most recent call last)
+Cell In[2], line 4
+      1 from sklearn.datasets import fetch_20newsgroups
+      3 # Load the 20 Newsgroups dataset
+----> 4 newsgroups_train = fetch_20newsgroups()
+
+File [~/miniconda3/lib/python3.13/site-packages/sklearn/utils/_param_validation.py:218](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/site-packages/sklearn/utils/_param_validation.py#line=217), in validate_params.<locals>.decorator.<locals>.wrapper(*args, **kwargs)
+    212 try:
+    213     with config_context(
+    214         skip_parameter_validation=(
+    215             prefer_skip_nested_validation or global_skip_validation
+    216         )
+    217     ):
+--> 218         return func(*args, **kwargs)
+    219 except InvalidParameterError as e:
+    220     # When the function is just a wrapper around an estimator, we allow
+    221     # the function to delegate validation to the estimator, but we replace
+    222     # the name of the estimator by the name of the function in the error
+    223     # message to avoid confusion.
+    224     msg = re.sub(
+    225         r""parameter of \w+ must be"",
+    226         f""parameter of {func.__qualname__} must be"",
+    227         str(e),
+    228     )
+
+File [~/miniconda3/lib/python3.13/site-packages/sklearn/datasets/_twenty_newsgroups.py:320](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/site-packages/sklearn/datasets/_twenty_newsgroups.py#line=319), in fetch_20newsgroups(data_home, subset, categories, shuffle, random_state, remove, download_if_missing, return_X_y, n_retries, delay)
+    318 if download_if_missing:
+    319     logger.info(""Downloading 20news dataset. This may take a few minutes."")
+--> 320     cache = _download_20newsgroups(
+    321         target_dir=twenty_home,
+    322         cache_path=cache_path,
+    323         n_retries=n_retries,
+    324         delay=delay,
+    325     )
+    326 else:
+    327     raise OSError(""20Newsgroups dataset not found"")
+
+File [~/miniconda3/lib/python3.13/site-packages/sklearn/datasets/_twenty_newsgroups.py:79](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/site-packages/sklearn/datasets/_twenty_newsgroups.py#line=78), in _download_20newsgroups(target_dir, cache_path, n_retries, delay)
+     76 os.makedirs(target_dir, exist_ok=True)
+     78 logger.info(""Downloading dataset from %s (14 MB)"", ARCHIVE.url)
+---> 79 archive_path = _fetch_remote(
+     80     ARCHIVE, dirname=target_dir, n_retries=n_retries, delay=delay
+     81 )
+     83 logger.debug(""Decompressing %s"", archive_path)
+     84 with tarfile.open(archive_path, ""r:gz"") as fp:
+
+File [~/miniconda3/lib/python3.13/site-packages/sklearn/datasets/_base.py:1513](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/site-packages/sklearn/datasets/_base.py#line=1512), in _fetch_remote(remote, dirname, n_retries, delay)
+   1511 while True:
+   1512     try:
+-> 1513         urlretrieve(remote.url, temp_file_path)
+   1514         break
+   1515     except (URLError, TimeoutError):
+
+File [~/miniconda3/lib/python3.13/urllib/request.py:214](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=213), in urlretrieve(url, filename, reporthook, data)
+    197 """"""
+    198 Retrieve a URL into a temporary location on disk.
+    199 
+   (...)    210 data file as well as the resulting HTTPMessage object.
+    211 """"""
+    212 url_type, path = _splittype(url)
+--> 214 with contextlib.closing(urlopen(url, data)) as fp:
+    215     headers = fp.info()
+    217     # Just return the local path and the ""headers"" for file://
+    218     # URLs. No sense in performing a copy unless requested.
+
+File [~/miniconda3/lib/python3.13/urllib/request.py:189](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=188), in urlopen(url, data, timeout, context)
+    187 else:
+    188     opener = _opener
+--> 189 return opener.open(url, data, timeout)
+
+File [~/miniconda3/lib/python3.13/urllib/request.py:495](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=494), in OpenerDirector.open(self, fullurl, data, timeout)
+    493 for processor in self.process_response.get(protocol, []):
+    494     meth = getattr(processor, meth_name)
+--> 495     response = meth(req, response)
+    497 return response
+
+File [~/miniconda3/lib/python3.13/urllib/request.py:604](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=603), in HTTPErrorProcessor.http_response(self, request, response)
+    601 # According to RFC 2616, ""2xx"" code indicates that the client's
+    602 # request was successfully received, understood, and accepted.
+    603 if not (200 <= code < 300):
+--> 604     response = self.parent.error(
+    605         'http', request, response, code, msg, hdrs)
+    607 return response
+
+File [~/miniconda3/lib/python3.13/urllib/request.py:533](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=532), in OpenerDirector.error(self, proto, *args)
+    531 if http_err:
+    532     args = (dict, 'default', 'http_error_default') + orig_args
+--> 533     return self._call_chain(*args)
+
+File [~/miniconda3/lib/python3.13/urllib/request.py:466](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=465), in OpenerDirector._call_chain(self, chain, kind, meth_name, *args)
+    464 for handler in handlers:
+    465     func = getattr(handler, meth_name)
+--> 466     result = func(*args)
+    467     if result is not None:
+    468         return result
+
+File [~/miniconda3/lib/python3.13/urllib/request.py:613](http://localhost:8888/lab/tree/miniconda3/lib/python3.13/urllib/request.py#line=612), in HTTPDefaultErrorHandler.http_error_default(self, req, fp, code, msg, hdrs)
+    612 def http_error_default(self, req, fp, code, msg, hdrs):
+--> 613     raise HTTPError(req.full_url, code, msg, hdrs, fp)
+
+HTTPError: HTTP Error 403: Forbidden
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.13.2 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 18:56:02) [GCC 11.2.0]
+executable: /home/lucas/miniconda3/bin/python
+   machine: Linux-6.14.0-1018-oem-x86_64-with-glibc2.39
+
+Python dependencies:
+      sklearn: 1.8.0
+          pip: 25.2
+   setuptools: 80.9.0
+        numpy: 2.2.6
+        scipy: 1.16.3
+       Cython: None
+       pandas: 2.3.2
+   matplotlib: 3.10.6
+       joblib: 1.5.2
+threadpoolctl: 3.6.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: blas
+   internal_api: openblas
+    num_threads: 16
+         prefix: libscipy_openblas
+       filepath: /home/lucas/miniconda3/lib/python3.13/site-packages/numpy.libs/libscipy_openblas64_-56d6093b.so
+        version: 0.3.29
+threading_layer: pthreads
+   architecture: SkylakeX
+
+       user_api: blas
+   internal_api: openblas
+    num_threads: 16
+         prefix: libscipy_openblas
+       filepath: /home/lucas/miniconda3/lib/python3.13/site-packages/scipy.libs/libscipy_openblas-b75cc656.so
+        version: 0.3.29.dev
+threading_layer: pthreads
+   architecture: SkylakeX
+
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 16
+         prefix: libgomp
+       filepath: /home/lucas/miniconda3/lib/python3.13/site-packages/scikit_learn.libs/libgomp-e985bcbb.so.1.0.0
+        version: None
+```","2026-01-05T14:11:55Z","closed","Bug,Needs Triage","TRUE",""
+"scikit-learn","33383","https://github.com/scikit-learn/scikit-learn/issues/33383","Check `column_or_1d` doesn't accept `StringDType` as `dtype` parameter  since Pandas 3","### Describe the bug and give evidence about its user-facing impact
+
+Since Pandas 3.0, `StringDType` is not anymore a valid Numpy data type. This makes `check_column_or_1d` crash when called with that type as `dtype` parameter.
+
+### Steps/Code to Reproduce
+
+```python
+from sklearn.utils.validation import column_or_1d
+import pandas as pd
+pd.options.future.infer_string = True # So this test also works in the 2.x series also
+
+
+df = pd.DataFrame({""y"": [""a"", ""b"", ""a"", ""c""]})
+column_or_1d(df[""y""], dtype=df[""y""].dtype) # fails
+```
+
+### Expected Results
+
+No error is thrown.
+
+### Actual Results
+
+```
+TypeError                                 Traceback (most recent call last)
+Cell In[1], line 8
+      4 pd.options.future.infer_string = True # So it works in the 2.x series also
+      7 df = pd.DataFrame({""y"": [""a"", ""b"", ""a"", ""c""]})
+----> 8 column_or_1d(df[""y""], dtype=df[""y""].dtype) # fails
+
+File ~/.venv/lib/python3.14/site-packages/sklearn/utils/validation.py:1405, in column_or_1d(y, dtype, input_name, warn, device)
+   1362 """"""Ravel column or 1d numpy array, else raises an error.
+   1363
+   1364 Parameters
+   (...)   1402 array([1, 1])
+   1403 """"""
+   1404 xp, _ = get_namespace(y)
+-> 1405 y = check_array(
+   1406     y,
+   1407     ensure_2d=False,
+   1408     dtype=dtype,
+   1409     input_name=input_name,
+   1410     ensure_all_finite=False,
+   1411     ensure_min_samples=0,
+   1412 )
+   1414 shape = y.shape
+   1415 if len(shape) == 1:
+
+File ~/.venv/lib/python3.14/site-packages/sklearn/utils/validation.py:952, in check_array(array, accept_sparse, accept_large_sparse, dtype, order, copy, force_writeable, ensure_all_finite, ensure_non_negative, ensure_2d, allow_nd, ensure_min_samples, ensure_min_features, estimator, input_name)
+    945     raise ValueError(
+    946         ""ensure_all_finite should be a bool or 'allow-nan'. Got ""
+    947         f""{ensure_all_finite!r} instead.""
+    948     )
+    950 if dtype is not None and _is_numpy_namespace(xp):
+    951     # convert to dtype object to conform to Array API to be use `xp.isdtype` later
+--> 952     dtype = np.dtype(dtype)
+    954 estimator_name = _check_estimator_name(estimator)
+    955 context = "" by %s"" % estimator_name if estimator is not None else """"
+
+TypeError: Cannot interpret '<StringDtype(storage='python', na_value=nan)>' as a data type
+```
+
+### Versions
+
+```shell
+System:
+    python: 3.14.3 (main, Feb  3 2026, 15:32:20) [Clang 17.0.0 (clang-1700.6.3.2)]
+executable: ~/.cache/uv/builds-v0/.tmphptoZv/bin/python
+   machine: macOS-26.3-arm64-arm-64bit-Mach-O
+
+Python dependencies:
+      sklearn: 1.8.0
+          pip: None
+   setuptools: None
+        numpy: 2.4.2
+        scipy: 1.17.1
+       Cython: None
+       pandas: 3.0.1
+   matplotlib: None
+       joblib: 1.5.3
+threadpoolctl: 3.6.0
+
+Built with OpenMP: True
+
+threadpoolctl info:
+       user_api: openmp
+   internal_api: openmp
+    num_threads: 10
+         prefix: libomp
+       filepath: /<redacted>/.venv/lib/python3.14/site-packages/sklearn/.dylibs/libomp.dylib
+        version: None
+```
+
+### Interest in fixing the bug
+
+Yes","2026-02-23T17:07:10Z","closed","Bug,Needs Info,Needs Triage,autoclose","TRUE",""
+"scikit-learn","34307","https://github.com/scikit-learn/scikit-learn/issues/34307","Using `move_to` on a numpy array with negative stride crashes the Python process","The `move_to` function we have for moving arrays from one namespace to another can crash the Python process when you ask it to move an array with negative strides. I found this while working on `PCA` where we have an array with negative stride (`Vt` from `_fit_truncated`).
+
+The code below is a reproducer:
+
+```python
+import numpy as np
+import torch
+import sklearn
+from sklearn.utils._array_api import get_namespace_and_device, move_to
+
+def make_negative_strided():
+    """"""A small, contiguous-source array viewed with a negative stride.""""""
+    a = np.arange(12.0).reshape(3, 4)[:, ::-1]
+    assert not a.flags[""C_CONTIGUOUS""]
+    assert a.strides[-1] < 0
+    return a
+
+a = make_negative_strided()
+with sklearn.config_context(array_api_dispatch=True):
+    xp, _, device = get_namespace_and_device(torch.asarray([1.0]))
+    try:
+        move_to(a, xp=xp, device=device)
+    except Exception as exc:  # it is not caught
+        print(""Caught a Python exception (unexpected):"", type(exc).__name__, exc)
+    else:
+        # this doesn't happen
+        print(""move_to returned without error (unexpected)"")
+
+    # instead the process exits with a SIGABRT
+```
+
+AI tells me that a possible fix is to call `np.ascontiguousarray(array)` if the input `array` is an array with negative stride. In addition we should [only apply this workaround in the case where the `move_to` target is torch](https://github.com/scikit-learn/scikit-learn/issues/34307#issuecomment-4778962780). The comment for the workaround should also include a link to https://github.com/pytorch/pytorch/issues/188023 and this issue so we can know when the work around can be removed.
+
+Something like this, but with a check for torch as target:
+```diff
+--- a/sklearn/utils/_array_api.py
++++ b/sklearn/utils/_array_api.py
+@@ def move_to(*arrays, xp, device):
+             xp_array, _, device_array = get_namespace_and_device(array)
+             if xp == xp_array and device == device_array:
+                 converted_arrays.append(array)
+             else:
++                strides = getattr(array, ""strides"", None)
++                if strides is not None and any(
++                    stride < 0 for stride in strides
++                ):
++                    # Some libraries (e.g. torch) do not raise a catchable
++                    # Python exception but abort the whole process when a NumPy
++                    # array with negative or zero strides is imported via DLPack
++                    # (such arrays are produced for instance by ``a[::-1]``
++                    # reversals, as done by ARPACK). The ``except`` clause below
++                    # therefore cannot protect against it, so the source array is
++                    # made contiguous first to guarantee positive strides.
++                    array = numpy.ascontiguousarray(array)
+                 try:
+                     # The dlpack protocol is the future proof and library agnostic
+                     # method to transfer arrays across namespace and device boundaries
+                     # hence this method is attempted first and going through NumPy is
+                     # only used as fallback in case of failure.
+                     # Note: copy=None is the default since array-api 2023.12. Namespace
+                     # libraries should only trigger a copy automatically if needed.
+                     array_converted = xp.from_dlpack(array, device=device)
+```
+
+What do others think about this? I am also wondering if this is a bug in numpy's DLPack implementation (should not expose arrays with negative stride) or if this is a bug in torch (should check for negative stride before doing anything)?
+
+I think that `numpy.ascontiguousarray(array)` is free for most arrays, those that already full fill it. For arrays that are not already contiguous I don't know what the cost is, but I think there is no alternative?","2026-06-16T09:39:10Z","open","Bug,Array API","TRUE",""
+"vscode","318786","https://github.com/microsoft/vscode/issues/318786","Unable to resolve workspace folder in ExtHost sessions (ENOPRO: No file system provider found for resource 'unknown:/')","<!-- ⚠️⚠️ Do Not Delete This! bug_report_template ⚠️⚠️ -->
+
+### Problem
+When hovering over a newly created folder, the following error appears:
+```
+/ • Unable to resolve workspace folder (ENOPRO: No file system provider found for resource 'unknown:/')
+```
+Additionally, the file system isn't visible at all.
+
+### Context
+- This appears to happen only in ExtHost sessions. Agent Host sessions load the filesystem properly.
+
+### Steps to Reproduce
+1. Open or create a folder in an ExtHost session within VS Code
+2. Hover over the newly created folder
+
+### Observed behavior
+- Error message as above
+- File system is not accessible
+
+### Expected behavior
+- Workspace folder should resolve normally
+- File system should be accessible
+
+Does this issue occur when all extensions are disabled?: (unknown)
+
+- VS Code Version: (unknown)
+- OS Version: (unknown)
+
+*This issue was reported based on user feedback discussing unexpected behavior when working with ExtHost sessions.*
+
+[View original Slack conversation](https://vscodeteam.slack.com/archives/C09MVCZKLP4/p1779984856231429?thread_ts=1779984856.231429&cid=C09MVCZKLP4)","2026-05-28T16:16:08Z","open","bug,workbench-workspace","TRUE",""
+"vscode","319001","https://github.com/microsoft/vscode/issues/319001","[Error] [GitHub.copilot-chat] unhandlederror-fetch failed","## Error Message
+````
+unhandlederror-fetch failed
+````
+
+## Stack Trace
+> ⚠️ **Stack not deminified** — no frames could be mapped to original source. The frames below are minified; line/column numbers refer to the bundled JavaScript, not the original TypeScript source. To deminify, either re-run the `create_issue` MCP tool with the VS Code build commit hash (and, for extension errors, the extension id + version), or call the standalone `deminify_stack` MCP tool.
+
+````
+TypeError: fetch failed 	at node:<REDACTED: user-file-path>:14902:13 	at process.processTicksAndRejections (node:<REDACTED: user-file-path>:103:5) 	at async n._fetch (<REDACTED: user-file-path>:5505:6188) 	at async n.fetch (<REDACTED: user-file-path>:5505:5496) 	at async jYr (<REDACTED: user-file-path>:5505:10979) 	at async SN.fetch (<REDACTED: user-file-path>:5505:15546) 	at async AI (<REDACTED: user-file-path>:1269:5514) 	at async S8.getCurrentAuthedUser (<REDACTED: user-file-path>:1730:707) 	at async w3.computePreferredOrganizationName (<REDACTED: user-file-path>:1410:20512)
+````
+
+## Details
+| Property | Value |
+| --- | --- |
+| Bucket ID | [`13152bfa-ae5f-abeb-c565-c732357e1c9f`](https://errors.code.visualstudio.com/bucket/13152bfa-ae5f-abeb-c565-c732357e1c9f?product=VSCode&extension=GitHub.copilot-chat&commit=8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e) |
+| Extension Version | 0.50.0 |
+| Last Seen | Thu May 28 2026 23:56:32 GMT+0000 (Coordinated Universal Time) |
+| Platforms | linux, win32, darwin |
+| Product | VSCode |
+
+---
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-05-29T16:03:22Z","closed","bug,error-telemetry,insiders-released,recent-regression,extension,ai-generated,ai-analyzed","TRUE",""
+"vscode","319003","https://github.com/microsoft/vscode/issues/319003","[Error] [GitHub.copilot-chat] unhandlederror-Response stream has been closed","## Error Message
+````
+unhandlederror-Response stream has been closed
+````
+
+## Stack Trace
+&nbsp;&nbsp;&nbsp;&nbsp;at t2 (../src/extension/intents/node/hookResultProcessor.ts:129:16)  
+&nbsp;&nbsp;&nbsp;&nbsp;at uye.executePostToolUseHook (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:7012:14330) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at process.processTicksAndRejections (node:<REDACTED: user-file-path>:103:5) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at async K4i (../src/extension/prompts/node/panel/toolCalling.tsx:611:24)
+
+<details>
+<summary>Raw Stack Trace (minified)</summary>
+
+````
+Error: Response stream has been closed 	at t2 (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:1748:34179) 	at uye.executePostToolUseHook (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:7012:14330) 	at process.processTicksAndRejections (node:<REDACTED: user-file-path>:103:5) 	at async K4i (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:1693:73)
+````
+
+</details>
+
+## Details
+| Property | Value |
+| --- | --- |
+| Bucket ID | [`b42d68f1-fdbd-6b04-f831-6e556dd8382f`](https://errors.code.visualstudio.com/bucket/b42d68f1-fdbd-6b04-f831-6e556dd8382f?product=VSCode&extension=GitHub.copilot-chat&commit=8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e) |
+| Extension Version | 0.50.0 |
+| Last Seen | Thu May 28 2026 23:50:18 GMT+0000 (Coordinated Universal Time) |
+| Platforms | win32 |
+| Product | VSCode |
+
+---
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-05-29T16:03:25Z","closed","bug,error-telemetry,insiders-released,recent-regression,extension,ai-generated,ai-analyzed","TRUE",""
+"vscode","319783","https://github.com/microsoft/vscode/issues/319783","Github Copilot Chat will not complete activation","
+Type: <b>Bug</b>
+
+Chats which worked today before update now get ready for a while and then say:
+Chat took too long to get ready. Please ensure you are signed in to GitHub and that the extension GitHub.copilot-chat is installed and enabled. Click restart to try again if this issue persists.
+
+Restarting VSCODE, rebooting, logging out and in of github (with restarts) disabling/renabling of copilot chat do nothing to clear this issue. 
+
+Happens with all selected models.
+
+VS Code version: Code - Insiders 1.124.0-insider (f138cc2fb5fe0586b5ac077973bc661ebd9baf9c, 2026-06-03T09:42:40Z)
+OS version: Windows_NT x64 10.0.19045
+Modes:
+
+<details>
+<summary>System Info</summary>
+
+|Item|Value|
+|---|---|
+|CPUs|Intel(R) Core(TM) i5-8265U CPU @ 1.60GHz (8 x 1800)|
+|GPU Status|2d_canvas: enabled<br>GPU0: VENDOR= 0x8086, DEVICE=0x3ea0 [Intel(R) UHD Graphics 620], DRIVER_VENDOR=Intel, DRIVER_VERSION=31.0.101.2135 *ACTIVE*<br>GPU1: VENDOR= 0x1002, DEVICE=0x6987 [AMD Radeon 550X], DRIVER_VERSION=31.0.21018.23005<br>GPU2: VENDOR= 0x8086, DEVICE=0x3ea0 [Intel(R) UHD Graphics 620], DRIVER_VERSION=31.0.101.2135<br>GPU3: VENDOR= 0x8086, DEVICE=0x3ea0 [Intel(R) UHD Graphics 620], DRIVER_VERSION=31.0.101.2135<br>GPU4: VENDOR= 0x8086, DEVICE=0x3ea0 [Intel(R) UHD Graphics 620], DRIVER_VERSION=31.0.101.2135<br>GPU5: VENDOR= 0x1414, DEVICE=0x008c [Microsoft Basic Render Driver], DRIVER_VERSION=10.0.19041.5794<br>Machine model name: <br>Machine model version: <br>direct_rendering_display_compositor: disabled_off_ok<br>gpu_compositing: enabled<br>multiple_raster_threads: enabled_on<br>opengl: enabled_on<br>rasterization: enabled<br>raw_draw: disabled_off_ok<br>skia_graphite: disabled_off<br>trees_in_viz: disabled_off<br>video_decode: enabled<br>video_encode: enabled<br>webgl: enabled<br>webgpu: enabled<br>webnn: disabled_off|
+|Load (avg)|undefined|
+|Memory (System)|15.81GB (2.79GB free)|
+|Process Argv|--crash-reporter-id 816f1527-5a4a-45e2-b4e1-142088143c5f|
+|Screen Reader|no|
+|VM|0%|
+</details><details><summary>Extensions (16)</summary>
+
+Name|Identifier|Author|Version
+---|---|---|---
+GitHub Actions|github.vscode-github-actions|github|0.31.5
+GitLab|gitlab.gitlab-workflow|GitLab|6.81.0
+Rainbow CSV|mechatroner.rainbow-csv|mechatroner|3.24.1
+Python Debugger|ms-python.debugpy|ms-python|2026.6.0
+Python|ms-python.python|ms-python|2026.4.0
+Pylance|ms-python.vscode-pylance|ms-python|2026.2.1
+Python Environments|ms-python.vscode-python-envs|ms-python|1.30.0
+Remote - SSH|ms-vscode-remote.remote-ssh|ms-vscode-remote|0.123.0
+Remote - SSH: Editing Configuration Files|ms-vscode-remote.remote-ssh-edit|ms-vscode-remote|0.87.0
+CMake Tools|ms-vscode.cmake-tools|ms-vscode|1.24.17
+C/C++ DevTools|ms-vscode.cpp-devtools|ms-vscode|0.6.4
+C/C++|ms-vscode.cpptools|ms-vscode|1.32.2
+C/C++ Extension Pack|ms-vscode.cpptools-extension-pack|ms-vscode|1.5.1
+PowerShell|ms-vscode.powershell|ms-vscode|2025.4.0
+Remote Explorer|ms-vscode.remote-explorer|ms-vscode|0.5.0
+Gradle for Java|vscjava.vscode-gradle|vscjava|3.17.3
+
+</details><details>
+<summary>A/B Experiments</summary>
+
+```
+vsliv368:30146709
+pythonvspyt551:31249597
+nativeloc1:31118317
+dwcopilot:31158714
+dwoutputs:31242946
+copilot_t_ci:31333650
+g012b348:31231168
+pythonrdcb7:31268811
+pythonpcpt1cf:31399617
+6518g693:31302842
+4f60g487:31327383
+63221493:31336333
+envsactivate1:31349248
+editstats-enabled:31346256
+cloudbuttont:31366566
+3efgi100_wstrepl:31403338
+839jf696:31457053
+ddidt:31398484
+cp_cls_t_966_ss:31454198
+inlinechat_v2_hd992725:31445440
+4je02754:31455664
+c3h7c220:31478652
+ge8j1254_inline_auto_hint_haiku:31490507
+cp_cls_c_1081:31454833
+conptydll_true:31485575
+ia-use-proxy-models-svc:31446143
+e9c30283:31453065
+test_treatment2:31471001
+c9b86496:31447327
+idci7584:31454084
+e3e4d672:31454087
+ei9d7968:31462942
+nes-extended-on:31455475
+f860i809:31458078
+89g7j272:31506658
+hhf17803:31462392
+7e187181:31482583
+i2gc6536:31472020
+52612955:31508042
+h08i8180:31475367
+ddid_t:31478204
+hmra_i5g22:31518061
+getcmakediagnosticsoff:31489825
+61f49681:31505879
+7df3h592:31491241
+pro_large_t:31499377
+cp_cls_t_1082:31516087
+logging_enabled_new:31490725
+jb_cp_cls_c_632:31524806
+32d76977:31503652
+ha629193:31508444
+cdk-lw-on:31524445
+31fi7170_t:31517328
+a1ije391_t:31520709
+api_cot_off:31509852
+g4a0e106:31510899
+prpt_ctrl:31513638
+95db8703:31517512
+
+```
+
+</details>
+
+<!-- generated by issue reporter -->","2026-06-03T18:17:49Z","closed","bug","TRUE",""
+"vscode","320013","https://github.com/microsoft/vscode/issues/320013","'esc' only closes the modal when focus is in the editor","- Open the modal editor window
+- Press escape
+- Sometimes it closes the modal, sometimes not
+
+I think it relies on focus being inside the text editor. If I just clicked in the sidebar to open a new file, it doesn't work. Very frustrating and un-ergonomic that I have to go click the x button","2026-06-04T22:35:06Z","closed","bug,insiders-released,agents-window","TRUE",""
+"vscode","320389","https://github.com/microsoft/vscode/issues/320389","VSCode seems it does not respect my profiles when starting some extensions","
+Type: <b>Bug</b>
+
+Hello there,
+
+I recently posted a similar issue for new Agents window. In that task I explained that I disabled many features in the ""Default"" profile, including all AI, and the profile I am starting agent window is fully decorated for AI works. Yet, agents window tries to use ""Default"" profile to connect agents, and fails miserably to do so becuause of changes I made to ""Default"" profile.
+
+The same is now happenning with Remote Explorer.
+
+I also removed Remote Explorer from ""Default"" profile. And now I am not able to connect WSL containers, and vscode complains saying ""Extension 'WSL' is required. And it says this after I started this connection from within Remote Explorer, just from another profile set for this purpose.
+
+How can you recreate the issue? follow these steps:
+1- Open ""Default"" profile and remove WSL, and maybe Remote Explorer(?!)
+2- Create a new profile, from scratch or using default
+3- switch to new profile, find and install WSL
+4- open Remote explorer window and try to connect a WSL container (current or new windows, wont matter)
+5- Now witness: VSCode switches to ""Default"" profile immediately before trying to connect, and it fails because there is no WSL in ""Default"" profile.
+6- Bonus: open File menu, and then ""Close Remote Connection"". The profile stays in ""Default"".
+
+One exception I saw so far is this:
+If I enable WSL in ""Default"" profile, open a remote folder, and switch to another profile that has WSL enabled within that folder, then next time I try to connect from non-Default profile, it reopens the folder in that profile without a problem.
+
+Everything I use in VSCode should be contained within the profile I am working in. The exception clearly shows that my profiles are respected in the workspace level, but not in global level. 
+
+I hope you fix this issue and bring balance and peace to the use of profiles.
+
+VS Code version: Code 1.123.0 (6a44c352bd24569c417e530095901b649960f9f8, 2026-06-03T11:29:03+02:00)
+OS version: Windows_NT x64 10.0.26100
+Modes:
+Connection to 'WSL: AgenticTraining' could not be established  No remote extension installed to resolve wsl.
+
+<details>
+<summary>System Info</summary>
+
+|Item|Value|
+|---|---|
+|CPUs|Intel(R) Core(TM) i7-4770HQ CPU @ 2.20GHz (8 x 2195)|
+|GPU Status|2d_canvas: enabled<br>GPU0: VENDOR= 0x8086, DEVICE=0x0d26 [Intel(R) Iris(TM) Pro Graphics 5200], DRIVER_VENDOR=Intel, DRIVER_VERSION=20.19.15.4531 *ACTIVE*<br>GPU1: VENDOR= 0x1414, DEVICE=0x008c [Microsoft Basic Render Driver], DRIVER_VERSION=10.0.26100.8521<br>Machine model name: <br>Machine model version: <br>direct_rendering_display_compositor: disabled_off_ok<br>gpu_compositing: enabled<br>multiple_raster_threads: enabled_on<br>opengl: enabled_on<br>rasterization: enabled<br>raw_draw: disabled_off_ok<br>skia_graphite: disabled_off<br>trees_in_viz: disabled_off<br>video_decode: enabled<br>video_encode: enabled<br>webgl: enabled<br>webgpu: enabled<br>webnn: disabled_off|
+|Load (avg)|undefined|
+|Memory (System)|15.91GB (2.07GB free)|
+|Process Argv|--crash-reporter-id 1e1cd08e-d950-4c1a-a30a-00ed7b58646a|
+|Screen Reader|no|
+|VM|0%|
+
+Connection to 'WSL: AgenticTraining' could not be established  No remote extension installed to resolve wsl.
+</details><details><summary>Extensions (1)</summary>
+
+Name|Identifier|Author|Version
+---|---|---|---
+Extensions not loaded|extensions-load-error|N/A|
+
+</details><details>
+<summary>A/B Experiments</summary>
+
+```
+vsliv368cf:30146710
+binariesv615:30325510
+nativeloc1:31344060
+dwcopilot:31170013
+dwoutputs:31242946
+copilot_t_ci:31333650
+e5gg6876:31282496
+pythonrdcb7:31342333
+6518g693:31463988
+aj953862:31281341
+b6b4d950:31327385
+6abeh943:31336334
+envsdeactivate2:31505458
+cloudbuttont:31379625
+3efgi100_wstrepl:31403338
+839jf696:31457053
+ec5jj548:31422691
+cp_cls_t_966_ss:31526232
+inlinechat_v2_hd992725:31505030
+4je02754:31466945
+c3h7c220:31478652
+38bie571_auto:31426784
+cp_cls_t_1081:31454832
+conptydll_true:31498968
+e9c30283:31461165
+test_treatment2:31471001
+46204921:31447328
+idci7584:31464702
+e3e4d672:31494082
+ei9d7968:31496641
+chat:31457767
+7e187181:31503455
+ghj88844:31499326
+ec1eg703:31520046
+ddid_c:31478207
+hmra_i5g22:31518061
+getcmakediagnosticsoff:31489825
+7df3h592:31512476
+cp_cls_t_1082:31516087
+logging_enabled_new:31498466
+j0d79568:31499440
+jb_cp_cls_c_632:31524806
+748c7209:31512887
+32d76977:31512328
+ha629193:31508444
+cdk-lw-on:31524445
+31fi7170_t:31522396
+jh5f2457_c:31515489
+61138546:31518536
+gf14b233:31526830
+
+```
+
+</details>
+
+<!-- generated by issue reporter -->","2026-06-08T10:43:17Z","open","bug,user-profiles","TRUE",""
+"vscode","320428","https://github.com/microsoft/vscode/issues/320428","missing active doc context in AHP sessions","1. Open a document, either saved or untitled, and ask about the content in ""this file""
+
+🐛 AHP agent will ask to clarify what file, whereas a local chat is given the context to know what ""this"" means.
+
+Note that selected text from a saved document is attached as expected, but neither local nor AHP will attach a selection from an untitled doc.
+
+","2026-06-08T15:44:01Z","open","bug,agent-host","TRUE",""
+"vscode","320617","https://github.com/microsoft/vscode/issues/320617","[Regression] [Error] [GitHub.copilot-chat] unhandlederror-fetch failed — byokContribution.fetchKnownModelList","## Error Message
+````
+unhandlederror-fetch failed
+````
+
+## Stack Trace
+&nbsp;&nbsp;&nbsp;&nbsp;at node:<REDACTED: (user-file-path>:14902:13) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at processTicksAndRejections (node:<REDACTED: user-file-path>:103:5) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at runNextTicks (node:<REDACTED: user-file-path>:68:3) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at process.processImmediate (node:<REDACTED: user-file-path>:452:9) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at process.callbackTrampoline (node:<REDACTED: user-file-path>:130:17) [not deminified]  
+&nbsp;&nbsp;&nbsp;&nbsp;at async n._fetch (../src/platform/networking/node/baseFetchFetcher.ts:93:15)  
+&nbsp;&nbsp;&nbsp;&nbsp;at async n.fetch (../src/platform/networking/node/baseFetchFetcher.ts:55:20)  
+&nbsp;&nbsp;&nbsp;&nbsp;at async LVr (../src/platform/networking/node/fetcherFallback.ts:96:21)  
+&nbsp;&nbsp;&nbsp;&nbsp;at async pN.fetch (../src/platform/networking/vscode-node/fetcherServiceImpl.ts:143:71)  
+&nbsp;&nbsp;&nbsp;&nbsp;at async Fre.fetchKnownModelList (../src/extension/byok/vscode-node/byokContribution.ts:88:22)  
+&nbsp;&nbsp;&nbsp;&nbsp;at async Fre._authChange (../src/extension/byok/vscode-node/byokContribution.ts:64:23)
+
+<details>
+<summary>Raw Stack Trace (minified)</summary>
+
+````
+TypeError: fetch failed 	at node:<REDACTED: user-file-path>:14902:13 	at processTicksAndRejections (node:<REDACTED: user-file-path>:103:5) 	at runNextTicks (node:<REDACTED: user-file-path>:68:3) 	at process.processImmediate (node:<REDACTED: user-file-path>:452:9) 	at process.callbackTrampoline (node:<REDACTED: user-file-path>:130:17) 	at async n._fetch (<REDACTED: user-file-path>/.vscode-server/extensions/github.copilot-chat-0.48.1/dist/extension.js:5486:5229) 	at async n.fetch (<REDACTED: user-file-path>/.vscode-server/extensions/github.copilot-chat-0.48.1/dist/extension.js:5486:4541) 	at async LVr (<REDACTED: user-file-path>/.vscode-server/extensions/github.copilot-chat-0.48.1/dist/extension.js:5486:9266) 	at async pN.fetch (<REDACTED: user-file-path>/.vscode-server/extensions/github.copilot-chat-0.48.1/dist/extension.js:5486:13451) 	at async Fre.fetchKnownModelList (<REDACTED: user-file-path>/.vscode-server/extensions/github.copilot-chat-0.48.1/dist/extension.js:1716:20297) 	at async Fre._authChange (<REDACTED: user-file-path>/.vscode-server/extensions/github.copilot-chat-0.48.1/dist/extension.js:1716:18899)
+````
+
+</details>
+
+## Details
+| Property | Value |
+| --- | --- |
+| Bucket ID | [`e3861a6b-6076-14e0-94fc-6033988c930d`](https://errors.code.visualstudio.com/bucket/e3861a6b-6076-14e0-94fc-6033988c930d?product=VSCode&extension=GitHub.copilot-chat&commit=6a44c352bd24569c417e530095901b649960f9f8) |
+| Extension Version | 0.48.1 |
+| Last Seen | Mon Jun 08 2026 23:34:54 GMT+0000 (Coordinated Universal Time) |
+| Platforms | linux, darwin, win32 |
+| Product | VSCode |
+
+---
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-09T15:50:02Z","open","bug,error-telemetry,model-byok,recent-regression,extension,ai-generated,*fix","TRUE",""
+"vscode","321018","https://github.com/microsoft/vscode/issues/321018","Output dropdown closes when the list updates","
+Type: <b>Bug</b>
+
+The Output tab selector dropdown closes whenever the list updates, making it impossible to select an output during startup until the list stabalizes. This is a long standing issue. 
+
+VS Code version: Code 1.124.0 (1b50d58d73426c9171299ec4037d01365d995b78, 2026-06-09T21:29:32-07:00)
+OS version: Windows_NT x64 10.0.26200
+Modes:
+
+<details>
+<summary>System Info</summary>
+
+|Item|Value|
+|---|---|
+|CPUs|Intel(R) Core(TM) 5 120U (12 x 2496)|
+|GPU Status|2d_canvas: enabled<br>GPU0: VENDOR= 0x8086, DEVICE=0xa7ac [Intel(R) Graphics], DRIVER_VENDOR=Intel, DRIVER_VERSION=32.0.101.7076 *ACTIVE*<br>GPU1: VENDOR= 0x1414, DEVICE=0x008c [Microsoft Basic Render Driver], DRIVER_VERSION=10.0.26100.8328<br>Machine model name: <br>Machine model version: <br>direct_rendering_display_compositor: disabled_off_ok<br>gpu_compositing: enabled<br>multiple_raster_threads: enabled_on<br>opengl: enabled_on<br>rasterization: enabled<br>raw_draw: disabled_off_ok<br>skia_graphite: disabled_off<br>trees_in_viz: disabled_off<br>video_decode: enabled<br>video_encode: enabled<br>webgl: enabled<br>webgpu: enabled<br>webnn: disabled_off|
+|Load (avg)|undefined|
+|Memory (System)|15.70GB (1.59GB free)|
+|Process Argv|--folder-uri file:///c%3A/macct/VSCode-VBNet --crash-reporter-id 7cfeba12-46a1-410b-b063-d1177ca5d898|
+|Screen Reader|no|
+|VM|0%|
+</details><details><summary>Extensions (96)</summary>
+
+Name|Identifier|Author|Version
+---|---|---|---
+JavaScript REPL|achil.vscode-javascript-repl|achil|0.7.7
+SQL Formatter|adpyke.vscode-sql-formatter|adpyke|1.4.4
+Bookmarks|alefragnani.bookmarks|alefragnani|14.1.1
+Pm2 Explorer|alex-young.pm2-explorer|alex-young|0.0.7
+Sourcemap Helper|andersnm.sourcemap-helper|andersnm|1.0.0
+Fontsy|andrewberty.fontsy|andrewberty|1.2.0
+Claude Code for VS Code|anthropic.claude-code|Anthropic|2.1.173
+Apollo GraphQL|apollographql.vscode-apollo|apollographql|2.6.6
+Surround with Tag|balduinlandolt.surround-with-tag|BalduinLandolt|1.0.0
+PHP Intelephense|bmewburn.vscode-intelephense-client|bmewburn|1.18.4
+Prisma Entity-Relationship Diagrams visualizer|bocovo.prisma-erd-visualizer|bocovo|0.6.0
+Path Intellisense|christian-kohler.path-intellisense|christian-kohler|2.10.0
+Font Preview|ctcuff.font-preview|ctcuff|2.2.1
+VSCode TSV|ctenbrinke.vscode-tsv|ctenbrinke|0.2.2
+Go to Character Position|davidfreer.go-to-character-position|davidfreer|2.0.2
+Remote Bridge|davidlouda.remote-bridge|DavidLouda|3.5.0
+ESLint|dbaeumer.vscode-eslint|dbaeumer|3.0.24
+Docker DX|docker.docker|docker|0.18.0
+Git History|donjayamanne.githistory|donjayamanne|0.6.20
+XML Tools|dotjoshjohnson.xml|DotJoshJohnson|2.5.1
+Interface generator|dotup.dotup-vscode-interface-generator|dotup|1.0.15
+GitLens — Git supercharged|eamodio.gitlens|eamodio|18.1.0
+Prettier - Code formatter|esbenp.prettier-vscode|esbenp|12.4.0
+Font Switcher|evan-buss.font-switcher|evan-buss|4.1.1
+Auto Rename Tag|formulahendry.auto-rename-tag|formulahendry|0.1.10
+GitHub Codespaces|github.codespaces|GitHub|1.18.13
+GitHub Repositories|github.remotehub|GitHub|0.64.0
+Spreadsheet Viewer|grapecity.gc-excelviewer|GrapeCity|4.2.66
+GraphQL: Syntax Highlighting|graphql.vscode-graphql-syntax|GraphQL|1.3.10
+Trigger Task on Save|gruntfuggly.triggertaskonsave|Gruntfuggly|0.2.17
+Git History|guodongsun.vscode-git-cruise|GuodongSun|0.2.6
+Extension Manager|hayden.extension-pack-manager|hayden|0.2.4
+TS interface from class|herrlax.ts-interface-from-class|herrlax|1.0.4
+REST Client|humao.rest-client|humao|0.25.1
+ftp-simple|humy2833.ftp-simple|humy2833|0.7.6
+Gzip Decompressor|hyunkyunmoon.gzipdecompressor|HyunKyunMoon|1.3.0
+Move selection to new file|kentos.move-selection-to-new-file|kentos|1.0.1
+JSON to CSV|khaeransori.json2csv|khaeransori|1.0.0
+Character Position|kyrcha.character-position|kyrcha|1.0.0
+Diff Folders|l13rary.l13-diff|L13RARY|1.3.11
+JavaScript Performance|mazenkhiami.jsperformance|MazenKhiami|0.0.14
+Better Open Editors|mcsodbrenner.better-open-editors|McSodbrenner|1.12.0
+Azure Resources|ms-azuretools.vscode-azureresourcegroups|ms-azuretools|0.12.6
+Container Tools|ms-azuretools.vscode-containers|ms-azuretools|2.4.5
+Docker|ms-azuretools.vscode-docker|ms-azuretools|2.0.0
+C# Dev Kit|ms-dotnettools.csdevkit|ms-dotnettools|3.20.199
+C#|ms-dotnettools.csharp|ms-dotnettools|2.140.9
+.NET Install Tool|ms-dotnettools.vscode-dotnet-runtime|ms-dotnettools|3.1.0
+Python Debugger|ms-python.debugpy|ms-python|2026.6.0
+Python|ms-python.python|ms-python|2026.4.0
+Pylance|ms-python.vscode-pylance|ms-python|2026.2.1
+Python Environments|ms-python.vscode-python-envs|ms-python|1.34.0
+Dev Containers|ms-vscode-remote.remote-containers|ms-vscode-remote|0.459.1
+Remote - SSH|ms-vscode-remote.remote-ssh|ms-vscode-remote|0.124.0
+Remote - SSH: Editing Configuration Files|ms-vscode-remote.remote-ssh-edit|ms-vscode-remote|0.87.0
+WSL|ms-vscode-remote.remote-wsl|ms-vscode-remote|0.104.3
+Azure Repos|ms-vscode.azure-repos|ms-vscode|0.40.0
+Remote Explorer|ms-vscode.remote-explorer|ms-vscode|0.5.0
+Remote Repositories|ms-vscode.remote-repositories|ms-vscode|0.42.0
+Remote - Tunnels|ms-vscode.remote-server|ms-vscode|1.5.3
+Live Share|ms-vsliveshare.vsliveshare|ms-vsliveshare|1.1.122
+SQLTools|mtxr.sqltools|mtxr|0.28.5
+SQLTools PostgreSQL/Cockroach Driver|mtxr.sqltools-driver-pg|mtxr|0.5.7
+TypeScript Explorer|mxsdev.typescript-explorer|mxsdev|0.4.2
+MQL4 Syntax Highlight|nervtech.mq4|nervtech|1.0.4
+Codex – OpenAI’s coding agent|openai.chatgpt|openai|26.602.71036
+CSV to Table|phplasma.csv-to-table|phplasma|1.4.1
+Template Literal Editor|plievone.vscode-template-literal-editor|plievone|0.10.0
+Git File History|pomber.git-file-history|pomber|1.0.1
+Prisma|prisma.prisma|Prisma|31.11.0
+SQLite Viewer|qwtel.sqlite-viewer|qwtel|25.12.2
+Language Support for Java(TM) by Red Hat|redhat.java|redhat|1.54.0
+XML|redhat.vscode-xml|redhat|0.29.3
+Tabster|ribragimov.tabster|ribragimov|0.0.6
+VB.NET Companion|roies.vbnet-companion|roies|0.1.47
+rust-analyzer|rust-lang.rust-analyzer|rust-lang|0.3.2929
+JavaScript Booster|sburg.vscode-javascript-booster|sburg|14.0.1
+Language Server tools for Copilot|sehejjain.lsp-mcp-bridge|sehejjain|1.0.1
+Shopify Liquid|shopify.theme-check-vscode|Shopify|3.11.5
+Windows Default Keybindings|smcpeak.default-keys-windows|smcpeak|1.0.0
+Velocity Template Language|sodatea.velocity|sodatea|0.3.0
+nginx-format|teclado.vscode-nginx-format|teclado|0.0.6
+Tex Preview|tialki.tex-preview|tialki|0.0.4
+Terminal Color and Style Highlighting for the Editor|tobias-faller.vt100-syntax-highlighting|Tobias-Faller|1.1.0
+vscode-pdf|tomoki1207.pdf|tomoki1207|1.2.2
+Android XML Editor|totalcross.android-xml-editor|TotalCross|0.0.1
+TypeScript (Native Preview)|typescriptteam.native-preview|TypeScriptTeam|0.20260611.2
+MCP Debug Tools|uhd.mcp-debug-tools|uhd|1.0.2
+Pinned Panel|ukyouz.pinned-panel|ukyouz|0.0.4
+Error Lens|usernamehw.errorlens|usernamehw|3.28.0
+vscode-icons|vscode-icons-team.vscode-icons|vscode-icons-team|12.18.0
+GistPad|vsls-contrib.gistfs|vsls-contrib|0.9.6
+Vue (Official)|vue.volar|Vue|3.3.4
+Git Blame|waderyan.gitblame|waderyan|13.0.1
+GPG Indicator|wdhongtw.gpg-indicator|wdhongtw|0.7.5
+NGINX Configuration|william-voyek.vscode-nginx|william-voyek|0.7.2
+
+</details><details>
+<summary>A/B Experiments</summary>
+
+```
+vsliv368:30146709
+binariesv615:30325510
+nativeloc1:31344060
+dwcopilot:31170013
+dwoutputs:31242946
+copilot_t_ci:31333650
+e5gg6876:31282496
+pythonrdcb7:31342333
+6518g693:31463988
+aj953862:31281341
+6abeh943:31336334
+envsdeactivate2:31505458
+478i5457:31521843
+cloudbuttont:31379625
+3efgi100_wstrepl:31403338
+ec5jj548:31422691
+cp_cls_t_966_ss:31526232
+4je02754:31466945
+c3h7c220:31478652
+ge8j1254_inline_auto_hint_haiku:31490510
+38bie571_auto:31478678
+cp_cls_c_1081:31454833
+conptydll_true:31498968
+ia-use-proxy-models-svc:31452481
+e9c30283:31461165
+test_treatment2:31471001
+c9b86496:31447327
+idci7584:31464702
+e3e4d672:31494082
+ei9d7968:31496641
+nes-extended-on:31455476
+chat:31457767
+8hig5102:31480529
+89g7j272:31518289
+7e187181:31503455
+i2gc6536:31499202
+52612955:31516516
+ghj88844:31499326
+ddid_t:31478206
+hmra_i5g22:31518061
+7df3h592:31512476
+pro_large_t:31499376
+cp_cls_t_1082:31516087
+logging_enabled_new:31498466
+db5d2638:31499441
+jb_cp_cls_t_632:31524805
+852d2892:31506239
+56dj4588:31512888
+32d76977:31512328
+ha629193:31508444
+cdk-lw-on:31524445
+nes-charagree-2:31521371
+31fi7170_t:31522396
+g4a0e106:31529594
+jbcp_cls_pctr_t:31531130
+61138546:31518536
+gf14b233:31526830
+nes-curr-leftover-1000:31530976
+
+```
+
+</details>
+
+<!-- generated by issue reporter -->","2026-06-11T19:56:12Z","open","bug,output","TRUE",""
+"vscode","321444","https://github.com/microsoft/vscode/issues/321444","Agent terminal gets stuck on interactive package manager prompts (needrestart, debconf, pipe buffering)","## Summary
+
+The agent terminal tool fails to handle two classes of interactive prompts, causing consistent eval failures on terminalbench2 tasks that copilot-cli passes.
+
+## Problem 1: needrestart/debconf TUI prompts
+
+When `apt-get install` triggers needrestart, a ""Which services should be restarted?"" TUI prompt appears. None of the `detectsHighConfidenceInputPattern()` or `detectsLikelyInputRequiredPattern()` patterns in `outputMonitor.ts` match this format. The `idleSilence` timer fires after 60s, the tool returns ""moved to background"", and the agent gives up.
+
+**Example**: `nginx-request-logging` — agent ran `apt-get install -y nginx`, needrestart prompted, agent waited 5 minutes then sent an empty `send_to_terminal` and stopped. copilot-cli finished the same task in 33 seconds.
+
+## Problem 2: Pipe buffering hides prompts
+
+When the model pipes an interactive command through `tail`/`head`/`grep`, the pipe buffers all output until the upstream closes. Interactive prompts (like opam `[Y/n]`) never reach the terminal buffer, so the `OutputMonitor` cannot detect them.
+
+**Example**: `compile-compcert` — agent ran `opam install coq -y 2>&1 | tail -20`. The opam depext `[Y/n]` prompt was buffered by `tail` and never visible to the output monitor. The `[Y/n]` pattern *would* match `detectsHighConfidenceInputPattern` if it reached the terminal — the bug is the pipe hiding it.
+
+## Fix
+
+1. Set `DEBIAN_FRONTEND=noninteractive` in the copilot agent terminal env vars (in `toolTerminalCreator.ts`), alongside existing `GIT_PAGER`, `GIT_EDITOR`, etc. This prevents apt/dpkg from ever opening interactive prompts.
+
+2. Add system prompt guidance telling the model to never pipe interactive commands through filters.
+
+## Impact
+
+Found via terminalbench2 eval analysis comparing vscode-copilot-cli vs copilot-cli. These two issues account for 2 of 12 consistent regressions (~13% score gap).","2026-06-15T16:46:07Z","closed","bug,verified,terminal,insiders-released,chat","TRUE",""
+"vscode","322377","https://github.com/microsoft/vscode/issues/322377","Copilot Chat: sequence of dots (`.........`) jumps or bunches in outputs (rendering issue)","- Copilot Chat Extension Version:
+
+- VS Code Version:
+
+- OS Version:
+
+- Feature (e.g. agent/edit/ask mode): Copilot Chat UI / chat interface
+
+- Selected model (e.g. GPT 4.1, Claude 3.7 Sonnet): multiple models (observed across several models)
+
+- Logs:
+
+Steps to Reproduce:
+
+1. Open the Copilot Chat extension in VS Code (with default settings).
+2. Ask the model to output or paste a line containing repeated periods (for example: `.........`) or view model outputs that include such lines.
+3. Observe the rendering of the sequence of dots in the chat UI.
+
+Expected behavior:
+
+- A sequence of periods like `.........` should render consistently without jumps, gaps, or unexpected bunched characters.
+
+Actual behavior:
+
+- The line `.........` shows visual weirdness in the chat output: either a jump or gap appears in the sequence, or groups of dots become bunched together in different places. This was observed across most models.
+
+Additional context:
+
+- Reported in Slack: ""some weirdness with the line `.........` i see this in most of the models, either some weird jump or gap, or the `....` being bunched together in different places""
+
+
+[View original Slack conversation](https://vscodeteam.slack.com/archives/C0A4S3T7KB6/p1782093802453989?thread_ts=1782093802.453989&cid=C0A4S3T7KB6)","2026-06-22T14:12:47Z","closed","bug","TRUE",""
+"vscode","323148","https://github.com/microsoft/vscode/issues/323148","[Error] [GitHub.copilot-chat] unhandlederror-Cannot read properties of undefined (reading 'start')","## Error Message
+````
+unhandlederror-Cannot read properties of undefined (reading 'start')
+````
+
+## Stack Trace
+&nbsp;&nbsp;&nbsp;&nbsp;at <REDACTED: user-file-path> VS <REDACTED: (../src/extension/xtab/common/lintErrors.ts:44:45)  
+&nbsp;&nbsp;&nbsp;&nbsp;at <REDACTED: user-file-path> VS <REDACTED: (../src/extension/xtab/common/lintErrors.ts:43:22)  
+&nbsp;&nbsp;&nbsp;&nbsp;at R6._diagnostics (../src/extension/xtab/common/lintErrors.ts:41:24)  
+&nbsp;&nbsp;&nbsp;&nbsp;at R6.getData (../src/extension/xtab/common/lintErrors.ts:190:25)  
+&nbsp;&nbsp;&nbsp;&nbsp;at <REDACTED: user-file-path> VS <REDACTED: (../src/extension/xtab/node/xtabProvider.ts:427:37)
+
+<details>
+<summary>Raw Stack Trace (minified)</summary>
+
+````
+TypeError: Cannot read properties of undefined (reading 'start') 	at <REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:2645:23644 	at Array.map (<anonymous>) 	at <REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:2645:23615 	at Array.map (<anonymous>) 	at R6._diagnostics (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:2645:23587) 	at R6.getData (<REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:2648:1090) 	at <REDACTED: user-file-path> VS <REDACTED: user-file-path>/resources\app\extensions\copilot\dist\extension.js:2785:14651
+````
+
+</details>
+
+## Details
+| Property | Value |
+| --- | --- |
+| Bucket ID | [`a6fdead0-370a-b7d4-5f9c-8ee48b2f08c8`](https://errors.code.visualstudio.com/bucket/a6fdead0-370a-b7d4-5f9c-8ee48b2f08c8?product=VSCode&extension=GitHub.copilot-chat&commit=7e7950df89d055b5a378379db9ee14290772148a) |
+| Extension Version | 0.53.1 |
+| Last Seen | Wed Jun 24 2026 20:22:04 GMT+0000 (Coordinated Universal Time) |
+| Platforms | win32 |
+| Product | VSCode |
+
+---
+*This issue was automatically created from the VS Code Errors Dashboard*","2026-06-26T15:38:56Z","closed","bug,error-telemetry,insiders-released,recent-regression,extension,ai-generated,ai-analyzed","TRUE",""
+"vscode","323204","https://github.com/microsoft/vscode/issues/323204","Agents window: Changes view/modal shows no diffs when opening a session (possible race during session restore)","Summary:
+When opening a session in the Agents window the header shows there are changes, but the Changes view (right side) and the changes modal show no diffs. This appears intermittent and may be a race condition when a session is being restored.
+
+Steps to Reproduce:
+1. Have VS Code open.
+2. Open the session in the Agents window.
+3. Search for a session that was open in VS Code and open it in Agents.
+4. Observe the changes indicator in the header at the top showing there are changes.
+5. The Changes view (right side) shows nothing.
+6. Click the changes in the header to open the modal — the modal shows no changes.
+
+Expected:
+The Changes view and the changes modal should display the diffs corresponding to the header indicator.
+
+Actual:
+No changes are shown in the Changes view or modal despite the header indicating changes.
+
+Additional details / context:
+- This is intermittent and not reliably reproducible. I suspect a race condition when a session is being restored.
+- This was discussed in Slack and is related to an earlier issue where changes are missing: https://github.com/microsoft/vscode/issues/320243
+- There are logs attached to the related issue, but recent logs may help reproduce — previous logs were a bit stale.
+
+Please investigate potential race conditions during session restore that could cause the Agents window to fail to populate the changes view/modal.
+
+
+[View original Slack conversation](https://vscodeteam.slack.com/archives/C09MVCZKLP4/p1782496034381059?thread_ts=1782496034.381059&cid=C09MVCZKLP4)","2026-06-26T20:03:25Z","open","bug,agents","TRUE",""
