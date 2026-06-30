@@ -36,7 +36,7 @@ We propose a clarification-only amendment to the prompt:
 - keep the same four labels: `Sufficient`, `Ambiguous`, `Missing`, `Incorrect`
 - tighten decision rules for `EB` and `S2R` so the model does not rely on implication
 
-The candidate revised prompt is stored in:
+The revised prompt for the pilot re-run is stored in:
 
 - `prompt_v2_candidate.md`
 

@@ -1,6 +1,6 @@
-# Candidate Prompt V2 For Pilot Re-run
+# Prompt V2 For Pilot Re-run
 
-Use this prompt only if the team approves the amendment note. This file does not replace `prompt_final.md` by default.
+Use this prompt to rerun the pilot after the team accepts the amendment note. This file does not replace `prompt_final.md` by default.
 
 ## Why this version exists
 
