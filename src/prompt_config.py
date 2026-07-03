@@ -1,12 +1,11 @@
 """
-Frozen prompt configuration for the RBL-4 experiment.
+Prompt configuration for the RBL-4 full experiment.
 
-DO NOT EDIT the prompt text below. It is copied verbatim from
-`prompt_final.md` (version v1.0). Changing it requires an approved
-team amendment (see issue-handling-rules.md / team-assignment-master.md).
+This uses the instructor-approved prompt v2 candidate. It keeps the same
+model, temperature, labels, and metric, but tightens EB/S2R rules.
 """
 
-PROMPT_VERSION = "v1.0"
+PROMPT_VERSION = "v2.0-candidate"
 
 # The model id used when calling the OpenAI API.
 # The proposal fixes this to "GPT-4o mini" -> OpenAI API id "gpt-4o-mini".
@@ -43,10 +42,24 @@ Important rules:
 - Use only the issue title and body.
 - Do not use outside knowledge.
 - Do not infer missing details.
+- Do not upgrade a component from Missing to Ambiguous or Sufficient based only on implication.
 - If a component is absent, label it "Missing".
 - If a component exists but is too vague to use, label it "Ambiguous".
 - If a component exists and is clear enough to act on, label it "Sufficient".
 - If a component exists but is contradictory or clearly wrong, label it "Incorrect".
+
+Extra decision rules for Expected Behavior (EB):
+- Label EB as "Sufficient" only if the report explicitly states what should happen instead.
+- Do not mark EB as "Sufficient" only because the expected outcome can be guessed from the bug context.
+- Phrases such as "should", "expected", "instead", "must", or an explicit correct output are strong EB evidence.
+- If the report only implies the expectation but does not say it clearly, label EB as "Missing" or "Ambiguous", not "Sufficient".
+
+Extra decision rules for Steps to Reproduce (S2R):
+- Label S2R as "Sufficient" only if another developer could reasonably attempt reproduction from the provided actions, code, setup, or sequence.
+- A code snippet counts as S2R only if it functions as a concrete reproducible example, not just an isolated fragment without enough context.
+- A single action may be enough only if it clearly describes a reproducible user step with the relevant context.
+- If the report names a symptom without actionable steps or reproducible setup, do not mark S2R as "Sufficient".
+- If partial steps exist but a developer would still have to guess important missing actions or conditions, label S2R as "Ambiguous".
 
 Return STRICTLY this JSON object and nothing else:
 {
