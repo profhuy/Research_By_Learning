@@ -1,8 +1,10 @@
 """
-Prompt configuration for the RBL-4 pilot rerun.
 
-This is the approved prompt v2 candidate from the amendment note. It keeps
-the same model, temperature, labels, and metric, but tightens EB/S2R rules.
+Prompt configuration for the RBL-4 full experiment.
+
+This uses the instructor-approved prompt v2 candidate. It keeps the same
+model, temperature, labels, and metric, but tightens EB/S2R rules.
+
 """
 
 PROMPT_VERSION = "v2.0-candidate"
