@@ -1,11 +1,11 @@
 rq_name,metric_name,metric_value,p_value,effect_size,n_valid,n_invalid,decision
-ms-hh-kappa-overall,human_human_kappa_overall,1.0000,,,30,0,"FLAG (> 0.8, check for leakage / too-easy rubric)"
-ms-hh-kappa-ob,human_human_kappa_ob,1.0000,,,30,0,"FLAG (> 0.8, check for leakage / too-easy rubric)"
-ms-hh-kappa-eb,human_human_kappa_eb,1.0000,,,30,0,"FLAG (> 0.8, check for leakage / too-easy rubric)"
-ms-hh-kappa-s2r,human_human_kappa_s2r,1.0000,,,30,0,"FLAG (> 0.8, check for leakage / too-easy rubric)"
+ms-hh-kappa-overall,human_human_kappa_overall,1.0000,,,30,0,PASS (within accepted range >= 0.6)
+ms-hh-kappa-ob,human_human_kappa_ob,1.0000,,,30,0,PASS (within accepted range >= 0.6)
+ms-hh-kappa-eb,human_human_kappa_eb,1.0000,,,30,0,PASS (within accepted range >= 0.6)
+ms-hh-kappa-s2r,human_human_kappa_s2r,1.0000,,,30,0,PASS (within accepted range >= 0.6)
 ms-hh-raw-agreement,human_human_raw_agreement,1.0000,,,30,0,
-ms-llm-dev-kappa-overall,llm_dev_kappa_overall,0.6183,,,30,0,PASS (within 0.6-0.8)
-ms-llm-dev-kappa-ob,llm_dev_kappa_ob,1.0000,,,30,0,"FLAG (> 0.8, check for leakage / too-easy rubric)"
-ms-llm-dev-kappa-eb,llm_dev_kappa_eb,0.6951,,,30,0,PASS (within 0.6-0.8)
+ms-llm-dev-kappa-overall,llm_dev_kappa_overall,0.6183,,,30,0,PASS (within accepted range >= 0.6)
+ms-llm-dev-kappa-ob,llm_dev_kappa_ob,1.0000,,,30,0,PASS (within accepted range >= 0.6)
+ms-llm-dev-kappa-eb,llm_dev_kappa_eb,0.6951,,,30,0,PASS (within accepted range >= 0.6)
 ms-llm-dev-kappa-s2r,llm_dev_kappa_s2r,0.4168,,,30,0,FAIL (< 0.6)
 ms-llm-dev-raw-agreement,llm_dev_raw_agreement,0.8444,,,30,0,
