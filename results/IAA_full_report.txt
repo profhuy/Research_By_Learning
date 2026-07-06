@@ -1,0 +1,7 @@
+=== FULL DATASET IAA RESULTS ===
+Double-labeled samples: 75
+Kappa OB:  1.0000
+Kappa EB:  1.0000
+Kappa S2R: 1.0000
+-------------------------
+Verdict: PASS

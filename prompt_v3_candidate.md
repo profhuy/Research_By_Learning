@@ -1,24 +1,13 @@
-"""
-Prompt configuration for the RBL-4 full rerun.
+# Prompt V3 For Full Re-run
 
-This uses prompt v3, which keeps the stricter EB rules from v2 but relaxes
-S2R enough to better match the team's full-dataset annotation style.
-"""
+Use this prompt for the next full rerun. It keeps the stricter `EB` discipline
+from v2, but relaxes `S2R` so that code snippets, commands, and short workflows
+can count as reproducible when they are actionable enough for a developer to try.
 
-PROMPT_VERSION = "v3.0-candidate-s2r-relaxed"
+## System prompt
 
-# The model id used when calling the OpenAI API.
-# The proposal fixes this to "GPT-4o mini" -> OpenAI API id "gpt-4o-mini".
-MODEL_API_ID = "gpt-4o-mini"
-TEMPERATURE = 0.0
-
-# The four allowed labels. Any label outside this set => INVALID.
-ALLOWED_LABELS = {"Sufficient", "Ambiguous", "Missing", "Incorrect"}
-
-# The three components the model must score.
-COMPONENTS = ("OB", "EB", "S2R")
-
-SYSTEM_PROMPT = """You are evaluating the quality of a GitHub software bug report based ONLY on the text provided.
+```text
+You are evaluating the quality of a GitHub software bug report based ONLY on the text provided.
 Do not assume information that is not present in the report.
 
 Evaluate the following three components:
@@ -67,25 +56,20 @@ Return STRICTLY this JSON object and nothing else:
   "OB": {"label": "...", "reason": "..."},
   "EB": {"label": "...", "reason": "..."},
   "S2R": {"label": "...", "reason": "..."}
-}"""
+}
+```
 
-USER_PROMPT_TEMPLATE = """Bug report:
+## User prompt template
+
+```text
+Bug report:
 Title: {{issue_title}}
 Body:
-{{issue_body}}"""
+{{issue_body}}
+```
 
+## Run configuration
 
-def build_user_prompt(issue_title, issue_body):
-    """Fill the frozen user template with one issue's title and body.
-
-    We use str.replace (NOT str.format) on purpose: SYSTEM_PROMPT contains
-    literal { } braces (the JSON skeleton). Using .format anywhere near that
-    text would crash. .replace is safe, explicit, and good enough here.
-    """
-    title = "" if issue_title is None else str(issue_title)
-    body = "" if issue_body is None else str(issue_body)
-    return (
-        USER_PROMPT_TEMPLATE
-        .replace("{{issue_title}}", title)
-        .replace("{{issue_body}}", body)
-    )
+- Model: `GPT-4o mini`
+- Temperature: `0.0`
+- Prompt version tag: `v3.0-candidate-s2r-relaxed`

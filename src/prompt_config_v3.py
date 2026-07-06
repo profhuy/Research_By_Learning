@@ -1,21 +1,16 @@
 """
-Prompt configuration for the RBL-4 full rerun.
+Prompt configuration candidate v3 for targeted S2R recovery on the full set.
 
-This uses prompt v3, which keeps the stricter EB rules from v2 but relaxes
-S2R enough to better match the team's full-dataset annotation style.
+This keeps the v2 discipline for EB, but relaxes S2R enough to better match
+the team's full-dataset annotation style.
 """
 
 PROMPT_VERSION = "v3.0-candidate-s2r-relaxed"
 
-# The model id used when calling the OpenAI API.
-# The proposal fixes this to "GPT-4o mini" -> OpenAI API id "gpt-4o-mini".
 MODEL_API_ID = "gpt-4o-mini"
 TEMPERATURE = 0.0
 
-# The four allowed labels. Any label outside this set => INVALID.
 ALLOWED_LABELS = {"Sufficient", "Ambiguous", "Missing", "Incorrect"}
-
-# The three components the model must score.
 COMPONENTS = ("OB", "EB", "S2R")
 
 SYSTEM_PROMPT = """You are evaluating the quality of a GitHub software bug report based ONLY on the text provided.
@@ -76,12 +71,6 @@ Body:
 
 
 def build_user_prompt(issue_title, issue_body):
-    """Fill the frozen user template with one issue's title and body.
-
-    We use str.replace (NOT str.format) on purpose: SYSTEM_PROMPT contains
-    literal { } braces (the JSON skeleton). Using .format anywhere near that
-    text would crash. .replace is safe, explicit, and good enough here.
-    """
     title = "" if issue_title is None else str(issue_title)
     body = "" if issue_body is None else str(issue_body)
     return (
