@@ -1,1 +1,296 @@
+% ==============================================================
+% Section 3: Methodology
+% Author: Phúc (LR - LLM Runner)
+% File:   paper/sections/03_method.tex
+%
+% Sources of every number in this section (do not invent values):
+%   - data/full_sample.csv, data/pilot_sample.csv
+%   - data/full_ground_truth.csv, data/pilot_ground_truth.csv
+%   - results/full_api_log.txt, results/pilot_api_log.txt
+%   - results/full_llm_output.csv, results/pilot_llm_output.csv
+%   - prompt_final.md (v1.0), prompt_v3_candidate.md (v3.0-candidate-s2r-relaxed)
+%   - notes.md
+%
+% NOTE FOR HÙNG (references.bib): this section cites `cohen1960`,
+% `landis1977` and `kang2024libro`, which are not in references.bib yet.
+% Please add those three entries, otherwise BibTeX prints [?].
+%
+% NOTE FOR THÊM / QUÂN: this section refers to \ref{sec:results} and
+% \ref{sec:threats}. Please use exactly these labels:
+%   04_results.tex -> \section{Results}\label{sec:results}
+%   06_threats.tex -> \section{Threats to Validity}\label{sec:threats}
+%
+% NOTE FOR HÙNG/HUY: the random seed used for sampling is not recorded in
+% notes.md yet -> see the TODO below before we submit.
+% ==============================================================
 
+\section{Methodology}\label{sec:method}
+
+This section describes the experimental design, the dataset, the exact
+LLM configuration, and the execution pipeline used to answer our
+research question. The protocol was fixed in the approved proposal
+before any data was inspected. Every deviation from that protocol is
+reported explicitly in Section~\ref{sec:method:amendment}.
+
+% ------------------------------------------------------------------
+\subsection{Study Design and Pipeline Overview}
+\label{sec:method:design}
+
+We conduct an observational agreement study: an LLM and human
+annotators independently label the same bug reports along three
+quality dimensions---Observed Behavior (OB), Expected Behavior (EB),
+and Steps to Reproduce (S2R)---and we quantify how closely the LLM
+reproduces the human consensus. The LLM is therefore treated as a
+candidate \emph{quality gate} placed in front of developer triage,
+not as a text generator.
+
+The pipeline consists of five stages:
+
+\begin{enumerate}
+  \item \textbf{Data collection.} Bug reports are mined from three
+        open-source GitHub projects and stored verbatim.
+  \item \textbf{Ground truth.} Two annotators label each report using
+        a shared rubric; disagreements are resolved into a consensus
+        label.
+  \item \textbf{LLM labeling.} Each report is sent to the model in a
+        single, stateless request that returns a strict JSON object.
+  \item \textbf{Parsing and validation.} Responses are parsed; any
+        response that is empty or not valid JSON is marked
+        \texttt{INVALID} and is never filled in manually.
+  \item \textbf{Agreement analysis.} Cohen's Kappa is computed between
+        the two annotators (human--human) and between the LLM and the
+        developer consensus (LLM--developer).
+\end{enumerate}
+
+We ran the pipeline twice: a \emph{pilot} on a subset to validate the
+technical setup, and a \emph{full run} on the complete dataset.
+
+% ------------------------------------------------------------------
+\subsection{Subject Systems and Dataset}
+\label{sec:method:dataset}
+
+We selected three widely used open-source projects that differ in
+domain and in reporting culture: \texttt{pandas} (data analysis
+library), \texttt{scikit-learn} (machine-learning library), and
+\texttt{vscode} (a large IDE with a very high issue volume). This
+choice lets us observe whether agreement is stable across a
+library-style and an application-style project.
+
+The final dataset contains 250 bug reports; Table~\ref{tab:dataset}
+reports its composition. Reports were drawn from issues created
+between February 2024 and June 2026, and both open and closed issues
+are included (156 closed, 94 open), because closing status is not
+part of the construct we measure.
+
+% TODO(Phúc + Hùng): the random seed used for sampling must be recorded
+% in notes.md and stated here before submission. Do not guess it.
+The pilot set (30 reports) was drawn at random with a fixed seed and
+is a strict subset of the full set: all 30 pilot reports were re-labeled
+during the full run, so the full run is internally consistent and no
+report is labeled under two different configurations in the reported
+results.
+
+Only the issue \emph{title} and \emph{body} are given to the model and
+to the annotators. Comments, linked pages, commit history, and the
+eventual fix are excluded, since a quality gate must decide at
+submission time, when none of that information exists yet. Report
+bodies average 3{,}668 characters (median 2{,}760).
+
+\begin{table}[t]
+\caption{Dataset composition (full run, $N=250$)}
+\label{tab:dataset}
+\centering
+\begin{tabular}{lrrl}
+\hline
+\textbf{Project} & \textbf{Full} & \textbf{Pilot} & \textbf{Issue creation range} \\
+\hline
+\texttt{pandas}       &  50 &  5 & 2025-11-05 -- 2026-06-29 \\
+\texttt{scikit-learn} &  96 &  9 & 2024-02-08 -- 2026-06-16 \\
+\texttt{vscode}       & 104 & 16 & 2026-05-27 -- 2026-06-26 \\
+\hline
+\textbf{Total}        & \textbf{250} & \textbf{30} & \\
+\hline
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------------
+\subsection{Annotation Rubric and Ground Truth}
+\label{sec:method:groundtruth}
+
+Each of OB, EB, and S2R receives exactly one of four labels:
+\texttt{Sufficient} (present and clear enough to act on),
+\texttt{Ambiguous} (present but vague), \texttt{Missing} (not stated),
+or \texttt{Incorrect} (stated but contradictory or unusable). The three
+dimensions are judged independently, and annotators are explicitly
+forbidden to reward domain knowledge that is not written in the report
+text---the same restriction the model operates under, which keeps the
+two conditions comparable.
+
+Annotator~1 labeled every report. Annotator~2 independently labeled a
+random subset for inter-annotator agreement: 10 of 30 reports (33\%)
+in the pilot and 75 of 250 reports (30\%) in the full run.
+Disagreements were resolved by discussion into the consensus columns,
+which serve as ground truth for the LLM comparison.
+
+% ------------------------------------------------------------------
+\subsection{LLM Configuration}
+\label{sec:method:llm}
+
+Table~\ref{tab:config} lists the configuration. We use GPT-4o~mini,
+which is a deliberate choice rather than a convenience one: a quality
+gate would run on every incoming issue, so cost per report is a design
+constraint, and a small model is the realistic deployment candidate.
+The same model family has been used in recent bug-report work by
+Akyol~et~al.~\cite{akyol2026improbr}.
+
+We set \texttt{temperature}~$=0.0$ to make the labeling as close to
+deterministic as the API allows. This differs from generation-oriented
+studies, which use sampling to obtain diverse candidates
+(e.g., $t=0.7$ in LIBRO~\cite{kang2024libro}); for a classification
+gate, output stability is preferable to diversity. Each report is one
+independent, stateless request: no conversation history, no examples in
+the prompt (zero-shot), and no self-consistency voting.
+
+The system prompt defines OB, EB, and S2R, defines the four labels,
+forbids the use of outside knowledge and of inference over absent
+information, and requires the reply to be strictly the JSON object
+\texttt{\{"OB":\{"label","reason"\},"EB":\{...\},"S2R":\{...\}\}} with
+no markdown and no commentary. The user message contains only the issue
+title and body. Requiring a machine-parsable JSON schema follows the
+prompt-design practice reported by Bo~et~al.~\cite{bo2024chatbr} and
+Acharya and Ginde~\cite{acharya2025enhance}, and it is what makes an
+\texttt{INVALID} response detectable rather than silently
+mis-interpreted.
+
+\begin{table}[t]
+\caption{Run configuration (identical for pilot and full run except the prompt version)}
+\label{tab:config}
+\centering
+\begin{tabular}{ll}
+\hline
+\textbf{Parameter} & \textbf{Value} \\
+\hline
+Model (requested)   & \texttt{gpt-4o-mini} \\
+Model (returned)    & \texttt{gpt-4o-mini-2024-07-18} \\
+Temperature         & \texttt{0.0} \\
+Prompting strategy  & zero-shot, single call per report \\
+Output format       & strict JSON, no markdown \\
+Prompt (pilot)      & \texttt{v1.0} \\
+Prompt (full run)   & \texttt{v3.0-candidate-s2r-relaxed} \\
+Input given to model& issue title + body only \\
+\hline
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------------
+\subsection{Prompt Amendment Between Pilot and Full Run}
+\label{sec:method:amendment}
+
+The pilot used prompt \texttt{v1.0}. Pilot agreement was acceptable for
+OB and EB but low for S2R, and manual inspection of the disagreements
+showed a systematic cause: \texttt{v1.0} led the model to expect
+explicit, enumerated steps, so reports whose reproduction path was a
+runnable code snippet or a single command---the dominant style in
+\texttt{pandas} and \texttt{scikit-learn}---were labeled
+\texttt{Missing}, whereas the annotators accepted them as actionable.
+
+The full run therefore used prompt \texttt{v3.0-candidate-s2r-relaxed},
+which changes two things relative to \texttt{v1.0}:
+
+\begin{itemize}
+  \item \textbf{S2R relaxed:} a concrete code snippet, command block, or
+        short workflow that identifies the triggering action counts as
+        \texttt{Sufficient} even without numbered steps; \texttt{Missing}
+        is reserved for reports with no actionable reproduction path at all.
+  \item \textbf{EB tightened:} EB is \texttt{Sufficient} only when the
+        report explicitly states what should have happened; an
+        expectation that is merely guessable from context is not enough.
+\end{itemize}
+
+We report this change explicitly because it is a deviation from the
+frozen-prompt protocol, and we make three points about its scope.
+First, the change is an alignment of the prompt with the annotation
+rubric, not a change of the rubric, the metric, the threshold, or the
+model. Second, it was decided from pilot \emph{error patterns} and
+applied to all 250 reports uniformly, including the 30 pilot reports,
+so the reported full-run results come from a single configuration.
+Third, because pilot and full run differ in both prompt version and
+sample size, pilot and full numbers must not be read as a controlled
+comparison of prompt versions; we treat this as a threat to validity
+(Section~\ref{sec:threats}).
+
+% ------------------------------------------------------------------
+\subsection{Execution Pipeline and Error Handling}
+\label{sec:method:pipeline}
+
+Because an API-based pipeline can fail in ways that quietly corrupt a
+dataset, error handling was defined before the run rather than
+improvised during it:
+
+\begin{itemize}
+  \item \textbf{Rate limiting.} Requests are retried up to five times
+        with exponential backoff and jitter ($2^{n}$~seconds plus a
+        random offset). The jitter avoids synchronised retries; the cap
+        avoids masking a persistent outage as slowness.
+  \item \textbf{Other errors.} Any non-rate-limit exception is raised
+        instead of retried, so that a genuine defect surfaces
+        immediately rather than being retried into silence.
+  \item \textbf{Empty or unparsable responses.} The row is marked
+        \texttt{INVALID} in \texttt{raw\_json\_status}. Labels are never
+        filled in by hand and invalid rows are never deleted; they are
+        counted separately so that the invalid rate is reported next to
+        the metric.
+  \item \textbf{Logging.} Every call appends one line to the API log
+        recording timestamp, repository, issue id, the model string
+        actually returned, success/failure, parse status, token usage,
+        cost, and any error message. The returned model string is logged
+        (not assumed) so that a silent model rollover is detectable.
+\end{itemize}
+
+In practice, all 30 pilot calls and all 250 full-run calls succeeded
+and returned parsable JSON: 0/250 \texttt{INVALID}, no retries
+triggered, and no format change during the run. One anomaly was
+observed: 2 of the 250 responses reported the model alias
+\texttt{gpt-4o-mini} instead of the pinned snapshot
+\texttt{gpt-4o-mini-2024-07-18}; both parsed correctly and were kept,
+and we note them because exact snapshot pinning is a reproducibility
+concern for API-based studies.
+
+% ------------------------------------------------------------------
+\subsection{Measurement Procedure}
+\label{sec:method:metrics}
+
+Agreement is measured with Cohen's Kappa~\cite{cohen1960}, which
+corrects for the agreement expected by chance. This correction matters
+here: the label distribution is heavily skewed toward
+\texttt{Sufficient}, so raw agreement alone would overstate the
+model's ability, and we therefore report raw agreement only alongside
+Kappa, never instead of it. Kappa is also the measure used by recent
+bug-report studies that compare human raters, which makes our numbers
+comparable to theirs~\cite{mahmud2025astrobr,akyol2026improbr}. We
+interpret magnitudes following Landis and Koch~\cite{landis1977}.
+
+We compute Kappa (i) between the two annotators, to establish that the
+rubric itself is reliable, and (ii) between the LLM and the developer
+consensus, which is the quantity the research question asks about.
+Both are computed overall and per dimension (OB, EB, S2R), since a
+single overall value can hide one weak dimension. The pass threshold
+fixed in the proposal is $\kappa \geq 0.70$. Results are reported in
+Section~\ref{sec:results}.
+
+% ------------------------------------------------------------------
+\subsection{Cost, Runtime, and Reproducibility}
+\label{sec:method:repro}
+
+The pilot (30 calls, 2026-06-29) consumed 50{,}174 prompt tokens and
+3{,}545 completion tokens for approximately US\$0.010 in under two
+minutes. The full run (250 calls, 2026-07-06) consumed 449{,}688 prompt
+tokens and 30{,}894 completion tokens for approximately US\$0.086 in
+about 15 minutes, i.e.\ roughly US\$0.0003 per bug report. This
+supports the deployment premise: screening an entire issue backlog with
+this gate costs cents, so the binding constraint is accuracy, not cost.
+
+All artifacts required to reproduce the study are in the project
+repository: the sampled datasets, the frozen prompts, the parsed model
+outputs, and the per-call API logs. No API key is stored in the
+repository; credentials are read from the environment at runtime.
