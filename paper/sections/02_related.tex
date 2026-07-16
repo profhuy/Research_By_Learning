@@ -1,0 +1,165 @@
+% ==============================================================
+% Section 2: Related Work
+% Author: Hùng
+% File:   paper/sections/02_related.tex
+% ==============================================================
+
+\section{Related Work}\label{sec:related}
+
+The assessment of bug report quality has been studied from multiple
+angles over the past decade.  We organize related work into three
+themes: (1)~traditional machine-learning approaches for bug-report
+classification, (2)~recent LLM-based methods for improving or
+evaluating bug reports, and (3)~studies that employ inter-rater
+agreement metrics such as Cohen's Kappa.  For each theme we highlight
+what has been achieved and what remains unaddressed, ultimately
+motivating the research gap that this study fills.
+
+% ------------------------------------------------------------------
+\subsection{Bug-Report Classification with Traditional ML}
+\label{sec:related:ml}
+
+Early efforts focused on distinguishing \emph{valid} from
+\emph{invalid} bug reports using conventional classifiers.
+Fan~et~al.~\cite{fan2020chaff} trained Random Forest and SVM models
+on handcrafted features extracted from five Bugzilla projects,
+achieving an average AUC of 0.86 for validity classification
+(Table~VII in~\cite{fan2020chaff}).
+However, their approach treats a bug report as a monolithic entity
+and does not evaluate individual quality dimensions such as
+\emph{Observed Behavior} (OB), \emph{Expected Behavior} (EB), or
+\emph{Steps to Reproduce} (S2R).  No inter-rater agreement was
+measured.
+
+Song and Chaparro~\cite{song2020bee} proposed \textsc{BEE}, an SVM-based
+tool that detects OB, EB, and S2R sentences within bug reports,
+reporting F1 scores of 0.93~(OB), 0.73~(EB), and 0.77~(S2R)
+(Table~2 in~\cite{song2020bee}).
+Although BEE explicitly targets the three reproducibility
+components, the evaluation relied solely on automated metrics;
+the authors acknowledged the need for user studies and did not
+measure Cohen's Kappa against developer judgments.
+
+These studies demonstrate that the problem of assessing bug-report
+quality has long been recognized, yet the evaluation paradigm
+remained limited to automated classification metrics without
+measuring agreement with human reviewers.
+
+% ------------------------------------------------------------------
+\subsection{LLM-Based Bug-Report Enhancement and Evaluation}
+\label{sec:related:llm}
+
+With the advent of large language models, researchers began
+leveraging their text-understanding capabilities for bug-report
+tasks.  Bo~et~al.~\cite{bo2024chatbr} combined a BERT classifier
+with ChatGPT (GPT-3.5) to both assess and improve bug reports from
+Eclipse OSS projects.  Their tool, \textsc{ChatBR}, improved report
+completeness substantially---OB by 13.0\%, EB by 84.2\%, and S2R by
+41.0\% (Table~2 in~\cite{bo2024chatbr})---but evaluated improvements
+exclusively through automated semantic-similarity metrics, without
+any form of human agreement measurement.
+
+Acharya and Ginde~\cite{acharya2025enhance} fine-tuned Qwen~2.5-7B
+and Llama~3.2-3B with LoRA on 3,903 Bugzilla reports, achieving a
+CTQRS score of 77\% and an SBERT similarity of 0.82.  While these
+results are competitive with GPT-4o few-shot baselines, the authors
+themselves identified the absence of human evaluation as a key
+limitation and called for ``human-judged evaluations'' in future
+work.
+
+Both studies confirm the potential of LLMs for processing bug
+reports on general open-source repositories, yet neither measures
+inter-rater agreement (e.g., Cohen's Kappa) between an LLM assessor
+and a developer reviewer.
+
+% ------------------------------------------------------------------
+\subsection{Inter-Rater Agreement in Bug-Report Quality Assessment}
+\label{sec:related:kappa}
+
+A smaller body of work has incorporated Cohen's Kappa ($\kappa$) to
+quantify annotation reliability, but with important scope
+restrictions.
+
+Mahmud~et~al.~\cite{mahmud2025astrobr} developed \textsc{AstroBR},
+which pairs GPT-4 with dynamic app UI analysis to evaluate
+Steps-to-Reproduce quality.  The study reports strong human--human
+Kappa values ($\kappa = 0.91$ for sentence identification and
+$\kappa = 0.88$ for S2R mapping) when constructing ground truth.
+However, AstroBR is restricted to \emph{Android applications only}
+and evaluates only the S2R dimension; the authors explicitly
+acknowledge that OB and EB assessment is deferred to future work.
+
+Akyol~et~al.~\cite{akyol2026improbr} presented \textsc{ImproBR},
+which uses DistilBERT combined with GPT-4o~mini and
+Retrieval-Augmented Generation to improve Minecraft (Mojira) bug
+reports.  Notably, ImproBR reports inter-rater Kappa across all
+three quality dimensions: $\kappa = 0.642$ (OB), $\kappa = 0.801$
+(EB), and $\kappa = 0.663$ (S2R), with a pooled Kappa of 0.62.
+Despite covering all three dimensions, the agreement is measured
+\emph{between human annotators only}, not between the LLM and a
+developer, and the study is confined to the Mojira platform.
+
+Saha~et~al.~\cite{saha2026bugscribe} reported the highest Kappa in
+our evidence set ($\kappa = 0.98$ for S2R on the development set;
+Sec.~4.4.2 in~\cite{saha2026bugscribe}),
+but this value again reflects human--human agreement during ground
+truth construction.  BugScribe is also limited to Android
+applications and does not measure LLM-versus-developer Kappa.
+
+In summary, all three studies that employ Kappa are restricted to
+platform-specific contexts (Android or Mojira) and measure only
+human--human agreement, leaving LLM-versus-developer agreement on
+general open-source repositories unexplored.
+
+% ------------------------------------------------------------------
+\subsection{Research Gap}
+\label{sec:related:gap}
+
+Table~\ref{tab:related_summary} summarizes the positioning of our
+study relative to prior work across four key dimensions.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of related studies along key dimensions.
+         $\checkmark$ = addressed, $\times$ = not addressed.}
+\label{tab:related_summary}
+\small
+\begin{tabular}{lccccc}
+\hline
+\textbf{Study} &
+  \textbf{Year} &
+  \textbf{OB/EB/S2R} &
+  \textbf{LLM} &
+  \textbf{Kappa} &
+  \textbf{Gen.\ OSS} \\
+\hline
+Fan et al.~\cite{fan2020chaff}             & 2020 & $\times$     & $\times$     & $\times$  & $\checkmark$ \\
+Song \& Chaparro~\cite{song2020bee}        & 2020 & $\checkmark$ & $\times$     & $\times$  & $\checkmark$ \\
+Bo et al.~\cite{bo2024chatbr}              & 2024 & $\checkmark$ & $\checkmark$ & $\times$  & $\checkmark$ \\
+Acharya \& Ginde~\cite{acharya2025enhance} & 2025 & $\times$     & $\checkmark$ & $\times$  & $\checkmark$ \\
+Mahmud et al.~\cite{mahmud2025astrobr}     & 2025 & S2R only     & $\checkmark$ & H--H      & $\times$ \\
+Akyol et al.~\cite{akyol2026improbr}       & 2026 & $\checkmark$ & $\checkmark$ & H--H      & $\times$ \\
+Saha et al.~\cite{saha2026bugscribe}       & 2026 & $\checkmark$ & $\checkmark$ & H--H      & $\times$ \\
+\hline
+\textbf{This study}                        & 2026 & $\checkmark$ & $\checkmark$ & \textbf{LLM-Dev} & $\checkmark$ \\
+\hline
+\end{tabular}
+\vspace{4pt}
+
+\raggedright\footnotesize H--H = Human--Human Kappa only.
+\end{table}
+
+As the table shows, although prior work has made significant progress
+in individual dimensions, \textbf{no existing study measures Cohen's
+Kappa between an LLM assessor and a developer reviewer for the
+combined OB\,+\,EB\,+\,S2R quality of bug reports on general GitHub
+open-source projects}.  Studies that do employ Kappa (AstroBR,
+ImproBR, BugScribe) are limited to platform-specific contexts
+(Android, Mojira) and measure only human--human agreement during
+ground truth construction.  Studies conducted on general OSS
+repositories (ChatBR, Acharya~\&~Ginde) rely exclusively on
+automated metrics without any human agreement evaluation.
+
+Our research addresses this gap by directly measuring LLM-versus-developer
+Cohen's Kappa for a combined assessment of OB, EB, and S2R on
+GitHub open-source bug reports.

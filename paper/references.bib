@@ -1,0 +1,79 @@
+% ==============================================================
+% References for Related Work (Section 2)
+% Maintained by: Hùng
+% Full author names extracted from PDF full-texts in
+%   RBL-3/Hùng/SLR/_pdftxt/
+% Venues verified against 03_final_included.csv
+% ==============================================================
+
+% --- Theme 1: Traditional ML ---
+
+@article{fan2020chaff,
+  author    = {Fan, Yuanrui and Xia, Xin and Lo, David and Hassan, Ahmed E.},
+  title     = {Chaff from the Wheat: Characterizing and Determining Valid Bug Reports},
+  journal   = {IEEE Transactions on Software Engineering},
+  volume    = {46},
+  number    = {5},
+  pages     = {495--525},
+  year      = {2020},
+  doi       = {10.1109/TSE.2018.2864217},
+  note      = {Bugzilla; Random Forest + SVM; AUC 0.86; no Kappa}
+}
+
+@inproceedings{song2020bee,
+  author    = {Song, Yang and Chaparro, Oscar},
+  title     = {{BEE}: A Tool for Structuring and Analyzing Bug Reports},
+  booktitle = {Proceedings of the 28th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE)},
+  year      = {2020},
+  doi       = {10.1145/3368089.3417928},
+  note      = {SVM classifier; F1: OB 0.93, EB 0.73, S2R 0.77; no Kappa}
+}
+
+% --- Theme 2: LLM-based ---
+
+@inproceedings{bo2024chatbr,
+  author    = {Bo, Lili and Ji, Wangjie and Sun, Xiaobing and Zhang, Ting and Wu, Xiaoxue and Wei, Ying},
+  title     = {{ChatBR}: Automated Assessment and Improvement of Bug Report Quality Using {ChatGPT}},
+  booktitle = {Proceedings of the 39th IEEE/ACM International Conference on Automated Software Engineering (ASE)},
+  year      = {2024},
+  doi       = {10.1145/3691620.3695518},
+  note      = {BERT + ChatGPT (GPT-3.5); Eclipse OSS; no Kappa}
+}
+
+@inproceedings{acharya2025enhance,
+  author    = {Acharya, Jagrit and Ginde, Gouri},
+  title     = {Can We Enhance Bug Report Quality Using {LLMs}?: An Empirical Study of {LLM}-Based Bug Report Generation},
+  booktitle = {Proceedings of the International Conference on Evaluation and Assessment in Software Engineering (EASE)},
+  year      = {2025},
+  doi       = {10.1145/3756681.3756995},
+  note      = {Qwen 2.5; Bugzilla; CTQRS 77\%; no Kappa}
+}
+
+% --- Theme 3: Kappa-based ---
+
+@inproceedings{mahmud2025astrobr,
+  author    = {Mahmud, Junayed and Saha, Antu and Chaparro, Oscar and Moran, Kevin and Marcus, Andrian},
+  title     = {Combining Language and App {UI} Analysis for the Automated Assessment of Bug Reproduction Steps ({AstroBR})},
+  booktitle = {Proceedings of the 33rd IEEE/ACM International Conference on Program Comprehension (ICPC)},
+  year      = {2025},
+  doi       = {10.1109/ICPC66645.2025.00010},
+  note      = {GPT-4; Android only; S2R Kappa 0.91 (H-H)}
+}
+
+@inproceedings{akyol2026improbr,
+  author    = {Akyol, Emre Furkan and Dedeler, Mehmet and T\"{u}z\"{u}n, Eray},
+  title     = {{ImproBR}: Bug Report Improver Using {LLMs}},
+  booktitle = {Proceedings of the International Conference on Evaluation and Assessment in Software Engineering (EASE)},
+  year      = {2026},
+  doi       = {10.48550/arXiv.2604.26142},
+  note      = {DistilBERT + GPT-4o mini; Mojira; Kappa OB 0.642, EB 0.801, S2R 0.663 (H-H)}
+}
+
+@article{saha2026bugscribe,
+  author    = {Saha, Antu and Dipongkor, Atish Kumar and Bennett, Sam and Moran, Kevin and Marcus, Andrian and Chaparro, Oscar},
+  title     = {{BugScribe}: Automated Generation of High-Quality Bug Reports for Android Applications},
+  journal   = {arXiv preprint arXiv:2604.01148},
+  year      = {2026},
+  doi       = {10.48550/arXiv.2604.01148},
+  note      = {GPT-5.4 + Claude Opus-4.6; Android; S2R Kappa 0.98 (H-H)}
+}
