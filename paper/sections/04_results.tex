@@ -1,1 +1,126 @@
 
+% ============================================================
+% Section 4: Results
+% Author: Them (MS)
+% Data source: results/summary.csv (pilot run, N=30)
+% ============================================================
+
+\section{Results}
+\label{sec:results}
+
+This section reports the quantitative outcomes of the pilot experiment.
+All values are computed from \texttt{src/compute\_metrics.py} using the
+data in \texttt{data/pilot\_ground\_truth.csv} and
+\texttt{results/pilot\_llm\_output.csv} ($N = 30$ issues).
+
+% ----------------------------------------------------------------
+\subsection{RQ1: Human–Human Inter-Annotator Agreement}
+% ----------------------------------------------------------------
+
+Table~\ref{tab:hh_kappa} shows Cohen's Kappa between the two human
+annotators (Annotator~1 and Annotator~2) across the three components.
+
+\begin{table}[h]
+\centering
+\caption{Human–Human Cohen's Kappa (pilot, $N=30$)}
+\label{tab:hh_kappa}
+\begin{tabular}{lccc}
+\hline
+\textbf{Component} & \textbf{Kappa} & \textbf{Interpretation} & \textbf{Decision} \\
+\hline
+OB  & 1.000 & Almost perfect & PASS ($\geq 0.6$) \\
+EB  & 1.000 & Almost perfect & PASS ($\geq 0.6$) \\
+S2R & 1.000 & Almost perfect & PASS ($\geq 0.6$) \\
+\hline
+\textbf{Overall} & \textbf{1.000} & Almost perfect & PASS ($\geq 0.6$) \\
+\hline
+\end{tabular}
+\end{table}
+
+Raw agreement between the two annotators was 100\% across all components.
+The overall Human–Human Kappa of 1.000 exceeds the accepted range of
+0.6–0.8; this anomaly is noted in Section~\ref{sec:discussion}.
+
+% ----------------------------------------------------------------
+\subsection{RQ2: LLM-vs-Developer Agreement}
+% ----------------------------------------------------------------
+
+Table~\ref{tab:llm_kappa} shows Cohen's Kappa between the LLM output
+(\texttt{GPT-4o mini}, temperature = 0.0, prompt v2) and the developer
+consensus labels.
+
+\begin{table}[h]
+\centering
+\caption{LLM-vs-Developer Cohen's Kappa (pilot, $N=30$, 0 invalid)}
+\label{tab:llm_kappa}
+\begin{tabular}{lccc}
+\hline
+\textbf{Component} & \textbf{Kappa} & \textbf{Interpretation} & \textbf{Decision} \\
+\hline
+OB  & 1.000 & Almost perfect & PASS ($\geq 0.6$) \\
+EB  & 0.695 & Substantial    & PASS ($\geq 0.6$) \\
+S2R & 0.417 & Moderate       & FAIL ($< 0.6$)    \\
+\hline
+\textbf{Overall} & \textbf{0.618} & Substantial & PASS ($\geq 0.6$) \\
+\hline
+\end{tabular}
+\end{table}
+
+Raw agreement between LLM output and developer consensus was 84.4\%.
+The LLM achieved strong agreement on OB ($\kappa = 1.000$) and
+acceptable agreement on EB ($\kappa = 0.695$), but fell below the
+acceptance threshold on S2R ($\kappa = 0.417$).
+
+% ----------------------------------------------------------------
+\subsection{Label Distribution}
+% ----------------------------------------------------------------
+
+Table~\ref{tab:label_dist} compares the distribution of labels assigned
+by developer consensus versus the LLM across all three components
+combined ($3 \times 30 = 90$ label slots).
+
+\begin{table}[h]
+\centering
+\caption{Label distribution: developer consensus vs.\ LLM (pilot)}
+\label{tab:label_dist}
+\begin{tabular}{lcc}
+\hline
+\textbf{Label}    & \textbf{Consensus} & \textbf{LLM} \\
+\hline
+Sufficient  & 64 & 69 \\
+Ambiguous   &  3 &  5 \\
+Missing     & 23 & 16 \\
+Incorrect   &  0 &  0 \\
+\hline
+\textbf{Total} & \textbf{90} & \textbf{90} \\
+\hline
+\end{tabular}
+\end{table}
+
+The LLM tends to assign \textit{Sufficient} more frequently than human
+annotators (69 vs.\ 64), and assigns \textit{Missing} less frequently
+(16 vs.\ 23). Neither annotators nor the LLM assigned the
+\textit{Incorrect} label to any component in the pilot sample.
+
+% ----------------------------------------------------------------
+\subsection{Data Quality}
+% ----------------------------------------------------------------
+
+All 30 pilot issues returned valid JSON responses from the LLM
+($N_{\text{valid}} = 30$, $N_{\text{invalid}} = 0$).
+No issues were excluded from the LLM-vs-Developer Kappa calculation.
+
+% Figure placeholder - use actual figures from figures/ folder
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.45\textwidth]{figures/kappa_overall_comparison}
+\caption{Overall Kappa comparison: Human–Human vs.\ LLM-vs-Developer}
+\label{fig:kappa_overall}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.45\textwidth]{figures/kappa_comparison_by_dimension}
+\caption{Per-component Kappa: LLM-vs-Developer across OB, EB, and S2R}
+\label{fig:kappa_dim}
+\end{figure}
