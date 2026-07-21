@@ -23,8 +23,7 @@ Early efforts focused on distinguishing \emph{valid} from
 \emph{invalid} bug reports using conventional classifiers.
 Fan~et~al.~\cite{fan2020chaff} trained Random Forest and SVM models
 on handcrafted features extracted from five Bugzilla projects,
-achieving an average AUC of 0.86 for validity classification
-(Table~VII in~\cite{fan2020chaff}).
+achieving an average AUC of 0.86 for validity classification.
 However, their approach treats a bug report as a monolithic entity
 and does not evaluate individual quality dimensions such as
 \emph{Observed Behavior} (OB), \emph{Expected Behavior} (EB), or
@@ -33,8 +32,7 @@ measured.
 
 Song and Chaparro~\cite{song2020bee} proposed \textsc{BEE}, an SVM-based
 tool that detects OB, EB, and S2R sentences within bug reports,
-reporting F1 scores of 0.93~(OB), 0.73~(EB), and 0.77~(S2R)
-(Table~2 in~\cite{song2020bee}).
+reporting F1 scores of 0.93 (OB), 0.73 (EB), and 0.77 (S2R).
 Although BEE explicitly targets the three reproducibility
 components, the evaluation relied solely on automated metrics;
 the authors acknowledged the need for user studies and did not
@@ -55,9 +53,9 @@ tasks.  Bo~et~al.~\cite{bo2024chatbr} combined a BERT classifier
 with ChatGPT (GPT-3.5) to both assess and improve bug reports from
 Eclipse OSS projects.  Their tool, \textsc{ChatBR}, improved report
 completeness substantially---OB by 13.0\%, EB by 84.2\%, and S2R by
-41.0\% (Table~2 in~\cite{bo2024chatbr})---but evaluated improvements
-exclusively through automated semantic-similarity metrics, without
-any form of human agreement measurement.
+41.0\%---but evaluated improvements exclusively through automated
+semantic-similarity metrics, without any form of human agreement
+measurement.
 
 Acharya and Ginde~\cite{acharya2025enhance} fine-tuned Qwen~2.5-7B
 and Llama~3.2-3B with LoRA on 3,903 Bugzilla reports, achieving a
@@ -100,16 +98,10 @@ Despite covering all three dimensions, the agreement is measured
 developer, and the study is confined to the Mojira platform.
 
 Saha~et~al.~\cite{saha2026bugscribe} reported the highest Kappa in
-our evidence set ($\kappa = 0.98$ for S2R on the development set;
-Sec.~4.4.2 in~\cite{saha2026bugscribe}),
+our evidence set ($\kappa = 0.98$ for S2R on the development set),
 but this value again reflects human--human agreement during ground
 truth construction.  BugScribe is also limited to Android
 applications and does not measure LLM-versus-developer Kappa.
-
-In summary, all three studies that employ Kappa are restricted to
-platform-specific contexts (Android or Mojira) and measure only
-human--human agreement, leaving LLM-versus-developer agreement on
-general open-source repositories unexplored.
 
 % ------------------------------------------------------------------
 \subsection{Research Gap}
@@ -124,28 +116,26 @@ study relative to prior work across four key dimensions.
          $\checkmark$ = addressed, $\times$ = not addressed.}
 \label{tab:related_summary}
 \small
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccc}
 \hline
 \textbf{Study} &
-  \textbf{Year} &
   \textbf{OB/EB/S2R} &
   \textbf{LLM} &
   \textbf{Kappa} &
   \textbf{Gen.\ OSS} \\
 \hline
-Fan et al.~\cite{fan2020chaff}             & 2020 & $\times$     & $\times$     & $\times$  & $\checkmark$ \\
-Song \& Chaparro~\cite{song2020bee}        & 2020 & $\checkmark$ & $\times$     & $\times$  & $\checkmark$ \\
-Bo et al.~\cite{bo2024chatbr}              & 2024 & $\checkmark$ & $\checkmark$ & $\times$  & $\checkmark$ \\
-Acharya \& Ginde~\cite{acharya2025enhance} & 2025 & $\times$     & $\checkmark$ & $\times$  & $\checkmark$ \\
-Mahmud et al.~\cite{mahmud2025astrobr}     & 2025 & S2R only     & $\checkmark$ & H--H      & $\times$ \\
-Akyol et al.~\cite{akyol2026improbr}       & 2026 & $\checkmark$ & $\checkmark$ & H--H      & $\times$ \\
-Saha et al.~\cite{saha2026bugscribe}       & 2026 & $\checkmark$ & $\checkmark$ & H--H      & $\times$ \\
+Fan~\cite{fan2020chaff}             & $\times$    & $\times$ & $\times$ & $\checkmark$ \\
+Song~\cite{song2020bee}             & $\checkmark$ & $\times$ & $\times$ & $\checkmark$ \\
+Bo~\cite{bo2024chatbr}              & $\checkmark$ & $\checkmark$ & $\times$ & $\checkmark$ \\
+Acharya~\cite{acharya2025enhance}   & $\times$    & $\checkmark$ & $\times$ & $\checkmark$ \\
+Mahmud~\cite{mahmud2025astrobr}     & S2R only     & $\checkmark$ & H--H     & $\times$ \\
+Akyol~\cite{akyol2026improbr}       & $\checkmark$ & $\checkmark$ & H--H     & $\times$ \\
+Saha~\cite{saha2026bugscribe}       & $\checkmark$ & $\checkmark$ & H--H     & $\times$ \\
 \hline
-\textbf{This study}                        & 2026 & $\checkmark$ & $\checkmark$ & \textbf{LLM-Dev} & $\checkmark$ \\
+\textbf{This study}                 & $\checkmark$ & $\checkmark$ & \textbf{LLM-Dev} & $\checkmark$ \\
 \hline
 \end{tabular}
-\vspace{4pt}
-
+\\[4pt]
 \raggedright\footnotesize H--H = Human--Human Kappa only.
 \end{table}
 
