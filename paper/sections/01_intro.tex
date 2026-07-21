@@ -1,1 +1,76 @@
+% ==============================================================
+% Section 1: Introduction
+% Author: Quân (RW)
+% File:   paper/sections/01_intro.tex
+% ==============================================================
+
+\section{Introduction}\label{sec:intro}
+
+Bug reports are the primary channel through which defects are
+communicated in open-source software (OSS) projects.  A well-structured
+report allows developers to understand what went wrong, compare it
+against expected behavior, and reproduce the defect reliably.  Prior
+research has established that the three components most critical to
+this process are the \emph{Observed Behavior} (OB), the \emph{Expected
+Behavior} (EB), and the \emph{Steps to Reproduce}
+(S2R)~\cite{song2020bee, mahmud2025astrobr, akyol2026improbr}.  When
+any of these is absent or ambiguous, developer comprehension suffers
+and resolution time increases.
+
+Despite this, many real-world bug reports remain
+incomplete~\cite{fan2020chaff}.  Reviewing each incoming report
+manually at scale is expensive and does not fit the workflows of most
+OSS projects.  This motivates automated tools that can screen reports
+before they reach the development queue.
+
+Large language models (LLMs) have been applied to bug-report tasks,
+including quality classification and improvement~\cite{bo2024chatbr,
+acharya2025enhance}.  However, as reviewed in
+Section~\ref{sec:related}, \textbf{no existing study measures Cohen's
+Kappa between an LLM and human annotators for the combined
+OB\,+\,EB\,+\,S2R quality dimensions on general GitHub repositories}.
+Studies that employ inter-rater agreement metrics are either restricted
+to platform-specific contexts (Android, Mojira) or measure only
+human--human agreement during ground-truth construction.
+
+This study addresses that gap.  We evaluate \emph{GPT-4o mini} as an
+automated quality assessor for GitHub bug reports, measuring its label
+agreement with an annotator consensus using Cohen's Kappa ($\kappa$)
+across OB, EB, and S2R.  GPT-4o mini was selected because a quality
+gate must run on every incoming issue: at approximately
+US\$0.0003 per report (Section~\ref{sec:method:repro}), a lightweight
+model is the realistic deployment candidate.  The evaluation covers 30
+annotated issues from three OSS repositories (pandas, scikit-learn,
+VS~Code).
+
+The research question is:
+
+\begin{quote}
+\textit{How reliably can GPT-4o mini automatically evaluate bug report
+quality (OB, EB, and S2R sufficiency) compared to annotator consensus,
+as measured by Cohen's Kappa, on a dataset of open-source GitHub bug
+reports?}
+\end{quote}
+
+The main contributions of this paper are:
+
+\begin{itemize}
+  \item A structured annotation rubric with four sufficiency labels
+        (\textit{Sufficient}, \textit{Ambiguous}, \textit{Missing},
+        \textit{Incorrect}) for OB, EB, and S2R in GitHub bug reports;
+  \item An empirical evaluation of GPT-4o mini's agreement with
+        annotator consensus across all three dimensions, with Cohen's
+        Kappa as the primary metric;
+  \item A dimension-level analysis of the model's strengths and
+        limitations, with practical guidance on integrating LLM-based
+        screening into bug-report triage pipelines.
+\end{itemize}
+
+The remainder of this paper is organized as follows.
+Section~\ref{sec:related} reviews related work.
+Section~\ref{sec:method} describes the methodology.
+Section~\ref{sec:results} presents the results.
+Section~\ref{sec:discussion} discusses the findings.
+Section~\ref{sec:threats} addresses threats to validity, and
+Section~\ref{sec:conclusion} concludes the paper.
 
