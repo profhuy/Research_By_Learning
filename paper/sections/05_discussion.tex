@@ -1,1 +1,80 @@
+% ==============================================================
+% Section 5: Discussion
+% Author: Quân (RW)
+% File:   paper/sections/05_discussion.tex
+% ==============================================================
 
+\section{Discussion}\label{sec:discussion}
+
+\subsection{OB and EB: Where the Gate Performs Well}
+
+The model achieved perfect raw agreement with the annotator consensus
+on OB (100\%, Table~\ref{tab:llm_kappa}) and substantial agreement on
+EB ($\kappa = 0.695$), both meeting the pre-registered threshold of
+$\kappa \geq 0.60$.  As noted in Section~\ref{sec:method:metrics},
+OB Kappa is undefined in this sample because every report was labeled
+\textit{Sufficient} by both the model and the annotators; we therefore
+characterise OB by raw agreement rather than Kappa, and we exclude it
+from any averaged value.
+
+EB shows that the model correctly handles the tightened rubric
+requirement---that an expectation must be \emph{explicitly stated}
+rather than merely guessable from context---introduced in
+\texttt{v1.0} (Section~\ref{sec:method:prompts}).  The label
+distribution (Table~\ref{tab:label_dist}) shows the model and
+annotators assign \textit{Sufficient} at nearly the same rate on EB,
+and disagreement is concentrated on the \textit{Ambiguous}/\textit{Missing}
+boundary, which is the most subjective call in the rubric.
+
+\subsection{S2R: A Systematic Weakness}
+
+S2R agreement was substantially lower ($\kappa = 0.417$,
+Fig.~\ref{fig:kappa_dim}), falling below the threshold in the pilot.
+Manual inspection reported in Section~\ref{sec:method:prompts}
+identified a systematic cause: \texttt{v1.0} led the model to expect
+explicit, numbered reproduction steps, so reports whose reproduction
+path was a runnable code snippet or a single command---the dominant
+style in \texttt{pandas} and \texttt{scikit-learn}---were labeled
+\textit{Missing}, whereas the annotators accepted them as actionable.
+The label distribution confirms this directional bias: the model
+assigned \textit{Sufficient} to 69 of 90 label slots versus 64 for the
+annotators overall, and \textit{Missing} to only 16 versus 23
+(Table~\ref{tab:label_dist}), meaning the model under-flagged
+incomplete S2R.
+
+Phase~2 used \texttt{v3.0-candidate-s2r-relaxed} to address this
+pattern.  However, as stated in Section~\ref{sec:method:prompts}, the
+full corpus has no human labels yet, so the effect of \texttt{v3.0} on
+agreement is untested.  The Kappa values discussed throughout this
+section characterise \texttt{v1.0} only.
+
+\subsection{Annotator Consistency and Rubric Application}
+
+Human--human Kappa was 1.000 across all three dimensions on the
+double-labeled subset (Table~\ref{tab:hh_kappa}), indicating that the
+two annotators applied the rubric consistently within this sample.
+This removes annotation noise as a confounding factor: the
+LLM-vs-annotator gap is attributable to the model's interpretation of
+the rubric, not to disagreement between the annotators themselves.
+
+It should be noted that perfect agreement between two annotators from
+the same team, on a small overlap of 10 issues, does not guarantee the
+rubric would be applied identically by a broader or more diverse group.
+This limitation is discussed in Section~\ref{sec:threats}.
+
+\subsection{Overall Agreement and Practical Implications}
+
+The overall LLM-vs-annotator Kappa ($\kappa = 0.618$,
+Fig.~\ref{fig:kappa_overall}) passed the pilot gate of $\kappa \geq
+0.60$ but did not reach the proposal threshold of $\kappa \geq 0.70$.
+Phase~2 results confirm that the pipeline is operationally feasible at
+scale: 250 reports were screened in approximately 15 minutes at a
+total cost of roughly US\$0.086 (US\$0.0003 per report), with 0 of
+250 outputs invalid.
+
+In practical terms, the gate is most reliable as a first-pass filter
+for OB and EB---flagging reports that clearly lack a stated failure or
+expected outcome.  For S2R, the current accuracy is insufficient for
+standalone deployment.  A hybrid pipeline in which the model screens
+OB and EB while annotators handle S2R on borderline cases better
+matches the gate's demonstrated capability.
