@@ -1,1 +1,37 @@
 
+% ==============================================================
+% Section 7: Conclusion
+% Author: Quân (RW)
+% File:   paper/sections/07_conclusion.tex
+% ==============================================================
+
+\section{Conclusion}\label{sec:conclusion}
+
+This paper evaluated GPT-4o mini as an automated quality gate for
+GitHub bug reports, measuring its agreement with an annotator
+consensus across the Observed Behavior (OB), Expected Behavior (EB),
+and Steps to Reproduce (S2R) dimensions using Cohen's Kappa.
+Agreement analysis was conducted on 30 annotated issues from three
+OSS repositories (pandas, scikit-learn, VS~Code).
+
+The model showed strong alignment with annotators on OB (100\% raw
+agreement; Kappa undefined due to no label variation) and substantial
+agreement on EB ($\kappa = 0.695$), both at or above the pre-registered
+threshold of $\kappa \geq 0.60$.  Agreement on S2R was substantially
+lower ($\kappa = 0.417$), falling below the threshold.  The overall
+LLM-vs-annotator Kappa ($\kappa = 0.618$) passed the pilot gate but
+did not reach the proposal threshold of $\kappa \geq 0.70$.
+Separately, a scale-up run on 250 reports confirmed operational
+feasibility: 0 of 250 outputs were invalid and the total cost was
+approximately US\$0.086.
+
+These results indicate that GPT-4o mini is suitable as a first-pass
+filter for OB and EB quality, but should not be used as a standalone
+assessor for S2R without human review.  A hybrid pipeline---where the
+model screens OB and EB while annotators handle S2R on borderline
+cases---better reflects the gate's demonstrated capability profile.
+
+Future work should evaluate prompt \texttt{v3.0-candidate-s2r-relaxed}
+against human labels to determine whether the S2R gap can be closed,
+and extend the annotated dataset beyond the current 30-issue subset to
+support more robust agreement estimates.
