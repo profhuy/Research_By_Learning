@@ -1,46 +1,81 @@
-# RBL-4 Starter Pack
+# Research_By_Learning
 
-Starter pack nay bam theo huong `RBL-3` da duoc duyet:
+Kho lưu trữ này chứa dữ liệu, mã nguồn, kết quả thực nghiệm và bản thảo paper cho đề tài:
 
-- Topic: GPT-4o mini as a quality gate for GitHub OSS bug reports
-- Scope: `OB / EB / S2R`
-- Main metric: `Cohen's Kappa`
-- Main threshold: `Kappa >= 0.70`
-- Pilot in Week 7, full experiment in Week 8
+**Đánh giá GPT-4o mini như một công cụ tự động kiểm tra chất lượng bug report trên GitHub**
 
-## Folder structure
+## Tổng Quan
 
-- `README.md`: mo ta nhanh pack nay dung de lam gi
-- `team-assignment-master.md`: file tong hop phan cong ca nhom
-- `HUY_WORKPLAN.md`: phan viec rieng cua Huy va cac phu thuoc du lieu
-- `GITHUB_SETUP.md`: Huy tao repo nhu the nao va quan ly commit ra sao
-- `rubric-ob-eb-s2r.md`: rubric cuoi cho `OB`, `EB`, `S2R`
-- `prompt_final.md`: prompt dong bang cho pilot va full experiment
-- `pilot-workflow.md`: luong lam Tuan 7
-- `week8-full-experiment.md`: luong lam Tuan 8
-- `issue-handling-rules.md`: gap van de thi xu ly the nao
-- `sync-results-to-github.md`: quy tac dong bo len GitHub
-- `data/pilot_sample.csv`: mau pilot
-- `data/pilot_ground_truth.csv`: mau gan nhan pilot
-- `data/full_ground_truth.csv`: mau gan nhan full
-- `results/pilot_llm_output.csv`: mau output pilot
-- `results/pilot_api_log.txt`: log pilot
-- `results/pilot_analysis_plan.md`: nhung gi MS phai tinh o pilot
-- `results/full_llm_output.csv`: mau output full
-- `results/full_api_log.txt`: log full
-- `results/summary.csv`: bang tong hop metric cuoi
-- `figures/README.md`: yeu cau cho hinh ve
+Đề tài nghiên cứu khả năng sử dụng GPT-4o mini để hỗ trợ đánh giá chất lượng bug report trong các dự án mã nguồn mở. Trọng tâm của nghiên cứu là ba thành phần quan trọng đối với khả năng tái hiện lỗi:
 
-## Thu tu dung de bat dau
+- **Observed Behavior (OB):** hành vi thực tế quan sát được
+- **Expected Behavior (EB):** hành vi mong đợi
+- **Steps to Reproduce (S2R):** các bước tái hiện lỗi
 
-1. Huy doc `HUY_WORKPLAN.md`
-2. Huy tao repo theo `GITHUB_SETUP.md`
-3. Ca nhom doc `team-assignment-master.md`
-4. Hung lam du lieu pilot truoc
-5. Phuc chay pilot sau khi co sample
-6. Them tinh metric pilot sau khi co ground truth va output
-7. Huy review pilot roi moi cho sang full
+Kết quả dự đoán của GPT-4o mini được so sánh với nhãn đồng thuận của annotator bằng **raw agreement** và **Cohen's Kappa**.
 
-## Important rule
+## Câu Hỏi Nghiên Cứu
 
-Khong doi proposal direction sau khi thay data, tru khi nhom ghi amendment ro rang.
+GPT-4o mini có thể tự động đánh giá chất lượng bug report, xét theo mức độ đầy đủ của OB, EB và S2R, ở mức độ nào khi so sánh với annotator consensus bằng Cohen's Kappa?
+
+## Dữ Liệu
+
+Nghiên cứu sử dụng bug report từ ba repository mã nguồn mở trên GitHub:
+
+- `pandas`
+- `scikit-learn`
+- `VS Code`
+
+Bộ dữ liệu gồm:
+
+- **30 bug reports** được gán nhãn thủ công để đánh giá agreement
+- **250 bug reports** dùng để kiểm tra khả năng chạy pipeline ở quy mô lớn hơn
+
+## Phương Pháp
+
+Mỗi bug report được đánh giá theo ba chiều chất lượng: OB, EB và S2R.  
+Mỗi chiều được gán một trong bốn nhãn:
+
+- `Sufficient`
+- `Ambiguous`
+- `Missing`
+- `Incorrect`
+
+GPT-4o mini được chạy với cấu hình cố định:
+
+- Model: `GPT-4o mini`
+- Temperature: `0.0`
+- Prompting: zero-shot, one independent request per report
+- Output format: structured JSON
+
+Kết quả của mô hình được so sánh với annotator consensus bằng:
+
+- Raw agreement
+- Cohen's Kappa
+
+## Kết Quả Chính
+
+| Chỉ số | Kết quả |
+|---|---:|
+| Overall raw agreement | 84.4% |
+| Overall Cohen's Kappa | 0.582 |
+| Ngưỡng chấp nhận | 0.60 |
+| EB Kappa | 0.653 |
+| S2R Kappa | 0.400 |
+| Invalid output rate | 0.0% |
+
+GPT-4o mini đạt agreement tổng thể gần với ngưỡng chấp nhận, nhưng chưa vượt qua ngưỡng `0.60`. Mô hình hoạt động tốt hơn ở phần **Expected Behavior**, trong khi **Steps to Reproduce** là điểm yếu chính.
+
+## Kết Luận
+
+GPT-4o mini phù hợp với vai trò công cụ hỗ trợ trong quy trình đánh giá chất lượng bug report. Mô hình có thể giúp maintainer sàng lọc các report có khả năng thiếu thông tin, nhưng chưa đủ tin cậy để thay thế hoàn toàn đánh giá của con người, đặc biệt khi kiểm tra các bước tái hiện lỗi.
+
+## Cấu Trúc Thư Mục
+
+```text
+data/                 Dữ liệu bug report và các file mẫu
+figures/              Hình ảnh, bảng biểu hoặc biểu đồ dùng trong paper
+paper/                Mã nguồn LaTeX và bản paper cuối cùng
+paper/sections/       Các section riêng của paper
+paper/quality/        Log kiểm tra AI writing và ảnh chụp kết quả
+results/              Kết quả chạy model và các file phân tích
